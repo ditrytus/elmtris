@@ -83,6 +83,7 @@ type MoveType
   | Right
   | Down
   | Rotate
+  | None
 
 type Msg
   = Begin
@@ -159,19 +160,28 @@ update msg model =
     FirstBrick newBrickType ->
       (Gameplay { brick = newBrick newBrickType, score = 0, board = emptyBoard}, Cmd.none)
     NextBrick newBrickType ->
-      case model of
-        Gameplay state ->
-          (Gameplay {state | brick = newBrick newBrickType}, Cmd.none)  
-        _ -> (Start, Cmd.none)
+      model |> updateGameState (\state -> (Gameplay {state | brick = newBrick newBrickType}, Cmd.none))
+    Move moveType ->
+      case moveType of
+        Left ->
+          model |> updateGameState (\state -> (Gameplay (moveBrick toLeft state), Cmd.none))
+        Right ->
+          model |> updateGameState (\state -> (Gameplay (moveBrick toRight state), Cmd.none))
+        _ -> (model, Cmd.none)
     Tick ->
-      case model of
-        Gameplay state ->
-          if doesBrickCollide state then
-            (Gameplay {state | board = mergeElements state.board state.brick}, commandWithRandomBrickType NextBrick)
-          else
-            (Gameplay (moveBrickDown state), Cmd.none)
-        _ -> (Start, Cmd.none)
-    _ -> (Start, Cmd.none)
+      model |> updateGameState (\state -> 
+        if doesBrickCollide state then
+          (Gameplay {state | board = mergeElements state.board state.brick}, commandWithRandomBrickType NextBrick)
+        else
+          (Gameplay (moveBrick down state), Cmd.none))
+    _ -> (model, Cmd.none)
+
+updateGameState: (GameState -> (Model, Cmd a)) -> Model -> (Model, Cmd a)
+updateGameState updateStateFunc model =
+  case model of
+      Gameplay state ->
+        updateStateFunc state
+      _ -> (model, Cmd.none)
 
 newBrick brickType =
   {bType=brickType, rot=Horizontal Deg0, brickPos = Pos 0 0}
@@ -194,23 +204,28 @@ isTouchingOtherBrick state =
   |> Maybe.withDefault Array.empty
   |> Array.slice state.brick.brickPos.x (state.brick.brickPos.x + (brickWidth state.brick))
   |> Array.toList
-  |> Debug.log "boardSlice"
   |> List.indexedMap (\i cell ->
       brickShape state.brick
       |> Array2D.get i ((brickHeight state.brick)-1)
       |> Maybe.withDefault False
       |> (&&) cell)
   |> List.any identity
-  |> Debug.log "isTouching"
 
-moveBrickDown state =
+moveBrick: (GameState -> Pos -> Pos) -> GameState -> GameState
+moveBrick moveFunc state =
   let
     brick = state.brick
     brickPos = brick.brickPos
-    newPos = {brickPos | y = brickPos.y + 1}
+    newPos = moveFunc state brickPos
     newBrick = {brick | brickPos = newPos}
   in
     {state | brick = newBrick}
+
+down _ pos = {pos | y = pos.y + 1}
+
+toLeft _ pos = {pos | x = Basics.max (pos.x - 1) 0}
+
+toRight state pos = {pos | x = Basics.min (pos.x + 1) (boardWidth - (brickWidth state.brick))}
 
 -- SUBSCRIPTIONS
 
@@ -219,9 +234,20 @@ subscriptions model =
     Start ->
       Keyboard.presses (\_ -> Begin)
     Gameplay _ ->
-      Time.every Time.second (\_ -> Tick)
+      Sub.batch
+        [ Time.every Time.second (\_ -> Tick)
+        , Keyboard.downs keyCodeToMove]
     _ -> 
       Sub.none
+
+keyCodeToMove: KeyCode -> Msg
+keyCodeToMove keyCode =
+  case keyCode of
+    37 -> Move Left
+    38 -> Move None --Move Rotate
+    39 -> Move Right
+    40 -> Move None --Move Down  
+    _ -> Move None
 
 -- VIEW
 view : Model -> Html a
