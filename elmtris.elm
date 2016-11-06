@@ -20,7 +20,7 @@ main =
 -- MODEL
 boardWidth = 9
 boardHeight = 15
-emptyBoard = Array2D.repeat boardWidth boardHeight False
+emptyBoard = Array2D.repeat boardHeight boardWidth False
 
 type alias Board = Array2D.Array2D Bool
 
@@ -88,6 +88,7 @@ type Msg
   = Begin
   | FirstBrick BrickType
   | NextBrick BrickType
+  | Tick
   | Move MoveType
   | Reset
 
@@ -157,6 +158,17 @@ update msg model =
       (model, generate FirstBrick (map intToBrickType (int 1 brickTypesCount)))
     FirstBrick newBrickType ->
       (Gameplay { brick = {bType=newBrickType, rot=Horizontal Deg0, brickPos = Pos 0 0}, score = 0, board = emptyBoard}, Cmd.none)
+    Tick ->
+      case model of
+        Gameplay state ->
+          let
+            brick = state.brick
+            brickPos = brick.brickPos
+            newPos = {brickPos | y = brickPos.y + 1}
+            newBrick = {brick | brickPos = newPos}
+          in
+            (Gameplay {state | brick = newBrick}, Cmd.none)
+        _ -> (model, Cmd.none) 
     _ ->
       (Start, Cmd.none)
 
@@ -166,9 +178,10 @@ subscriptions model =
   case model of
     Start ->
       Keyboard.presses (\_ -> Begin)
-    _ ->
+    Gameplay _ ->
+      Time.every Time.second (\_ -> Tick)
+    _ -> 
       Sub.none
-
 
 -- VIEW
 view : Model -> Html a
@@ -209,9 +222,9 @@ or a b = a || b
 mergeElements: Board -> Brick -> Board
 mergeElements board brick =
     board |>
-      Array2D.indexedMap (\i j cell ->
+      Array2D.indexedMap (\row column cell ->
         brickShape brick
-        |> Array2D.get (i - brick.brickPos.x) (j - brick.brickPos.y)
+        |> Array2D.get (row - brick.brickPos.y) (column - brick.brickPos.x)
         |> Maybe.withDefault False
         |> or cell) 
 
@@ -219,12 +232,12 @@ viewBoard: Board -> List (Svg.Svg a)
 viewBoard board =
   let
     cellToRect: Int -> Int -> Bool -> Maybe (Svg.Svg a)
-    cellToRect i j cell =
+    cellToRect row column cell =
       case cell of
         True ->
           Just (rect
-            [ x (toString (j * cellWidth))
-            , y (toString (i * cellHeight))
+            [ x (toString (column * cellWidth))
+            , y (toString (row * cellHeight))
             , width (toString cellWidth)
             , height (toString cellHeight)
             , strokeWidth "0"
