@@ -161,16 +161,27 @@ update msg model =
     Tick ->
       case model of
         Gameplay state ->
-          let
-            brick = state.brick
-            brickPos = brick.brickPos
-            newPos = {brickPos | y = brickPos.y + 1}
-            newBrick = {brick | brickPos = newPos}
-          in
-            (Gameplay {state | brick = newBrick}, Cmd.none)
-        _ -> (model, Cmd.none) 
-    _ ->
-      (Start, Cmd.none)
+          if doesBrickCollide state then
+            (model, Cmd.none)
+          else
+            (Gameplay (moveBrickDown state), Cmd.none)
+        _ -> (Start, Cmd.none) 
+    _ -> (Start, Cmd.none)
+
+brickHeight = brickShape >> Array2D.rows
+brickWidth = brickShape >> Array2D.columns
+
+doesBrickCollide state =
+  state.brick.brickPos.y == boardHeight - (brickHeight state.brick)
+
+moveBrickDown state =
+  let
+    brick = state.brick
+    brickPos = brick.brickPos
+    newPos = {brickPos | y = brickPos.y + 1}
+    newBrick = {brick | brickPos = newPos}
+  in
+    {state | brick = newBrick}
 
 -- SUBSCRIPTIONS
 
