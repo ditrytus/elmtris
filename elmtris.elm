@@ -167,7 +167,7 @@ update msg model =
       case model of
         Gameplay state ->
           if doesBrickCollide state then
-            (model, commandWithRandomBrickType NextBrick)
+            (Gameplay {state | board = mergeElements state.board state.brick}, commandWithRandomBrickType NextBrick)
           else
             (Gameplay (moveBrickDown state), Cmd.none)
         _ -> (Start, Cmd.none)
