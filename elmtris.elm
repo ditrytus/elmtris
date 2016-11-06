@@ -5,6 +5,9 @@ import Svg.Attributes exposing (..)
 import Time exposing (Time, second)
 import Keyboard exposing (..)
 import Random exposing (..)
+import Array2D
+import Array
+import Debug exposing (..)
 
 main =
   App.program
@@ -15,16 +18,11 @@ main =
     }
 
 -- MODEL
-type alias Array2DBool = List (List Bool)
-
-make2DArray w h x =
-  List.repeat h (List.repeat w x)
-
 boardWidth = 9
 boardHeight = 15
-emptyBoard = make2DArray boardWidth boardHeight False
+emptyBoard = Array2D.repeat boardWidth boardHeight False
 
-type alias Board = Array2DBool
+type alias Board = Array2D.Array2D Bool
 
 type alias Score = Int
 
@@ -61,16 +59,16 @@ type HorizontalRotation
   = Deg0
   | Deg180
 
-type alias Pos = (Int, Int)
+type alias Pos = {x:Int, y:Int}
 
 type alias Brick =
   { bType: BrickType
   , rot: Rotation
+  , brickPos: Pos
   }
 
 type alias GameState =
   { brick: Brick
-  , brickPos: Pos
   , score: Score
   , board: Board
   }
@@ -93,60 +91,60 @@ type Msg
   | Move MoveType
   | Reset
 
-type alias BrickShape = Array2DBool
+type alias BrickShape = Array2D.Array2D Bool
 
-brickShape bType rot =
-  case bType of
+brickShape brick =
+  case brick.bType of
     Square ->
-      [[True, True], [True, True]]
+      Array2D.fromList [[True, True], [True, True]]
     Long ->
-      case rot of
+      case brick.rot of
         Horizontal _ ->
-          [[True, True, True, True]]
+          Array2D.fromList [[True, True, True, True]]
         Vertical _ ->
-          [[True],[True],[True],[True]]
+          Array2D.fromList [[True],[True],[True],[True]]
     ZLeft ->
-      case rot of
+      case brick.rot of
         Vertical _ ->
-          [[False, True], [True, True], [True, False]]
+          Array2D.fromList [[False, True], [True, True], [True, False]]
         Horizontal _ ->
-          [[True, True, False], [False, True, True]]
+          Array2D.fromList [[True, True, False], [False, True, True]]
     ZRight ->
-      case rot of
+      case brick.rot of
         Vertical _ ->
-          [[True, False], [True, True], [False, True]]
+          Array2D.fromList [[True, False], [True, True], [False, True]]
         Horizontal _ ->
-          [[False, True, True], [True, True, False]]    
+          Array2D.fromList [[False, True, True], [True, True, False]]    
     LLeft ->
-      case rot of
+      case brick.rot of
         Horizontal Deg0 ->
-          [[True, True, True], [False, False, True]]
+          Array2D.fromList [[True, True, True], [False, False, True]]
         Horizontal Deg180 ->
-          [[True, False, False], [True, True, True]]
+          Array2D.fromList [[True, False, False], [True, True, True]]
         Vertical Deg90 ->
-          [[False, True], [False, True], [True, True]]
+          Array2D.fromList [[False, True], [False, True], [True, True]]
         Vertical Deg270 ->
-          [[True, True], [True, False], [True, False]]
+          Array2D.fromList [[True, True], [True, False], [True, False]]
     LRight ->
-      case rot of
+      case brick.rot of
         Horizontal Deg0 ->
-          [[True, True, True], [True, False, False]]
+          Array2D.fromList [[True, True, True], [True, False, False]]
         Horizontal Deg180 ->
-          [[False, False, True], [True, True, True]]
+          Array2D.fromList [[False, False, True], [True, True, True]]
         Vertical Deg90 ->
-          [[True, True], [False, True], [False, True]]
+          Array2D.fromList [[True, True], [False, True], [False, True]]
         Vertical Deg270 ->
-          [[True, False], [True, False], [True, True]]
+          Array2D.fromList [[True, False], [True, False], [True, True]]
     TLike ->
-      case rot of
+      case brick.rot of
         Horizontal Deg0 ->
-          [[False, True, False], [True, True, True]]
+          Array2D.fromList [[False, True, False], [True, True, True]]
         Horizontal Deg180 ->
-          [[True, True, True], [False, True, False]]
+          Array2D.fromList [[True, True, True], [False, True, False]]
         Vertical Deg90 ->
-          [[False, True], [True, True], [False, True]]
+          Array2D.fromList [[False, True], [True, True], [False, True]]
         Vertical Deg270 ->
-          [[True, False], [True, True], [True, False]]
+          Array2D.fromList [[True, False], [True, True], [True, False]]
     
     
 init = (Start, Cmd.none)
@@ -158,7 +156,7 @@ update msg model =
     Begin ->
       (model, generate FirstBrick (map intToBrickType (int 1 brickTypesCount)))
     FirstBrick newBrickType ->
-      (Gameplay { brick = {bType=newBrickType, rot=Horizontal Deg0}, brickPos=(boardWidth // 2, 0), score = 0, board = emptyBoard}, Cmd.none)
+      (Gameplay { brick = {bType=newBrickType, rot=Horizontal Deg0, brickPos = Pos 0 0}, score = 0, board = emptyBoard}, Cmd.none)
     _ ->
       (Start, Cmd.none)
 
@@ -173,23 +171,28 @@ subscriptions model =
 
 
 -- VIEW
-
+view : Model -> Html a
 view model =
   svg [ viewBox "0 0 200 200", width "600", height "600" ]
     (viewContent model)
 
+cellWidth : number
 cellWidth = 10
+
+cellHeight : number
 cellHeight = 10
 
+viewContent : Model -> List (Svg a)
 viewContent model =
   case model of
     Start ->
       [text' [x "50", y "50", textAnchor "middle", fontSize "5px"] [text "Press ANY key to start"]]
     Gameplay gameState ->
-      List.concat [[ viewBorder ]]
+      List.concat [[ viewBorder ], mergeElements gameState.board (gameState.brick |> Debug.log "brick") |> viewBoard ]
     _ ->
       []
 
+viewBorder : Svg a
 viewBorder =
   rect
     [ x "0"
@@ -200,3 +203,52 @@ viewBorder =
     , stroke "#000000"
     , strokeWidth "1"
     ] []
+
+or a b = a || b
+
+mergeElements: Board -> Brick -> Board
+mergeElements board brick =
+    board |>
+      Array2D.indexedMap (\i j cell ->
+        brickShape brick
+        |> Array2D.get (i - brick.brickPos.x) (j - brick.brickPos.y)
+        |> Maybe.withDefault False
+        |> or cell) 
+
+viewBoard: Board -> List (Svg.Svg a) 
+viewBoard board =
+  let
+    cellToRect: Int -> Int -> Bool -> Maybe (Svg.Svg a)
+    cellToRect i j cell =
+      case cell of
+        True ->
+          Just (rect
+            [ x (toString (j * cellWidth))
+            , y (toString (i * cellHeight))
+            , width (toString cellWidth)
+            , height (toString cellHeight)
+            , strokeWidth "0"
+            , fill "#000000" ]
+            [])
+        False ->
+          Nothing
+  in 
+    board
+    |> Array2D.indexedMap cellToRect
+    |> flattenArray2D
+    |> Array.toList
+    |> List.filterMap identity
+
+hasValue: Maybe a -> Bool
+hasValue maybe =
+  case maybe of
+    Just a -> True
+    Nothing -> False
+
+flattenArray2D: Array2D.Array2D a -> Array.Array a
+flattenArray2D array2D =
+  array2D.data
+  |> Array.map (\row -> Array.toList row)
+  |> Array.toList
+  |> List.concat
+  |> Array.fromList
