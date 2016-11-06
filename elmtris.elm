@@ -183,7 +183,25 @@ brickHeight = brickShape >> Array2D.rows
 brickWidth = brickShape >> Array2D.columns
 
 doesBrickCollide state =
+  (isBrickOnGround state) || (isTouchingOtherBrick state) 
+
+isBrickOnGround state =
   state.brick.brickPos.y == boardHeight - (brickHeight state.brick)
+
+isTouchingOtherBrick state =
+  state.board
+  |> Array2D.getRow (state.brick.brickPos.y + (brickHeight state.brick))
+  |> Maybe.withDefault Array.empty
+  |> Array.slice state.brick.brickPos.x (state.brick.brickPos.x + (brickWidth state.brick))
+  |> Array.toList
+  |> Debug.log "boardSlice"
+  |> List.indexedMap (\i cell ->
+      brickShape state.brick
+      |> Array2D.get i ((brickHeight state.brick)-1)
+      |> Maybe.withDefault False
+      |> (&&) cell)
+  |> List.any identity
+  |> Debug.log "isTouching"
 
 moveBrickDown state =
   let
@@ -239,8 +257,6 @@ viewBorder =
     , strokeWidth "1"
     ] []
 
-or a b = a || b
-
 mergeElements: Board -> Brick -> Board
 mergeElements board brick =
     board |>
@@ -248,7 +264,7 @@ mergeElements board brick =
         brickShape brick
         |> Array2D.get (row - brick.brickPos.y) (column - brick.brickPos.x)
         |> Maybe.withDefault False
-        |> or cell) 
+        |> (||) cell) 
 
 viewBoard: Board -> List (Svg.Svg a) 
 viewBoard board =
