@@ -158,23 +158,27 @@ update msg model =
     Begin ->
       (model, commandWithRandomBrickType FirstBrick)
     FirstBrick newBrickType ->
-      (Gameplay { brick = newBrick newBrickType, score = 0, board = emptyBoard}, Cmd.none)
+      { brick = newBrick newBrickType, score = 0, board = emptyBoard} |> toGameplay
     NextBrick newBrickType ->
-      model |> updateGameState (\state -> (Gameplay {state | brick = newBrick newBrickType}, Cmd.none))
+      model |> updateGameState (\state -> {state | brick = newBrick newBrickType} |> toGameplay)
     Move moveType ->
       case moveType of
         Left ->
-          model |> updateGameState (\state -> (Gameplay (moveBrick toLeft state), Cmd.none))
+          model |> updateGameState (\state -> state |> moveBrick toLeft |> toGameplay)
         Right ->
-          model |> updateGameState (\state -> (Gameplay (moveBrick toRight state), Cmd.none))
+          model |> updateGameState (\state -> state |> moveBrick toRight |> toGameplay)
         _ -> (model, Cmd.none)
     Tick ->
       model |> updateGameState (\state -> 
         if doesBrickCollide state then
-          (Gameplay {state | board = mergeElements state.board state.brick}, commandWithRandomBrickType NextBrick)
+          {state | board = mergeElements state.board state.brick} |> toGameplayWith (commandWithRandomBrickType NextBrick)
         else
-          (Gameplay (moveBrick down state), Cmd.none))
+          state |> moveBrick down |> toGameplay)
     _ -> (model, Cmd.none)
+
+toGameplayWith cmd state = (Gameplay state, cmd)
+
+toGameplay = toGameplayWith Cmd.none
 
 updateGameState: (GameState -> (Model, Cmd a)) -> Model -> (Model, Cmd a)
 updateGameState updateStateFunc model =
