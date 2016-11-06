@@ -155,18 +155,29 @@ init = (Start, Cmd.none)
 update msg model =
   case msg of
     Begin ->
-      (model, generate FirstBrick (map intToBrickType (int 1 brickTypesCount)))
+      (model, commandWithRandomBrickType FirstBrick)
     FirstBrick newBrickType ->
-      (Gameplay { brick = {bType=newBrickType, rot=Horizontal Deg0, brickPos = Pos 0 0}, score = 0, board = emptyBoard}, Cmd.none)
+      (Gameplay { brick = newBrick newBrickType, score = 0, board = emptyBoard}, Cmd.none)
+    NextBrick newBrickType ->
+      case model of
+        Gameplay state ->
+          (Gameplay {state | brick = newBrick newBrickType}, Cmd.none)  
+        _ -> (Start, Cmd.none)
     Tick ->
       case model of
         Gameplay state ->
           if doesBrickCollide state then
-            (model, Cmd.none)
+            (model, commandWithRandomBrickType NextBrick)
           else
             (Gameplay (moveBrickDown state), Cmd.none)
-        _ -> (Start, Cmd.none) 
+        _ -> (Start, Cmd.none)
     _ -> (Start, Cmd.none)
+
+newBrick brickType =
+  {bType=brickType, rot=Horizontal Deg0, brickPos = Pos 0 0}
+
+commandWithRandomBrickType cmd =
+  generate cmd (map intToBrickType (int 1 brickTypesCount))
 
 brickHeight = brickShape >> Array2D.rows
 brickWidth = brickShape >> Array2D.columns
@@ -212,7 +223,7 @@ viewContent model =
     Start ->
       [text' [x "50", y "50", textAnchor "middle", fontSize "5px"] [text "Press ANY key to start"]]
     Gameplay gameState ->
-      List.concat [[ viewBorder ], mergeElements gameState.board (gameState.brick |> Debug.log "brick") |> viewBoard ]
+      List.concat [[ viewBorder ], mergeElements gameState.board gameState.brick |> viewBoard ]
     _ ->
       []
 
