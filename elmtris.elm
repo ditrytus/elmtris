@@ -164,9 +164,9 @@ update msg model =
     Move moveType ->
       case moveType of
         Left ->
-          model |> updateGameState (\state -> state |> moveBrick (updatePosition toLeft) isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
+          model |> updateGameState (\state -> state |> moveBrick (updatePosition toLeft) isBrickOnWallOrOtherBrick |> Maybe.withDefault state |> toGameplay)
         Right ->
-          model |> updateGameState (\state -> state |> moveBrick (updatePosition toRight) isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
+          model |> updateGameState (\state -> state |> moveBrick (updatePosition toRight) isBrickOnWallOrOtherBrick |> Maybe.withDefault state |> toGameplay)
         Down ->
           model |> updateGameState (\state ->
             case state |> moveBrick (updatePosition down) doesBrickCollide of
@@ -175,7 +175,12 @@ update msg model =
               Nothing ->
                 {state | board = mergeElements state.board state.brick} |> toGameplayWith (commandWithRandomBrickType NextBrick))
         Rotate ->
-          model |> updateGameState (\state -> state |> moveBrick updateRotation isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
+          model |> updateGameState (\state ->
+            case state |> moveBrick updateRotation isBrickOnWallOrOtherBrick of
+              Just newState ->
+                newState |> toGameplay
+              Nothing ->
+                state |> moveBrick (updatePosition toLeft >> updateRotation) isBrickOnWallOrOtherBrick |> Maybe.withDefault state |> toGameplay)
         _ -> (model, Cmd.none)
     _ -> (model, Cmd.none)
 
@@ -208,13 +213,16 @@ brickHeight = brickShape >> Array2D.rows
 brickWidth = brickShape >> Array2D.columns
 
 doesBrickCollide brick board =
-  (isBrickOnGround brick board) || (isTouchingOtherBrick brick board) 
+  (isBrickOnGround brick board) || (isBrickOnOtherBrick brick board) || (isBrickOnWall brick board)
 
 isBrickOnGround brick _ =
   brick.brickPos.y > boardHeight - (brickHeight brick)
 
-isTouchingOtherBrick: Brick -> Board -> Bool
-isTouchingOtherBrick brick board =
+isBrickOnWall brick _ =
+  brick.brickPos.x < 0 || brick.brickPos.x > boardWidth - (brickWidth brick)
+
+isBrickOnOtherBrick: Brick -> Board -> Bool
+isBrickOnOtherBrick brick board =
   board
   |> Array2D.indexedMap (\row col cell ->
       brick
@@ -225,6 +233,9 @@ isTouchingOtherBrick brick board =
   |> flattenArray2D
   |> Array.toList
   |> List.any identity
+
+isBrickOnWallOrOtherBrick brick board =
+  isBrickOnWall brick board || isBrickOnOtherBrick brick board
 
 moveBrick: (Brick -> Brick) -> (Brick -> Board -> Bool) -> GameState -> Maybe GameState
 moveBrick moveFunc collisionFunc state =
@@ -241,13 +252,13 @@ down {brickPos} =
   {brickPos | y = brickPos.y + 1}
 
 toLeft {brickPos} =
-  {brickPos | x = Basics.max (brickPos.x - 1) 0}
+  {brickPos | x = brickPos.x - 1}
 
 toRight brick =
   let
     pos = brick.brickPos
   in
-    {pos | x = Basics.min (pos.x + 1) (boardWidth - (brickWidth brick))}
+    {pos | x = pos.x + 1}
 
 updatePosition: (Brick -> Pos) -> Brick -> Brick
 updatePosition changePosFunc brick =
