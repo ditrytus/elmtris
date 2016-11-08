@@ -375,8 +375,8 @@ viewBoard board =
           Just (rect
             [ x (toString (column * cellWidth))
             , y (toString (row * cellHeight))
-            , width (toString cellWidth)
-            , height (toString cellHeight)
+            , width (toString (cellWidth + 0.1))
+            , height (toString (cellHeight + 0.1))
             , strokeWidth "0"
             , fill "#000000" ]
             [])
