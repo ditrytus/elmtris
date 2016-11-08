@@ -19,7 +19,7 @@ main =
 
 -- MODEL
 boardWidth = 10
-boardHeight = 22
+boardHeight = 20
 emptyBoard = Array2D.repeat boardHeight boardWidth False
 
 type alias Board = Array2D.Array2D Bool
@@ -95,30 +95,30 @@ type Msg
 
 type alias BrickShape = Array2D.Array2D Bool
 
-brickShape brick =
-  case brick.bType of
+brickShape {bType, rot} =
+  case bType of
     Square ->
       Array2D.fromList [[True, True], [True, True]]
     Long ->
-      case brick.rot of
+      case rot of
         Horizontal _ ->
           Array2D.fromList [[True, True, True, True]]
         Vertical _ ->
           Array2D.fromList [[True],[True],[True],[True]]
     ZLeft ->
-      case brick.rot of
+      case rot of
         Vertical _ ->
           Array2D.fromList [[False, True], [True, True], [True, False]]
         Horizontal _ ->
           Array2D.fromList [[True, True, False], [False, True, True]]
     ZRight ->
-      case brick.rot of
+      case rot of
         Vertical _ ->
           Array2D.fromList [[True, False], [True, True], [False, True]]
         Horizontal _ ->
           Array2D.fromList [[False, True, True], [True, True, False]]    
     LLeft ->
-      case brick.rot of
+      case rot of
         Horizontal Deg0 ->
           Array2D.fromList [[True, True, True], [False, False, True]]
         Horizontal Deg180 ->
@@ -128,7 +128,7 @@ brickShape brick =
         Vertical Deg270 ->
           Array2D.fromList [[True, True], [True, False], [True, False]]
     LRight ->
-      case brick.rot of
+      case rot of
         Horizontal Deg0 ->
           Array2D.fromList [[True, True, True], [True, False, False]]
         Horizontal Deg180 ->
@@ -138,7 +138,7 @@ brickShape brick =
         Vertical Deg270 ->
           Array2D.fromList [[True, False], [True, False], [True, True]]
     TLike ->
-      case brick.rot of
+      case rot of
         Horizontal Deg0 ->
           Array2D.fromList [[False, True, False], [True, True, True]]
         Horizontal Deg180 ->
@@ -147,7 +147,6 @@ brickShape brick =
           Array2D.fromList [[False, True], [True, True], [False, True]]
         Vertical Deg270 ->
           Array2D.fromList [[True, False], [True, True], [True, False]]
-    
     
 init = (Start, Cmd.none)
 
@@ -204,19 +203,25 @@ updateGameState updateStateFunc model =
       _ -> (model, Cmd.none)
 
 newBrick brickType =
-  {bType=brickType, rot=Horizontal Deg0, brickPos = Pos 0 0}
+  let
+    angle = Horizontal Deg0
+    shape = {bType = brickType, rot = angle}
+  in
+    {bType=brickType, rot=angle, brickPos = Pos ((boardWidth - (brickWidth shape)) // 2) (brickHeight shape)}
 
 commandWithRandomBrickType cmd =
   generate cmd (map intToBrickType (int 1 brickTypesCount))
 
 brickHeight = brickShape >> Array2D.rows
 brickWidth = brickShape >> Array2D.columns
+brickOriginX brick = brick.brickPos.x
+brickOriginY brick = brick.brickPos.y - brickHeight brick 
 
 doesBrickCollide brick board =
   (isBrickOnGround brick board) || (isBrickOnOtherBrick brick board) || (isBrickOnWall brick board)
 
 isBrickOnGround brick _ =
-  brick.brickPos.y > boardHeight - (brickHeight brick)
+  brick.brickPos.y > boardHeight
 
 isBrickOnWall brick _ =
   brick.brickPos.x < 0 || brick.brickPos.x > boardWidth - (brickWidth brick)
@@ -226,13 +231,17 @@ isBrickOnOtherBrick brick board =
   board
   |> Array2D.indexedMap (\row col cell ->
       brick
-      |> brickShape
-      |> Array2D.get (row - brick.brickPos.y) (col - brick.brickPos.x)
-      |> Maybe.withDefault False
+      |> isBrickAt row col
       |> (&&) cell)
   |> flattenArray2D
   |> Array.toList
   |> List.any identity
+
+isBrickAt row col brick =
+  brick
+  |> brickShape 
+  |> Array2D.get (row - brickOriginY brick) (col - brickOriginX brick)
+  |> Maybe.withDefault False
 
 isBrickOnWallOrOtherBrick brick board =
   isBrickOnWall brick board || isBrickOnOtherBrick brick board
@@ -308,8 +317,17 @@ keyCodeToMove keyCode =
 -- VIEW
 view : Model -> Html a
 view model =
-  svg [ viewBox "0 0 200 200", width "600", height "600" ]
+  svg [ viewBox viewBoxSizes, width "100%", height "100%" ]
     (viewContent model)
+
+viewBoxSizes = 
+  "0 0 "
+  ++ toString displayWidth
+  ++ " "
+  ++ toString displayHeight
+
+displayWidth = cellWidth * boardWidth
+displayHeight = cellHeight * boardHeight
 
 cellWidth : number
 cellWidth = 10
@@ -342,11 +360,10 @@ viewBorder =
 mergeElements: Brick -> Board -> Board
 mergeElements brick board  =
     board |>
-      Array2D.indexedMap (\row column cell ->
-        brickShape brick
-        |> Array2D.get (row - brick.brickPos.y) (column - brick.brickPos.x)
-        |> Maybe.withDefault False
-        |> (||) cell) 
+      Array2D.indexedMap (\row col cell ->
+        brick
+        |> isBrickAt row col
+        |> (||) cell)
 
 viewBoard: Board -> List (Svg.Svg a) 
 viewBoard board =
