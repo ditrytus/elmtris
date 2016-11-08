@@ -167,14 +167,14 @@ update msg model =
           model |> updateGameState (\state -> state |> moveBrick toLeft isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
         Right ->
           model |> updateGameState (\state -> state |> moveBrick toRight isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
+        Down ->
+          model |> updateGameState (\state ->
+            case state |> moveBrick down doesBrickCollide of
+              Just newState ->
+                newState |> toGameplay  
+              Nothing ->
+                {state | board = mergeElements state.board state.brick} |> toGameplayWith (commandWithRandomBrickType NextBrick))
         _ -> (model, Cmd.none)
-    Tick ->
-      model |> updateGameState (\state ->
-        case state |> moveBrick down doesBrickCollide of
-          Just newState ->
-            newState |> toGameplay  
-          Nothing ->
-            {state | board = mergeElements state.board state.brick} |> toGameplayWith (commandWithRandomBrickType NextBrick))
     _ -> (model, Cmd.none)
 
 toGameplayWith cmd state = (Gameplay state, cmd)
@@ -215,9 +215,6 @@ isTouchingOtherBrick brick board =
   |> flattenArray2D
   |> Array.toList
   |> List.any identity
-  
-translate (u,v) (x,y) =
-  (x + u, y + v)
 
 moveBrick: (Brick -> Pos) -> (Brick -> Board -> Bool) -> GameState -> Maybe GameState
 moveBrick moveFunc collisionFunc state =
@@ -250,7 +247,7 @@ subscriptions model =
       Keyboard.presses (\_ -> Begin)
     Gameplay _ ->
       Sub.batch
-        [ Time.every Time.second (\_ -> Tick)
+        [ Time.every Time.second (\_ -> Move Down)
         , Keyboard.downs keyCodeToMove]
     _ -> 
       Sub.none
@@ -261,7 +258,7 @@ keyCodeToMove keyCode =
     37 -> Move Left
     38 -> Move None --Move Rotate
     39 -> Move Right
-    40 -> Move None --Move Down  
+    40 -> Move Down  
     _ -> Move None
 
 -- VIEW
