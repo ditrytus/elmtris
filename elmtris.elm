@@ -164,16 +164,17 @@ update msg model =
     Move moveType ->
       case moveType of
         Left ->
-          model |> updateGameState (\state -> state |> moveBrick toLeft |> toGameplay)
+          model |> updateGameState (\state -> state |> moveBrick toLeft isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
         Right ->
-          model |> updateGameState (\state -> state |> moveBrick toRight |> toGameplay)
+          model |> updateGameState (\state -> state |> moveBrick toRight isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
         _ -> (model, Cmd.none)
     Tick ->
-      model |> updateGameState (\state -> 
-        if doesBrickCollide state then
-          {state | board = mergeElements state.board state.brick} |> toGameplayWith (commandWithRandomBrickType NextBrick)
-        else
-          state |> moveBrick down |> toGameplay)
+      model |> updateGameState (\state ->
+        case state |> moveBrick down doesBrickCollide of
+          Just newState ->
+            newState |> toGameplay  
+          Nothing ->
+            {state | board = mergeElements state.board state.brick} |> toGameplayWith (commandWithRandomBrickType NextBrick))
     _ -> (model, Cmd.none)
 
 toGameplayWith cmd state = (Gameplay state, cmd)
@@ -196,40 +197,50 @@ commandWithRandomBrickType cmd =
 brickHeight = brickShape >> Array2D.rows
 brickWidth = brickShape >> Array2D.columns
 
-doesBrickCollide state =
-  (isBrickOnGround state) || (isTouchingOtherBrick state) 
+doesBrickCollide brick board =
+  (isBrickOnGround brick board) || (isTouchingOtherBrick brick board) 
 
-isBrickOnGround state =
-  state.brick.brickPos.y == boardHeight - (brickHeight state.brick)
+isBrickOnGround brick _ =
+  brick.brickPos.y > boardHeight - (brickHeight brick)
 
-isTouchingOtherBrick state =
-  state.board
-  |> Array2D.getRow (state.brick.brickPos.y + (brickHeight state.brick))
-  |> Maybe.withDefault Array.empty
-  |> Array.slice state.brick.brickPos.x (state.brick.brickPos.x + (brickWidth state.brick))
-  |> Array.toList
-  |> List.indexedMap (\i cell ->
-      brickShape state.brick
-      |> Array2D.get i ((brickHeight state.brick)-1)
+isTouchingOtherBrick: Brick -> Board -> Bool
+isTouchingOtherBrick brick board =
+  board
+  |> Array2D.indexedMap (\row col cell ->
+      brick
+      |> brickShape
+      |> Array2D.get (row - brick.brickPos.y) (col - brick.brickPos.x)
       |> Maybe.withDefault False
       |> (&&) cell)
+  |> flattenArray2D
+  |> Array.toList
   |> List.any identity
+  
+translate (u,v) (x,y) =
+  (x + u, y + v)
 
-moveBrick: (GameState -> Pos -> Pos) -> GameState -> GameState
-moveBrick moveFunc state =
+moveBrick: (Brick -> Pos) -> (Brick -> Board -> Bool) -> GameState -> Maybe GameState
+moveBrick moveFunc collisionFunc state =
   let
     brick = state.brick
     brickPos = brick.brickPos
-    newPos = moveFunc state brickPos
-    newBrick = {brick | brickPos = newPos}
+    newPos = moveFunc brick
+    newBrick = {brick | brickPos = newPos} 
   in
-    {state | brick = newBrick}
+    if collisionFunc newBrick state.board then
+      Nothing
+    else
+      Just {state | brick = newBrick}
 
-down _ pos = {pos | y = pos.y + 1}
+down {brickPos} = {brickPos | y = brickPos.y + 1}
 
-toLeft _ pos = {pos | x = Basics.max (pos.x - 1) 0}
+toLeft {brickPos} = {brickPos | x = Basics.max (brickPos.x - 1) 0}
 
-toRight state pos = {pos | x = Basics.min (pos.x + 1) (boardWidth - (brickWidth state.brick))}
+toRight brick =
+  let
+    pos = brick.brickPos
+  in
+    {pos | x = Basics.min (pos.x + 1) (boardWidth - (brickWidth brick))}
 
 -- SUBSCRIPTIONS
 
