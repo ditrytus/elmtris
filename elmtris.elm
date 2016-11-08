@@ -164,18 +164,28 @@ update msg model =
     Move moveType ->
       case moveType of
         Left ->
-          model |> updateGameState (\state -> state |> moveBrick toLeft isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
+          model |> updateGameState (\state -> state |> moveBrick (updatePosition toLeft) isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
         Right ->
-          model |> updateGameState (\state -> state |> moveBrick toRight isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
+          model |> updateGameState (\state -> state |> moveBrick (updatePosition toRight) isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
         Down ->
           model |> updateGameState (\state ->
-            case state |> moveBrick down doesBrickCollide of
+            case state |> moveBrick (updatePosition down) doesBrickCollide of
               Just newState ->
                 newState |> toGameplay  
               Nothing ->
                 {state | board = mergeElements state.board state.brick} |> toGameplayWith (commandWithRandomBrickType NextBrick))
+        Rotate ->
+          model |> updateGameState (\state -> state |> moveBrick updateRotation isTouchingOtherBrick |> Maybe.withDefault state |> toGameplay)
         _ -> (model, Cmd.none)
     _ -> (model, Cmd.none)
+
+rotate: Rotation -> Rotation
+rotate rot =
+  case rot of
+    Horizontal Deg0 -> Vertical Deg90
+    Vertical Deg90 -> Horizontal Deg180
+    Horizontal Deg180 -> Vertical Deg270 
+    Vertical Deg270 -> Horizontal Deg0
 
 toGameplayWith cmd state = (Gameplay state, cmd)
 
@@ -216,28 +226,35 @@ isTouchingOtherBrick brick board =
   |> Array.toList
   |> List.any identity
 
-moveBrick: (Brick -> Pos) -> (Brick -> Board -> Bool) -> GameState -> Maybe GameState
+moveBrick: (Brick -> Brick) -> (Brick -> Board -> Bool) -> GameState -> Maybe GameState
 moveBrick moveFunc collisionFunc state =
   let
     brick = state.brick
-    brickPos = brick.brickPos
-    newPos = moveFunc brick
-    newBrick = {brick | brickPos = newPos} 
+    newBrick = moveFunc brick 
   in
     if collisionFunc newBrick state.board then
       Nothing
     else
       Just {state | brick = newBrick}
 
-down {brickPos} = {brickPos | y = brickPos.y + 1}
+down {brickPos} =
+  {brickPos | y = brickPos.y + 1}
 
-toLeft {brickPos} = {brickPos | x = Basics.max (brickPos.x - 1) 0}
+toLeft {brickPos} =
+  {brickPos | x = Basics.max (brickPos.x - 1) 0}
 
 toRight brick =
   let
     pos = brick.brickPos
   in
     {pos | x = Basics.min (pos.x + 1) (boardWidth - (brickWidth brick))}
+
+updatePosition: (Brick -> Pos) -> Brick -> Brick
+updatePosition changePosFunc brick =
+    {brick | brickPos = changePosFunc brick}
+
+updateRotation brick =
+  {brick | rot = rotate brick.rot}
 
 -- SUBSCRIPTIONS
 
@@ -256,7 +273,7 @@ keyCodeToMove: KeyCode -> Msg
 keyCodeToMove keyCode =
   case keyCode of
     37 -> Move Left
-    38 -> Move None --Move Rotate
+    38 -> Move Rotate
     39 -> Move Right
     40 -> Move Down  
     _ -> Move None
