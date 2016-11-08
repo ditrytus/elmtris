@@ -18,8 +18,8 @@ main =
     }
 
 -- MODEL
-boardWidth = 9
-boardHeight = 15
+boardWidth = 10
+boardHeight = 22
 emptyBoard = Array2D.repeat boardHeight boardWidth False
 
 type alias Board = Array2D.Array2D Bool
@@ -173,7 +173,7 @@ update msg model =
               Just newState ->
                 newState |> toGameplay  
               Nothing ->
-                {state | board = mergeElements state.board state.brick} |> toGameplayWith (commandWithRandomBrickType NextBrick))
+                {state | board = state.board |> mergeElements state.brick |> removeLines} |> toGameplayWith (commandWithRandomBrickType NextBrick))
         Rotate ->
           model |> updateGameState (\state ->
             case state |> moveBrick updateRotation isBrickOnWallOrOtherBrick of
@@ -267,6 +267,22 @@ updatePosition changePosFunc brick =
 updateRotation brick =
   {brick | rot = rotate brick.rot}
 
+removeLines: Board -> Board
+removeLines board =
+  let
+    remainingRows = board.data
+      |> Array.filter (\row ->
+        row
+        |> Array.toList
+        |> List.all identity
+        |> not)
+      |> Array.toList 
+  in
+    remainingRows
+    |> List.append (List.repeat (boardHeight - (List.length remainingRows)) (Array.repeat boardWidth False))
+    |> Array.fromList
+    |> Array2D.fromArray
+
 -- SUBSCRIPTIONS
 
 subscriptions model =
@@ -307,7 +323,7 @@ viewContent model =
     Start ->
       [text' [x "50", y "50", textAnchor "middle", fontSize "5px"] [text "Press ANY key to start"]]
     Gameplay gameState ->
-      List.concat [[ viewBorder ], mergeElements gameState.board gameState.brick |> viewBoard ]
+      List.concat [[ viewBorder ], mergeElements gameState.brick gameState.board |> viewBoard ]
     _ ->
       []
 
@@ -323,8 +339,8 @@ viewBorder =
     , strokeWidth "1"
     ] []
 
-mergeElements: Board -> Brick -> Board
-mergeElements board brick =
+mergeElements: Brick -> Board -> Board
+mergeElements brick board  =
     board |>
       Array2D.indexedMap (\row column cell ->
         brickShape brick
