@@ -124,9 +124,9 @@ brickShape {bType, rot} =
         Horizontal Deg180 ->
           Array2D.fromList [[True, False, False], [True, True, True]]
         Vertical Deg90 ->
-          Array2D.fromList [[False, True], [False, True], [True, True]]
-        Vertical Deg270 ->
           Array2D.fromList [[True, True], [True, False], [True, False]]
+        Vertical Deg270 ->
+          Array2D.fromList [[False, True], [False, True], [True, True]]
     LRight ->
       case rot of
         Horizontal Deg0 ->
@@ -134,9 +134,9 @@ brickShape {bType, rot} =
         Horizontal Deg180 ->
           Array2D.fromList [[False, False, True], [True, True, True]]
         Vertical Deg90 ->
-          Array2D.fromList [[True, True], [False, True], [False, True]]
-        Vertical Deg270 ->
           Array2D.fromList [[True, False], [True, False], [True, True]]
+        Vertical Deg270 ->
+          Array2D.fromList [[True, True], [False, True], [False, True]]
     TLike ->
       case rot of
         Horizontal Deg0 ->
@@ -186,10 +186,10 @@ update msg model =
 rotate: Rotation -> Rotation
 rotate rot =
   case rot of
-    Horizontal Deg0 -> Vertical Deg90
-    Vertical Deg90 -> Horizontal Deg180
-    Horizontal Deg180 -> Vertical Deg270 
-    Vertical Deg270 -> Horizontal Deg0
+    Horizontal Deg0 -> Vertical Deg270
+    Vertical Deg90 -> Horizontal Deg0
+    Horizontal Deg180 -> Vertical Deg90 
+    Vertical Deg270 -> Horizontal Deg180
 
 toGameplayWith cmd state = (Gameplay state, cmd)
 
