@@ -7,8 +7,8 @@ import Keyboard exposing (..)
 import Random exposing (..)
 import Array2D
 import Array
-import Debug exposing (..)
 
+main : Program Never
 main =
   App.program
     { init = init
@@ -18,11 +18,17 @@ main =
     }
 
 -- MODEL
+boardWidth : Int
 boardWidth = 10
+
+boardHeight : Int
 boardHeight = 20
-emptyBoard = Array2D.repeat boardHeight boardWidth False
+
 
 type alias Board = Array2D.Array2D Bool
+
+emptyBoard : Board
+emptyBoard = Array2D.repeat boardHeight boardWidth False
 
 type alias Score = Int
 
@@ -34,8 +40,6 @@ type BrickType
   | LLeft
   | LRight
   | TLike
-
-brickTypesCount = 7
 
 intToBrickType i =
   case i of
@@ -60,6 +64,7 @@ type HorizontalRotation
   | Deg180
 
 type alias Pos = {x:Int, y:Int}
+
 
 type alias Brick =
   { bType: BrickType
@@ -95,6 +100,7 @@ type Msg
 
 type alias BrickShape = Array2D.Array2D Bool
 
+brickShape : Brick -> BrickShape
 brickShape {bType, rot} =
   case bType of
     Square ->
@@ -147,11 +153,12 @@ brickShape {bType, rot} =
           Array2D.fromList [[False, True], [True, True], [False, True]]
         Vertical Deg270 ->
           Array2D.fromList [[True, False], [True, True], [True, False]]
-    
+
+init : ( Model, Cmd a )    
 init = (Start, Cmd.none)
 
 -- UPDATE
-
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
     Begin ->
@@ -183,7 +190,7 @@ update msg model =
         _ -> (model, Cmd.none)
     _ -> (model, Cmd.none)
 
-rotate: Rotation -> Rotation
+rotate : Rotation -> Rotation
 rotate rot =
   case rot of
     Horizontal Deg0 -> Vertical Deg270
@@ -191,42 +198,59 @@ rotate rot =
     Horizontal Deg180 -> Vertical Deg90 
     Vertical Deg270 -> Horizontal Deg180
 
+toGameplayWith : a -> GameState -> ( Model, a )
 toGameplayWith cmd state = (Gameplay state, cmd)
 
+toGameplay : GameState -> ( Model, Cmd a )
 toGameplay = toGameplayWith Cmd.none
 
-updateGameState: (GameState -> (Model, Cmd a)) -> Model -> (Model, Cmd a)
+updateGameState : (GameState -> (Model, Cmd a)) -> Model -> (Model, Cmd a)
 updateGameState updateStateFunc model =
   case model of
       Gameplay state ->
         updateStateFunc state
       _ -> (model, Cmd.none)
 
+newBrick : BrickType -> Brick
 newBrick brickType =
   let
     angle = Horizontal Deg0
-    shape = {bType = brickType, rot = angle}
+    shape = {bType = brickType, rot = angle, brickPos = Pos 0 0}
   in
     {bType=brickType, rot=angle, brickPos = Pos ((boardWidth - (brickWidth shape)) // 2) (brickHeight shape)}
 
+commandWithRandomBrickType : (BrickType -> a) -> Cmd a
 commandWithRandomBrickType cmd =
-  generate cmd (map intToBrickType (int 1 brickTypesCount))
+  let
+    brickTypesCount = 7
+  in
+    generate cmd (map intToBrickType (int 1 brickTypesCount))
 
+brickHeight : Brick -> Int
 brickHeight = brickShape >> Array2D.rows
+
+brickWidth : Brick -> Int
 brickWidth = brickShape >> Array2D.columns
+
+brickOriginX : Brick -> Int
 brickOriginX brick = brick.brickPos.x
+
+brickOriginY : Brick -> Int
 brickOriginY brick = brick.brickPos.y - brickHeight brick 
 
+doesBrickCollide : Brick -> Board -> Bool
 doesBrickCollide brick board =
   (isBrickOnGround brick board) || (isBrickOnOtherBrick brick board) || (isBrickOnWall brick board)
 
+isBrickOnGround : Brick -> Board -> Bool
 isBrickOnGround brick _ =
   brick.brickPos.y > boardHeight
 
+isBrickOnWall : Brick -> Board -> Bool
 isBrickOnWall brick _ =
   brick.brickPos.x < 0 || brick.brickPos.x > boardWidth - (brickWidth brick)
 
-isBrickOnOtherBrick: Brick -> Board -> Bool
+isBrickOnOtherBrick : Brick -> Board -> Bool
 isBrickOnOtherBrick brick board =
   board
   |> Array2D.indexedMap (\row col cell ->
@@ -237,12 +261,14 @@ isBrickOnOtherBrick brick board =
   |> Array.toList
   |> List.any identity
 
+isBrickAt : Int -> Int -> Brick -> Bool
 isBrickAt row col brick =
   brick
   |> brickShape 
   |> Array2D.get (row - brickOriginY brick) (col - brickOriginX brick)
   |> Maybe.withDefault False
 
+isBrickOnWallOrOtherBrick : Brick -> Board -> Bool
 isBrickOnWallOrOtherBrick brick board =
   isBrickOnWall brick board || isBrickOnOtherBrick brick board
 
@@ -257,12 +283,15 @@ moveBrick moveFunc collisionFunc state =
     else
       Just {state | brick = newBrick}
 
+down : Brick -> Pos
 down {brickPos} =
   {brickPos | y = brickPos.y + 1}
 
+toLeft : Brick -> Pos
 toLeft {brickPos} =
   {brickPos | x = brickPos.x - 1}
 
+toRight : Brick -> Pos
 toRight brick =
   let
     pos = brick.brickPos
@@ -273,6 +302,7 @@ updatePosition: (Brick -> Pos) -> Brick -> Brick
 updatePosition changePosFunc brick =
     {brick | brickPos = changePosFunc brick}
 
+updateRotation: Brick -> Brick
 updateRotation brick =
   {brick | rot = rotate brick.rot}
 
@@ -294,6 +324,7 @@ removeLines board =
 
 -- SUBSCRIPTIONS
 
+subscriptions : Model -> Sub Msg
 subscriptions model =
   case model of
     Start ->
@@ -317,16 +348,21 @@ keyCodeToMove keyCode =
 -- VIEW
 view : Model -> Html a
 view model =
-  svg [ viewBox viewBoxSizes, width "100%", height "100%" ]
-    (viewContent model)
+  svg
+  [ viewBox (
+      "0 0 "
+      ++ toString displayWidth
+      ++ " "
+      ++ toString displayHeight)
+  , width "100%"
+  , height "100%"
+  ]
+  (viewContent model)
 
-viewBoxSizes = 
-  "0 0 "
-  ++ toString displayWidth
-  ++ " "
-  ++ toString displayHeight
-
+displayWidth : Int
 displayWidth = cellWidth * boardWidth
+
+displayHeight : Int
 displayHeight = cellHeight * boardHeight
 
 cellWidth : number
