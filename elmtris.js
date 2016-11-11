@@ -9388,22 +9388,22 @@ var _user$project$Main$brickShape = function (_p9) {
 						_elm_lang$core$Native_List.fromArray(
 							[
 								_elm_lang$core$Native_List.fromArray(
-								[false, true]),
+								[true, true]),
 								_elm_lang$core$Native_List.fromArray(
-								[false, true]),
+								[true, false]),
 								_elm_lang$core$Native_List.fromArray(
-								[true, true])
+								[true, false])
 							]));
 				} else {
 					return _tortus$elm_array_2d$Array2D$fromList(
 						_elm_lang$core$Native_List.fromArray(
 							[
 								_elm_lang$core$Native_List.fromArray(
-								[true, true]),
+								[false, true]),
 								_elm_lang$core$Native_List.fromArray(
-								[true, false]),
+								[false, true]),
 								_elm_lang$core$Native_List.fromArray(
-								[true, false])
+								[true, true])
 							]));
 				}
 			}
@@ -9435,22 +9435,22 @@ var _user$project$Main$brickShape = function (_p9) {
 						_elm_lang$core$Native_List.fromArray(
 							[
 								_elm_lang$core$Native_List.fromArray(
-								[true, true]),
+								[true, false]),
 								_elm_lang$core$Native_List.fromArray(
-								[false, true]),
+								[true, false]),
 								_elm_lang$core$Native_List.fromArray(
-								[false, true])
+								[true, true])
 							]));
 				} else {
 					return _tortus$elm_array_2d$Array2D$fromList(
 						_elm_lang$core$Native_List.fromArray(
 							[
 								_elm_lang$core$Native_List.fromArray(
-								[true, false]),
+								[true, true]),
 								_elm_lang$core$Native_List.fromArray(
-								[true, false]),
+								[false, true]),
 								_elm_lang$core$Native_List.fromArray(
-								[true, true])
+								[false, true])
 							]));
 				}
 			}
@@ -9741,15 +9741,15 @@ var _user$project$Main$rotate = function (rot) {
 	var _p26 = rot;
 	if (_p26.ctor === 'Horizontal') {
 		if (_p26._0.ctor === 'Deg0') {
-			return _user$project$Main$Vertical(_user$project$Main$Deg90);
-		} else {
 			return _user$project$Main$Vertical(_user$project$Main$Deg270);
+		} else {
+			return _user$project$Main$Vertical(_user$project$Main$Deg90);
 		}
 	} else {
 		if (_p26._0.ctor === 'Deg90') {
-			return _user$project$Main$Horizontal(_user$project$Main$Deg180);
-		} else {
 			return _user$project$Main$Horizontal(_user$project$Main$Deg0);
+		} else {
+			return _user$project$Main$Horizontal(_user$project$Main$Deg180);
 		}
 	}
 };
