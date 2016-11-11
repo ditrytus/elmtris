@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 
-elm-make -yes elmtris.elm --output elmtris.js
+elm-make elmtris.elm --output elmtris.js --yes
 cp -v elmtris.js index.html style.css out
