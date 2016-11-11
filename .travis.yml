@@ -1,6 +1,9 @@
 language: node_js 
 node_js:
   - "0.12"
+cache:
+  directories:
+  - elm-stuff
 before_script:
   - npm install -g elm elm-test
 script: bash ./deploy.sh
