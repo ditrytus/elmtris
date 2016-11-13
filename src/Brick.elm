@@ -3,24 +3,18 @@ module Brick exposing (..)
 import Array2D
 
 type BrickType
-  = Square
-  | Long
-  | ZLeft
-  | ZRight
-  | LLeft
-  | LRight
-  | TLike
+  = O | I | Z | S | J | L | T
 
 intToBrickType : number -> BrickType
 intToBrickType i =
   case i of
-    1 -> Square
-    2 -> Long
-    3 -> ZLeft
-    4 -> ZRight
-    5 -> LLeft
-    6 -> LRight
-    _ -> TLike
+    1 -> O
+    2 -> I
+    3 -> Z
+    4 -> S
+    5 -> J
+    6 -> L
+    _ -> T
 
 type Rotation
   = Vertical VerticalRotation
@@ -55,27 +49,27 @@ type alias BrickShape = Array2D.Array2D Bool
 shape : Brick -> BrickShape
 shape {bType, rot} =
   case bType of
-    Square ->
+    O ->
       Array2D.fromList [[True, True], [True, True]]
-    Long ->
+    I ->
       case rot of
         Horizontal _ ->
           Array2D.fromList [[True, True, True, True]]
         Vertical _ ->
           Array2D.fromList [[True],[True],[True],[True]]
-    ZLeft ->
+    Z ->
       case rot of
         Vertical _ ->
           Array2D.fromList [[False, True], [True, True], [True, False]]
         Horizontal _ ->
           Array2D.fromList [[True, True, False], [False, True, True]]
-    ZRight ->
+    S ->
       case rot of
         Vertical _ ->
           Array2D.fromList [[True, False], [True, True], [False, True]]
         Horizontal _ ->
           Array2D.fromList [[False, True, True], [True, True, False]]    
-    LLeft ->
+    J ->
       case rot of
         Horizontal Deg0 ->
           Array2D.fromList [[True, True, True], [False, False, True]]
@@ -85,7 +79,7 @@ shape {bType, rot} =
           Array2D.fromList [[True, True], [True, False], [True, False]]
         Vertical Deg270 ->
           Array2D.fromList [[False, True], [False, True], [True, True]]
-    LRight ->
+    L ->
       case rot of
         Horizontal Deg0 ->
           Array2D.fromList [[True, True, True], [True, False, False]]
@@ -95,7 +89,7 @@ shape {bType, rot} =
           Array2D.fromList [[True, False], [True, False], [True, True]]
         Vertical Deg270 ->
           Array2D.fromList [[True, True], [False, True], [False, True]]
-    TLike ->
+    T ->
       case rot of
         Horizontal Deg0 ->
           Array2D.fromList [[False, True, False], [True, True, True]]
