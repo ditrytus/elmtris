@@ -1,5 +1,6 @@
 module Subscriptions exposing (subscriptions)
 
+import Brick
 import Model exposing (..)
 import Keyboard exposing (..)
 import Time exposing (Time, second)
@@ -20,7 +21,8 @@ keyCodeToMove: KeyCode -> Msg
 keyCodeToMove keyCode =
   case keyCode of
     37 -> Move Left
-    38 -> Move Rotate
     39 -> Move Right
-    40 -> Move Down  
+    40 -> Move Down
+    90 -> Move (Rotate Brick.CounterClockwise)
+    88 -> Move (Rotate Brick.Clockwise)
     _ -> Move None

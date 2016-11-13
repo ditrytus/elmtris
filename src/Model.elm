@@ -20,7 +20,7 @@ type MoveType
   = Left
   | Right
   | Down
-  | Rotate
+  | Rotate Brick.RotationDirection
   | None
 
 type Msg

@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Model exposing (..)
-import Brick exposing (Brick, BrickType, intToBrickType, Pos, isAt)
+import Brick exposing (Brick, BrickType, intToBrickType, Pos, isAt, RotationDirection)
 import Board exposing (..)
 import Random exposing (..)
 import Array
@@ -31,13 +31,13 @@ update msg model =
                 newState |> toGameplay  
               Nothing ->
                 {state | board = state.board |> mergeElements state.brick |> Board.removeLines} |> toGameplayWith (commandWithRandomBrickType NextBrick))
-        Rotate ->
+        Rotate rotationDirection ->
           model |> updateGameState (\state ->
-            case state |> moveBrick updateRotation of
+            case state |> moveBrick (updateRotation rotationDirection) of
               Just newState ->
                 newState |> toGameplay
               Nothing ->
-                state |> moveBrick (updatePosition toLeft >> updateRotation) |> Maybe.withDefault state |> toGameplay)
+                state |> moveBrick (updatePosition toLeft >> (updateRotation rotationDirection)) |> Maybe.withDefault state |> toGameplay)
         _ -> (model, Cmd.none)
     _ -> (model, Cmd.none)
 
@@ -104,9 +104,9 @@ updatePosition: (Brick -> Pos) -> Brick -> Brick
 updatePosition changePosFunc brick =
     {brick | brickPos = changePosFunc brick}
 
-updateRotation: Brick -> Brick
-updateRotation brick =
-  {brick | rot = Brick.rotate brick.rot}
+updateRotation: RotationDirection -> Brick -> Brick
+updateRotation direction brick =
+  {brick | rot = brick.rot |> Brick.rotate direction}
 
 mergeElements: Brick -> Board -> Board
 mergeElements brick board  =

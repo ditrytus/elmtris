@@ -22,13 +22,25 @@ type Rotation
   | Deg180
   | Deg270
 
-rotate : Rotation -> Rotation
-rotate rot =
-  case rot of
-    Deg0 -> Deg270
-    Deg90 -> Deg0
-    Deg180 -> Deg90 
-    Deg270 -> Deg180
+type RotationDirection
+  = Clockwise
+  | CounterClockwise
+
+rotate : RotationDirection -> Rotation -> Rotation
+rotate direction rot =
+  case direction of
+    Clockwise ->
+      case rot of
+        Deg0 -> Deg270
+        Deg90 -> Deg0
+        Deg180 -> Deg90 
+        Deg270 -> Deg180
+    CounterClockwise ->
+      case rot of
+        Deg0 -> Deg90
+        Deg90 -> Deg180
+        Deg180 -> Deg270 
+        Deg270 -> Deg0
 
 type alias Pos = {x:Int, y:Int}
 
