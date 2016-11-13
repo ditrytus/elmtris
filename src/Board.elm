@@ -3,16 +3,22 @@ module Board exposing (..)
 import Array
 import Array2D
 
-width : Int
-width = 10
+columns : Int
+columns = 10
 
-height : Int
-height = 20
+rows : Int
+rows = 22
+
+obstructedRows : Int
+obstructedRows = 2
+
+visibleRows : Int
+visibleRows = rows - obstructedRows
 
 type alias Board = Array2D.Array2D Bool
 
 empty : Board
-empty = Array2D.repeat width height False
+empty = Array2D.repeat columns rows False
 
 removeLines: Board -> Board
 removeLines board =
@@ -26,6 +32,6 @@ removeLines board =
       |> Array.toList 
   in
     remainingRows
-    |> List.append (List.repeat (height - (List.length remainingRows)) (Array.repeat width False))
+    |> List.append (List.repeat (rows - (List.length remainingRows)) (Array.repeat columns False))
     |> Array.fromList
     |> Array2D.fromArray

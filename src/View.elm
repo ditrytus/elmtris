@@ -11,10 +11,10 @@ import Array2D
 import Array2DExtras exposing (flattenArray2D)
 
 displayWidth : Int
-displayWidth = cellWidth * Board.width
+displayWidth = cellWidth * Board.columns
 
 displayHeight : Int
-displayHeight = cellHeight * Board.height
+displayHeight = cellHeight * Board.visibleRows
 
 cellWidth : number
 cellWidth = 10
@@ -51,8 +51,8 @@ viewBorder =
   rect
     [ x "0"
     , y "0"
-    , width (toString (Board.width * cellWidth))
-    , height (toString (Board.height * cellHeight))
+    , width (toString displayWidth)
+    , height (toString displayHeight)
     , fill "#FFFFFF"
     , stroke "#000000"
     , strokeWidth "1"
@@ -65,14 +65,17 @@ viewBoard board =
     cellToRect row column cell =
       case cell of
         True ->
-          Just (rect
-            [ x (toString (column * cellWidth))
-            , y (toString (row * cellHeight))
-            , width (toString (cellWidth + 0.1))
-            , height (toString (cellHeight + 0.1))
-            , strokeWidth "0"
-            , fill "#000000" ]
-            [])
+          if row < Board.obstructedRows then
+            Nothing
+          else
+            Just (rect
+              [ x (toString (column * cellWidth))
+              , y (toString ((row - Board.obstructedRows) * cellHeight))
+              , width (toString (cellWidth + 0.1))
+              , height (toString (cellHeight + 0.1))
+              , strokeWidth "0"
+              , fill "#000000" ]
+              [])
         False ->
           Nothing
   in 

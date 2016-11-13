@@ -2,7 +2,7 @@ module Update exposing (..)
 
 import Model exposing (..)
 import Brick exposing (Brick, BrickType, intToBrickType, Pos)
-import Board exposing (Board)
+import Board exposing (..)
 import Random exposing (..)
 import Array
 import Array2D
@@ -14,9 +14,9 @@ update msg model =
     Begin ->
       (model, commandWithRandomBrickType FirstBrick)
     FirstBrick newBrickType ->
-      { brick = Brick.new Board.width newBrickType, score = 0, board = Board.empty} |> toGameplay
+      { brick = Brick.new Board.columns newBrickType, score = 0, board = Board.empty} |> toGameplay
     NextBrick newBrickType ->
-      model |> updateGameState (\state -> {state | brick = Brick.new Board.width newBrickType} |> toGameplay)
+      model |> updateGameState (\state -> {state | brick = Brick.new Board.columns newBrickType} |> toGameplay)
     Move moveType ->
       case moveType of
         Left ->
@@ -66,11 +66,11 @@ doesBrickCollide brick board =
 
 isBrickOnGround : Brick -> Board -> Bool
 isBrickOnGround brick _ =
-  brick.brickPos.y > Board.height
+  brick.brickPos.y > Board.rows
 
 isBrickOnWall : Brick -> Board -> Bool
 isBrickOnWall brick _ =
-  brick.brickPos.x < 0 || brick.brickPos.x > Board.width - (Brick.width brick)
+  brick.brickPos.x < 0 || brick.brickPos.x > Board.columns - (Brick.width brick)
 
 isBrickOnOtherBrick : Brick -> Board -> Bool
 isBrickOnOtherBrick brick board =
