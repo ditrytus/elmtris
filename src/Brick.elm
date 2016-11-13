@@ -17,24 +17,18 @@ intToBrickType i =
     _ -> T
 
 type Rotation
-  = Vertical VerticalRotation
-  | Horizontal HorizontalRotation
-
-type VerticalRotation
-  = Deg90
-  | Deg270
-
-type HorizontalRotation
   = Deg0
+  | Deg90
   | Deg180
+  | Deg270
 
 rotate : Rotation -> Rotation
 rotate rot =
   case rot of
-    Horizontal Deg0 -> Vertical Deg270
-    Vertical Deg90 -> Horizontal Deg0
-    Horizontal Deg180 -> Vertical Deg90 
-    Vertical Deg270 -> Horizontal Deg180
+    Deg0 -> Deg270
+    Deg90 -> Deg0
+    Deg180 -> Deg90 
+    Deg270 -> Deg180
 
 type alias Pos = {x:Int, y:Int}
 
@@ -50,63 +44,208 @@ shape : Brick -> BrickShape
 shape {bType, rot} =
   case bType of
     O ->
-      Array2D.fromList [[True, True], [True, True]]
+      Array2D.fromList [
+        [0, 1, 1, 0],
+        [0, 1, 1, 0]
+        ]
+      |> Array2D.map intToBool
     I ->
-      case rot of
-        Horizontal _ ->
-          Array2D.fromList [[True, True, True, True]]
-        Vertical _ ->
-          Array2D.fromList [[True],[True],[True],[True]]
+    case rot of
+        Deg0 ->
+          Array2D.fromList [
+            [0, 0, 0, 0],
+            [1, 1, 1, 1],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg90 ->
+          Array2D.fromList [
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg180 ->
+          Array2D.fromList [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [1, 1, 1, 1],
+            [0, 0, 0, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg270 ->
+          Array2D.fromList [
+            [0, 0, 1, 0],
+            [0, 0, 1, 0],
+            [0, 0, 1, 0],
+            [0, 0, 1, 0]
+            ]
+          |> Array2D.map intToBool
     Z ->
       case rot of
-        Vertical _ ->
-          Array2D.fromList [[False, True], [True, True], [True, False]]
-        Horizontal _ ->
-          Array2D.fromList [[True, True, False], [False, True, True]]
+        Deg0 ->
+          Array2D.fromList [
+            [1, 1, 0],
+            [0, 1, 1],
+            [0, 0, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg90 ->
+          Array2D.fromList [
+            [0, 1, 0],
+            [1, 1, 0],
+            [1, 0, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg180 ->
+          Array2D.fromList [
+            [0, 0, 0],
+            [1, 1, 0],
+            [0, 1, 1]
+            ]
+          |> Array2D.map intToBool
+        Deg270 ->
+          Array2D.fromList [
+            [0, 0, 1],
+            [0, 1, 1],
+            [0, 1, 0]
+            ]
+          |> Array2D.map intToBool
     S ->
       case rot of
-        Vertical _ ->
-          Array2D.fromList [[True, False], [True, True], [False, True]]
-        Horizontal _ ->
-          Array2D.fromList [[False, True, True], [True, True, False]]    
+        Deg0 ->
+          Array2D.fromList [
+            [0, 1, 1],
+            [1, 1, 0],
+            [0, 0, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg90 ->
+          Array2D.fromList [
+            [1, 0, 0],
+            [1, 1, 0],
+            [0, 1, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg180 ->
+          Array2D.fromList [
+            [0, 0, 0],
+            [0, 1, 1],
+            [1, 1, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg270 ->
+          Array2D.fromList [
+            [0, 1, 0],
+            [0, 1, 1],
+            [0, 0, 1]
+            ]
+          |> Array2D.map intToBool
     J ->
       case rot of
-        Horizontal Deg0 ->
-          Array2D.fromList [[True, True, True], [False, False, True]]
-        Horizontal Deg180 ->
-          Array2D.fromList [[True, False, False], [True, True, True]]
-        Vertical Deg90 ->
-          Array2D.fromList [[True, True], [True, False], [True, False]]
-        Vertical Deg270 ->
-          Array2D.fromList [[False, True], [False, True], [True, True]]
+        Deg0 ->
+          Array2D.fromList [
+            [1, 0, 0],
+            [1, 1, 1],
+            [0, 0, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg90 ->
+          Array2D.fromList [
+            [0, 1, 0],
+            [0, 1, 0],
+            [1, 1, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg180 ->
+          Array2D.fromList [
+            [0, 0, 0],
+            [1, 1, 1],
+            [0, 0, 1]
+            ]
+          |> Array2D.map intToBool
+        Deg270 ->
+          Array2D.fromList [
+            [0, 1, 1],
+            [0, 1, 0],
+            [0, 1, 0]
+            ]
+          |> Array2D.map intToBool
     L ->
       case rot of
-        Horizontal Deg0 ->
-          Array2D.fromList [[True, True, True], [True, False, False]]
-        Horizontal Deg180 ->
-          Array2D.fromList [[False, False, True], [True, True, True]]
-        Vertical Deg90 ->
-          Array2D.fromList [[True, False], [True, False], [True, True]]
-        Vertical Deg270 ->
-          Array2D.fromList [[True, True], [False, True], [False, True]]
+        Deg0 ->
+          Array2D.fromList [
+            [0, 0, 1],
+            [1, 1, 1],
+            [0, 0, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg90 ->
+          Array2D.fromList [
+            [1, 1, 0],
+            [0, 1, 0],
+            [0, 1, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg180 ->
+          Array2D.fromList [
+            [0, 0, 0],
+            [1, 1, 1],
+            [1, 0, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg270 ->
+          Array2D.fromList [
+            [0, 1, 0],
+            [0, 1, 0],
+            [0, 1, 1]
+            ]
+          |> Array2D.map intToBool
     T ->
       case rot of
-        Horizontal Deg0 ->
-          Array2D.fromList [[False, True, False], [True, True, True]]
-        Horizontal Deg180 ->
-          Array2D.fromList [[True, True, True], [False, True, False]]
-        Vertical Deg90 ->
-          Array2D.fromList [[False, True], [True, True], [False, True]]
-        Vertical Deg270 ->
-          Array2D.fromList [[True, False], [True, True], [True, False]]
+        Deg0 ->
+          Array2D.fromList [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 0, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg90 ->
+          Array2D.fromList [
+            [0, 1, 0],
+            [1, 1, 0],
+            [0, 1, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg180 ->
+          Array2D.fromList [
+            [0, 0, 0],
+            [1, 1, 1],
+            [0, 1, 0]
+            ]
+          |> Array2D.map intToBool
+        Deg270 ->
+          Array2D.fromList [
+            [0, 1, 0],
+            [0, 1, 1],
+            [0, 1, 0]
+            ]
+          |> Array2D.map intToBool
+
+intToBool: Int -> Bool
+intToBool i =
+  if i == 0 then False else True
+
 
 new : Int -> BrickType -> Brick
 new boardWidth brickType =
   let
-    angle = Horizontal Deg0
+    angle = Deg0
     shape = {bType = brickType, rot = angle, brickPos = Pos 0 0}
   in
-    {bType=brickType, rot=angle, brickPos = Pos ((boardWidth - (width shape)) // 2) (height shape)}
+    {bType=brickType, rot=angle, brickPos = Pos ((boardWidth - (width shape)) // 2) 0}
 
 height : Brick -> Int
 height = shape >> Array2D.rows
@@ -114,8 +253,9 @@ height = shape >> Array2D.rows
 width : Brick -> Int
 width = shape >> Array2D.columns
 
-originX : Brick -> Int
-originX brick = brick.brickPos.x
-
-originY : Brick -> Int
-originY brick = brick.brickPos.y - height brick
+isAt : Int -> Int -> Brick -> Bool
+isAt row col brick =
+  brick
+  |> shape 
+  |> Array2D.get row col
+  |> Maybe.withDefault False

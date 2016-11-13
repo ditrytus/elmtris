@@ -18,7 +18,7 @@ visibleRows = rows - obstructedRows
 type alias Board = Array2D.Array2D Bool
 
 empty : Board
-empty = Array2D.repeat columns rows False
+empty = Array2D.repeat rows columns False
 
 removeLines: Board -> Board
 removeLines board =

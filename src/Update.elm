@@ -1,12 +1,13 @@
 module Update exposing (..)
 
 import Model exposing (..)
-import Brick exposing (Brick, BrickType, intToBrickType, Pos)
+import Brick exposing (Brick, BrickType, intToBrickType, Pos, isAt)
 import Board exposing (..)
 import Random exposing (..)
 import Array
 import Array2D
 import Array2DExtras exposing (flattenArray2D)
+import Debug
 
 update : Msg -> Model.Model -> ( Model, Cmd Msg )
 update msg model =
@@ -20,23 +21,23 @@ update msg model =
     Move moveType ->
       case moveType of
         Left ->
-          model |> updateGameState (\state -> state |> moveBrick (updatePosition toLeft) isBrickOnWallOrOtherBrick |> Maybe.withDefault state |> toGameplay)
+          model |> updateGameState (\state -> state |> moveBrick (updatePosition toLeft) |> Maybe.withDefault state |> toGameplay)
         Right ->
-          model |> updateGameState (\state -> state |> moveBrick (updatePosition toRight) isBrickOnWallOrOtherBrick |> Maybe.withDefault state |> toGameplay)
+          model |> updateGameState (\state -> state |> moveBrick (updatePosition toRight) |> Maybe.withDefault state |> toGameplay)
         Down ->
           model |> updateGameState (\state ->
-            case state |> moveBrick (updatePosition down) doesBrickCollide of
+            case state |> moveBrick (updatePosition down) of
               Just newState ->
                 newState |> toGameplay  
               Nothing ->
                 {state | board = state.board |> mergeElements state.brick |> Board.removeLines} |> toGameplayWith (commandWithRandomBrickType NextBrick))
         Rotate ->
           model |> updateGameState (\state ->
-            case state |> moveBrick updateRotation isBrickOnWallOrOtherBrick of
+            case state |> moveBrick updateRotation of
               Just newState ->
                 newState |> toGameplay
               Nothing ->
-                state |> moveBrick (updatePosition toLeft >> updateRotation) isBrickOnWallOrOtherBrick |> Maybe.withDefault state |> toGameplay)
+                state |> moveBrick (updatePosition toLeft >> updateRotation) |> Maybe.withDefault state |> toGameplay)
         _ -> (model, Cmd.none)
     _ -> (model, Cmd.none)
 
@@ -60,50 +61,29 @@ commandWithRandomBrickType cmd =
   in
     generate cmd (map intToBrickType (int 1 brickTypesCount))
 
-doesBrickCollide : Brick -> Board -> Bool
-doesBrickCollide brick board =
-  (isBrickOnGround brick board) || (isBrickOnOtherBrick brick board) || (isBrickOnWall brick board)
-
-isBrickOnGround : Brick -> Board -> Bool
-isBrickOnGround brick _ =
-  brick.brickPos.y > Board.rows
-
-isBrickOnWall : Brick -> Board -> Bool
-isBrickOnWall brick _ =
-  brick.brickPos.x < 0 || brick.brickPos.x > Board.columns - (Brick.width brick)
-
-isBrickOnOtherBrick : Brick -> Board -> Bool
-isBrickOnOtherBrick brick board =
-  board
-  |> Array2D.indexedMap (\row col cell ->
-      brick
-      |> isBrickAt row col
-      |> (&&) cell)
-  |> flattenArray2D
-  |> Array.toList
-  |> List.any identity
-
-isBrickAt : Int -> Int -> Brick -> Bool
-isBrickAt row col brick =
-  brick
-  |> Brick.shape 
-  |> Array2D.get (row - Brick.originY brick) (col - Brick.originX brick)
-  |> Maybe.withDefault False
-
-isBrickOnWallOrOtherBrick : Brick -> Board -> Bool
-isBrickOnWallOrOtherBrick brick board =
-  isBrickOnWall brick board || isBrickOnOtherBrick brick board
-
-moveBrick: (Brick -> Brick) -> (Brick -> Board -> Bool) -> GameState -> Maybe GameState
-moveBrick moveFunc collisionFunc state =
+moveBrick: (Brick -> Brick) -> GameState -> Maybe GameState
+moveBrick moveFunc state =
   let
     brick = state.brick
     newBrick = moveFunc brick 
   in
-    if collisionFunc newBrick state.board then
+    if doesCollide newBrick state.board then
       Nothing
     else
       Just {state | brick = newBrick}
+
+doesCollide : Brick -> Board -> Bool
+doesCollide brick board =
+  brick
+  |> Brick.shape
+  |> Array2D.indexedMap (\row column cell ->
+      board
+      |> Array2D.get (row + brick.brickPos.y) (column + brick.brickPos.x)
+      |> Maybe.withDefault True
+      |> (&&) cell)
+  |> flattenArray2D
+  |> Array.toList
+  |> List.any identity
 
 down : Brick -> Pos
 down {brickPos} =
@@ -133,5 +113,6 @@ mergeElements brick board  =
     board |>
       Array2D.indexedMap (\row col cell ->
         brick
-        |> isBrickAt row col
+        |> Brick.isAt (row - brick.brickPos.y) (col - brick.brickPos.x)
         |> (||) cell)
+
