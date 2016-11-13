@@ -7,7 +7,6 @@ import Random exposing (..)
 import Array
 import Array2D
 import Array2DExtras exposing (flattenArray2D)
-import Debug
 
 update : Msg -> Model.Model -> ( Model, Cmd Msg )
 update msg model =
@@ -31,13 +30,8 @@ update msg model =
                 newState |> toGameplay  
               Nothing ->
                 {state | board = state.board |> mergeElements state.brick |> Board.removeLines} |> toGameplayWith (commandWithRandomBrickType NextBrick))
-        Rotate rotationDirection ->
-          model |> updateGameState (\state ->
-            case state |> moveBrick (updateRotation rotationDirection) of
-              Just newState ->
-                newState |> toGameplay
-              Nothing ->
-                state |> moveBrick (updatePosition toLeft >> (updateRotation rotationDirection)) |> Maybe.withDefault state |> toGameplay)
+        Rotate direction ->
+          model |> updateGameState (\state -> state |> moveBrick (updateRotation direction state) |> Maybe.withDefault state |> toGameplay)
         _ -> (model, Cmd.none)
     _ -> (model, Cmd.none)
 
@@ -86,27 +80,38 @@ doesCollide brick board =
   |> List.any identity
 
 down : Brick -> Pos
-down {brickPos} =
-  {brickPos | y = brickPos.y + 1}
+down = by {x=0, y=1}
 
 toLeft : Brick -> Pos
-toLeft {brickPos} =
-  {brickPos | x = brickPos.x - 1}
+toLeft = by {x=-1, y=0}
 
 toRight : Brick -> Pos
-toRight brick =
+toRight = by {x=1, y=0}
+
+by : Pos -> Brick -> Pos
+by t brick =
   let
     pos = brick.brickPos
   in
-    {pos | x = pos.x + 1}
+    {x = pos.x + t.x, y = pos.y + t.y}
 
 updatePosition: (Brick -> Pos) -> Brick -> Brick
 updatePosition changePosFunc brick =
     {brick | brickPos = changePosFunc brick}
 
-updateRotation: RotationDirection -> Brick -> Brick
-updateRotation direction brick =
-  {brick | rot = brick.rot |> Brick.rotate direction}
+updateRotation: RotationDirection -> GameState -> Brick -> Brick
+updateRotation direction state brick =
+  let
+    rotatedBrick = {brick | rot = Brick.rotate direction brick.rot}
+    kicks = Brick.wallKicks brick.rot direction brick.bType
+  in
+    kicks
+    |> List.filterMap (\kick -> 
+      moveBrick (updatePosition (by kick)) {state | brick = rotatedBrick})
+    |> List.head
+    |> Maybe.withDefault state
+    |> (.brick)
+
 
 mergeElements: Brick -> Board -> Board
 mergeElements brick board  =

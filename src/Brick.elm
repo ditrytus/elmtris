@@ -271,3 +271,62 @@ isAt row col brick =
   |> shape 
   |> Array2D.get row col
   |> Maybe.withDefault False
+
+wallKicks: Rotation -> RotationDirection -> BrickType -> List Pos
+wallKicks rotation direction brickType =
+  case brickType of
+    J -> wallKicksJLSTZ rotation direction
+    L -> wallKicksJLSTZ rotation direction
+    S -> wallKicksJLSTZ rotation direction
+    T -> wallKicksJLSTZ rotation direction
+    Z -> wallKicksJLSTZ rotation direction
+    I -> wallKicksI rotation direction
+    O -> [Pos 0 0]
+
+wallKicksJLSTZ : Rotation -> RotationDirection -> List Pos
+wallKicksJLSTZ rotation direction =
+  case rotation of
+    Deg0 ->
+      case direction of
+        Clockwise ->
+          [Pos 0 0, Pos -1 0, Pos -1 1, Pos 0 -2, Pos -1 -2]
+        CounterClockwise ->
+          [Pos 0 0, Pos 1 0, Pos 1 1, Pos 0 -2, Pos 1 -2]
+    Deg90 ->
+      [Pos 0 0, Pos -1 0, Pos -1 -1, Pos 0 2, Pos -1 2]
+    Deg180 ->
+      case direction of
+        Clockwise ->
+          [Pos 0 0, Pos 1 0, Pos 1 1, Pos 0 -2, Pos 1 -2]
+        CounterClockwise ->
+          [Pos 0 0, Pos -1 0, Pos -1 1, Pos 0 -2, Pos -1 -2]
+    Deg270 ->
+      [Pos 0 0, Pos 1 0, Pos 1 -1, Pos 0 2, Pos 1 2]
+
+wallKicksI : Rotation -> RotationDirection -> List Pos
+wallKicksI rotation direction =
+  case rotation of
+    Deg0 ->
+      case direction of
+        Clockwise ->
+          [Pos 0 0, Pos -2 0, Pos 1 0, Pos -2 -1, Pos 1 2] 
+        CounterClockwise ->
+          [Pos 0 0, Pos -1 0, Pos 2 0, Pos -1 2, Pos 2 -1]
+    Deg90 ->
+      case direction of
+          Clockwise ->
+            [Pos 0 0, Pos 1 0, Pos -2 0, Pos 1 -2, Pos -2 1]
+          CounterClockwise ->
+            [Pos 0 0, Pos -2 0, Pos 1 0, Pos -2 -1, Pos 1 2]
+    Deg180 ->
+      case direction of
+          Clockwise ->
+            [Pos 0 0, Pos 2 0, Pos -1 0, Pos 2 1, Pos -1 -2]
+          CounterClockwise ->
+            [Pos 0 0, Pos 1 0, Pos -2 0, Pos 1 -2, Pos -2 1]
+    Deg270 ->
+      case direction of
+          Clockwise ->
+            [Pos 0 0, Pos -1 0, Pos 2 0, Pos -1 2, Pos 2 -1]
+          CounterClockwise ->
+            [Pos 0 0, Pos 2 0, Pos -1 0, Pos 2 1, Pos -1 -2]
