@@ -5,7 +5,7 @@ cache:
   directories:
   - elm-stuff
 before_script:
-  - npm install -g elm elm-test
+  - npm install -g elm@0.17
 script: bash ./deploy.sh
 env:
   global:
