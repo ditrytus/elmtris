@@ -3990,681 +3990,6 @@ var _ditrytus$elmtris$Board$removeLines = function (board) {
 				remainingRows)));
 };
 
-var _ditrytus$elmtris$Brick$intToBool = function (i) {
-	return _elm_lang$core$Native_Utils.eq(i, 0) ? false : true;
-};
-var _ditrytus$elmtris$Brick$shape = function (_p0) {
-	var _p1 = _p0;
-	var _p9 = _p1.rot;
-	var _p2 = _p1.bType;
-	switch (_p2.ctor) {
-		case 'O':
-			return A2(
-				_tortus$elm_array_2d$Array2D$map,
-				_ditrytus$elmtris$Brick$intToBool,
-				_tortus$elm_array_2d$Array2D$fromList(
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$core$Native_List.fromArray(
-							[0, 1, 1, 0]),
-							_elm_lang$core$Native_List.fromArray(
-							[0, 1, 1, 0])
-						])));
-		case 'I':
-			var _p3 = _p9;
-			switch (_p3.ctor) {
-				case 'Deg0':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0, 0])
-								])));
-				case 'Deg90':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0, 0])
-								])));
-				case 'Deg180':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0, 0])
-								])));
-				default:
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 1, 0])
-								])));
-			}
-		case 'Z':
-			var _p4 = _p9;
-			switch (_p4.ctor) {
-				case 'Deg0':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0])
-								])));
-				case 'Deg90':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 0, 0])
-								])));
-				case 'Deg180':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 1])
-								])));
-				default:
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0])
-								])));
-			}
-		case 'S':
-			var _p5 = _p9;
-			switch (_p5.ctor) {
-				case 'Deg0':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0])
-								])));
-				case 'Deg90':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[1, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0])
-								])));
-				case 'Deg180':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 0])
-								])));
-				default:
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 1])
-								])));
-			}
-		case 'J':
-			var _p6 = _p9;
-			switch (_p6.ctor) {
-				case 'Deg0':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[1, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0])
-								])));
-				case 'Deg90':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 0])
-								])));
-				case 'Deg180':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 1])
-								])));
-				default:
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0])
-								])));
-			}
-		case 'L':
-			var _p7 = _p9;
-			switch (_p7.ctor) {
-				case 'Deg0':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0])
-								])));
-				case 'Deg90':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0])
-								])));
-				case 'Deg180':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 0, 0])
-								])));
-				default:
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 1])
-								])));
-			}
-		default:
-			var _p8 = _p9;
-			switch (_p8.ctor) {
-				case 'Deg0':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0])
-								])));
-				case 'Deg90':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0])
-								])));
-				case 'Deg180':
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 0, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[1, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0])
-								])));
-				default:
-					return A2(
-						_tortus$elm_array_2d$Array2D$map,
-						_ditrytus$elmtris$Brick$intToBool,
-						_tortus$elm_array_2d$Array2D$fromList(
-							_elm_lang$core$Native_List.fromArray(
-								[
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 1]),
-									_elm_lang$core$Native_List.fromArray(
-									[0, 1, 0])
-								])));
-			}
-	}
-};
-var _ditrytus$elmtris$Brick$height = function (_p10) {
-	return _tortus$elm_array_2d$Array2D$rows(
-		_ditrytus$elmtris$Brick$shape(_p10));
-};
-var _ditrytus$elmtris$Brick$width = function (_p11) {
-	return _tortus$elm_array_2d$Array2D$columns(
-		_ditrytus$elmtris$Brick$shape(_p11));
-};
-var _ditrytus$elmtris$Brick$isAt = F3(
-	function (row, col, brick) {
-		return A2(
-			_elm_lang$core$Maybe$withDefault,
-			false,
-			A3(
-				_tortus$elm_array_2d$Array2D$get,
-				row,
-				col,
-				_ditrytus$elmtris$Brick$shape(brick)));
-	});
-var _ditrytus$elmtris$Brick$Pos = F2(
-	function (a, b) {
-		return {x: a, y: b};
-	});
-var _ditrytus$elmtris$Brick$wallKicksJLSTZ = F2(
-	function (rotation, direction) {
-		var _p12 = rotation;
-		switch (_p12.ctor) {
-			case 'Deg0':
-				var _p13 = direction;
-				if (_p13.ctor === 'Clockwise') {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, 1),
-							A2(_ditrytus$elmtris$Brick$Pos, 0, -2),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, -2)
-						]);
-				} else {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, 1),
-							A2(_ditrytus$elmtris$Brick$Pos, 0, -2),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, -2)
-						]);
-				}
-			case 'Deg90':
-				return _elm_lang$core$Native_List.fromArray(
-					[
-						A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-						A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
-						A2(_ditrytus$elmtris$Brick$Pos, -1, -1),
-						A2(_ditrytus$elmtris$Brick$Pos, 0, 2),
-						A2(_ditrytus$elmtris$Brick$Pos, -1, 2)
-					]);
-			case 'Deg180':
-				var _p14 = direction;
-				if (_p14.ctor === 'Clockwise') {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, 1),
-							A2(_ditrytus$elmtris$Brick$Pos, 0, -2),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, -2)
-						]);
-				} else {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, 1),
-							A2(_ditrytus$elmtris$Brick$Pos, 0, -2),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, -2)
-						]);
-				}
-			default:
-				return _elm_lang$core$Native_List.fromArray(
-					[
-						A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-						A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
-						A2(_ditrytus$elmtris$Brick$Pos, 1, -1),
-						A2(_ditrytus$elmtris$Brick$Pos, 0, 2),
-						A2(_ditrytus$elmtris$Brick$Pos, 1, 2)
-					]);
-		}
-	});
-var _ditrytus$elmtris$Brick$wallKicksI = F2(
-	function (rotation, direction) {
-		var _p15 = rotation;
-		switch (_p15.ctor) {
-			case 'Deg0':
-				var _p16 = direction;
-				if (_p16.ctor === 'Clockwise') {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -2, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -2, -1),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, 2)
-						]);
-				} else {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 2, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, 2),
-							A2(_ditrytus$elmtris$Brick$Pos, 2, -1)
-						]);
-				}
-			case 'Deg90':
-				var _p17 = direction;
-				if (_p17.ctor === 'Clockwise') {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -2, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, -2),
-							A2(_ditrytus$elmtris$Brick$Pos, -2, 1)
-						]);
-				} else {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -2, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -2, -1),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, 2)
-						]);
-				}
-			case 'Deg180':
-				var _p18 = direction;
-				if (_p18.ctor === 'Clockwise') {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 2, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 2, 1),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, -2)
-						]);
-				} else {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -2, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 1, -2),
-							A2(_ditrytus$elmtris$Brick$Pos, -2, 1)
-						]);
-				}
-			default:
-				var _p19 = direction;
-				if (_p19.ctor === 'Clockwise') {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 2, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, 2),
-							A2(_ditrytus$elmtris$Brick$Pos, 2, -1)
-						]);
-				} else {
-					return _elm_lang$core$Native_List.fromArray(
-						[
-							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 2, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
-							A2(_ditrytus$elmtris$Brick$Pos, 2, 1),
-							A2(_ditrytus$elmtris$Brick$Pos, -1, -2)
-						]);
-				}
-		}
-	});
-var _ditrytus$elmtris$Brick$wallKicks = F3(
-	function (rotation, direction, brickType) {
-		var _p20 = brickType;
-		switch (_p20.ctor) {
-			case 'J':
-				return A2(_ditrytus$elmtris$Brick$wallKicksJLSTZ, rotation, direction);
-			case 'L':
-				return A2(_ditrytus$elmtris$Brick$wallKicksJLSTZ, rotation, direction);
-			case 'S':
-				return A2(_ditrytus$elmtris$Brick$wallKicksJLSTZ, rotation, direction);
-			case 'T':
-				return A2(_ditrytus$elmtris$Brick$wallKicksJLSTZ, rotation, direction);
-			case 'Z':
-				return A2(_ditrytus$elmtris$Brick$wallKicksJLSTZ, rotation, direction);
-			case 'I':
-				return A2(_ditrytus$elmtris$Brick$wallKicksI, rotation, direction);
-			default:
-				return _elm_lang$core$Native_List.fromArray(
-					[
-						A2(_ditrytus$elmtris$Brick$Pos, 0, 0)
-					]);
-		}
-	});
-var _ditrytus$elmtris$Brick$Brick = F3(
-	function (a, b, c) {
-		return {bType: a, rot: b, brickPos: c};
-	});
-var _ditrytus$elmtris$Brick$T = {ctor: 'T'};
-var _ditrytus$elmtris$Brick$L = {ctor: 'L'};
-var _ditrytus$elmtris$Brick$J = {ctor: 'J'};
-var _ditrytus$elmtris$Brick$S = {ctor: 'S'};
-var _ditrytus$elmtris$Brick$Z = {ctor: 'Z'};
-var _ditrytus$elmtris$Brick$I = {ctor: 'I'};
-var _ditrytus$elmtris$Brick$O = {ctor: 'O'};
-var _ditrytus$elmtris$Brick$intToBrickType = function (i) {
-	var _p21 = i;
-	switch (_p21) {
-		case 1:
-			return _ditrytus$elmtris$Brick$O;
-		case 2:
-			return _ditrytus$elmtris$Brick$I;
-		case 3:
-			return _ditrytus$elmtris$Brick$Z;
-		case 4:
-			return _ditrytus$elmtris$Brick$S;
-		case 5:
-			return _ditrytus$elmtris$Brick$J;
-		case 6:
-			return _ditrytus$elmtris$Brick$L;
-		default:
-			return _ditrytus$elmtris$Brick$T;
-	}
-};
-var _ditrytus$elmtris$Brick$Deg270 = {ctor: 'Deg270'};
-var _ditrytus$elmtris$Brick$Deg180 = {ctor: 'Deg180'};
-var _ditrytus$elmtris$Brick$Deg90 = {ctor: 'Deg90'};
-var _ditrytus$elmtris$Brick$Deg0 = {ctor: 'Deg0'};
-var _ditrytus$elmtris$Brick$rotate = F2(
-	function (direction, rot) {
-		var _p22 = direction;
-		if (_p22.ctor === 'Clockwise') {
-			var _p23 = rot;
-			switch (_p23.ctor) {
-				case 'Deg0':
-					return _ditrytus$elmtris$Brick$Deg270;
-				case 'Deg90':
-					return _ditrytus$elmtris$Brick$Deg0;
-				case 'Deg180':
-					return _ditrytus$elmtris$Brick$Deg90;
-				default:
-					return _ditrytus$elmtris$Brick$Deg180;
-			}
-		} else {
-			var _p24 = rot;
-			switch (_p24.ctor) {
-				case 'Deg0':
-					return _ditrytus$elmtris$Brick$Deg90;
-				case 'Deg90':
-					return _ditrytus$elmtris$Brick$Deg180;
-				case 'Deg180':
-					return _ditrytus$elmtris$Brick$Deg270;
-				default:
-					return _ditrytus$elmtris$Brick$Deg0;
-			}
-		}
-	});
-var _ditrytus$elmtris$Brick$new = F2(
-	function (boardWidth, brickType) {
-		var angle = _ditrytus$elmtris$Brick$Deg0;
-		var shape = {
-			bType: brickType,
-			rot: angle,
-			brickPos: A2(_ditrytus$elmtris$Brick$Pos, 0, 0)
-		};
-		return {
-			bType: brickType,
-			rot: angle,
-			brickPos: A2(
-				_ditrytus$elmtris$Brick$Pos,
-				((boardWidth - _ditrytus$elmtris$Brick$width(shape)) / 2) | 0,
-				0)
-		};
-	});
-var _ditrytus$elmtris$Brick$CounterClockwise = {ctor: 'CounterClockwise'};
-var _ditrytus$elmtris$Brick$Clockwise = {ctor: 'Clockwise'};
-
 //import Maybe, Native.List, Native.Utils, Result //
 
 var _elm_lang$core$Native_String = function() {
@@ -5995,6 +5320,1867 @@ var _elm_lang$core$Dict$diff = F2(
 			t1,
 			t2);
 	});
+
+var _elm_lang$core$Set$foldr = F3(
+	function (f, b, _p0) {
+		var _p1 = _p0;
+		return A3(
+			_elm_lang$core$Dict$foldr,
+			F3(
+				function (k, _p2, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p1._0);
+	});
+var _elm_lang$core$Set$foldl = F3(
+	function (f, b, _p3) {
+		var _p4 = _p3;
+		return A3(
+			_elm_lang$core$Dict$foldl,
+			F3(
+				function (k, _p5, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p4._0);
+	});
+var _elm_lang$core$Set$toList = function (_p6) {
+	var _p7 = _p6;
+	return _elm_lang$core$Dict$keys(_p7._0);
+};
+var _elm_lang$core$Set$size = function (_p8) {
+	var _p9 = _p8;
+	return _elm_lang$core$Dict$size(_p9._0);
+};
+var _elm_lang$core$Set$member = F2(
+	function (k, _p10) {
+		var _p11 = _p10;
+		return A2(_elm_lang$core$Dict$member, k, _p11._0);
+	});
+var _elm_lang$core$Set$isEmpty = function (_p12) {
+	var _p13 = _p12;
+	return _elm_lang$core$Dict$isEmpty(_p13._0);
+};
+var _elm_lang$core$Set$Set_elm_builtin = function (a) {
+	return {ctor: 'Set_elm_builtin', _0: a};
+};
+var _elm_lang$core$Set$empty = _elm_lang$core$Set$Set_elm_builtin(_elm_lang$core$Dict$empty);
+var _elm_lang$core$Set$singleton = function (k) {
+	return _elm_lang$core$Set$Set_elm_builtin(
+		A2(
+			_elm_lang$core$Dict$singleton,
+			k,
+			{ctor: '_Tuple0'}));
+};
+var _elm_lang$core$Set$insert = F2(
+	function (k, _p14) {
+		var _p15 = _p14;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A3(
+				_elm_lang$core$Dict$insert,
+				k,
+				{ctor: '_Tuple0'},
+				_p15._0));
+	});
+var _elm_lang$core$Set$fromList = function (xs) {
+	return A3(_elm_lang$core$List$foldl, _elm_lang$core$Set$insert, _elm_lang$core$Set$empty, xs);
+};
+var _elm_lang$core$Set$map = F2(
+	function (f, s) {
+		return _elm_lang$core$Set$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				f,
+				_elm_lang$core$Set$toList(s)));
+	});
+var _elm_lang$core$Set$remove = F2(
+	function (k, _p16) {
+		var _p17 = _p16;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$remove, k, _p17._0));
+	});
+var _elm_lang$core$Set$union = F2(
+	function (_p19, _p18) {
+		var _p20 = _p19;
+		var _p21 = _p18;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$union, _p20._0, _p21._0));
+	});
+var _elm_lang$core$Set$intersect = F2(
+	function (_p23, _p22) {
+		var _p24 = _p23;
+		var _p25 = _p22;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$intersect, _p24._0, _p25._0));
+	});
+var _elm_lang$core$Set$diff = F2(
+	function (_p27, _p26) {
+		var _p28 = _p27;
+		var _p29 = _p26;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$diff, _p28._0, _p29._0));
+	});
+var _elm_lang$core$Set$filter = F2(
+	function (p, _p30) {
+		var _p31 = _p30;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(
+				_elm_lang$core$Dict$filter,
+				F2(
+					function (k, _p32) {
+						return p(k);
+					}),
+				_p31._0));
+	});
+var _elm_lang$core$Set$partition = F2(
+	function (p, _p33) {
+		var _p34 = _p33;
+		var _p35 = A2(
+			_elm_lang$core$Dict$partition,
+			F2(
+				function (k, _p36) {
+					return p(k);
+				}),
+			_p34._0);
+		var p1 = _p35._0;
+		var p2 = _p35._1;
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Set$Set_elm_builtin(p1),
+			_1: _elm_lang$core$Set$Set_elm_builtin(p2)
+		};
+	});
+
+var _elm_community$list_extra$List_Extra$greedyGroupsOfWithStep = F3(
+	function (size, step, xs) {
+		var okayXs = _elm_lang$core$Native_Utils.cmp(
+			_elm_lang$core$List$length(xs),
+			0) > 0;
+		var okayArgs = (_elm_lang$core$Native_Utils.cmp(size, 0) > 0) && (_elm_lang$core$Native_Utils.cmp(step, 0) > 0);
+		var xs$ = A2(_elm_lang$core$List$drop, step, xs);
+		var group = A2(_elm_lang$core$List$take, size, xs);
+		return (okayArgs && okayXs) ? A2(
+			_elm_lang$core$List_ops['::'],
+			group,
+			A3(_elm_community$list_extra$List_Extra$greedyGroupsOfWithStep, size, step, xs$)) : _elm_lang$core$Native_List.fromArray(
+			[]);
+	});
+var _elm_community$list_extra$List_Extra$greedyGroupsOf = F2(
+	function (size, xs) {
+		return A3(_elm_community$list_extra$List_Extra$greedyGroupsOfWithStep, size, size, xs);
+	});
+var _elm_community$list_extra$List_Extra$groupsOfWithStep = F3(
+	function (size, step, xs) {
+		var okayArgs = (_elm_lang$core$Native_Utils.cmp(size, 0) > 0) && (_elm_lang$core$Native_Utils.cmp(step, 0) > 0);
+		var xs$ = A2(_elm_lang$core$List$drop, step, xs);
+		var group = A2(_elm_lang$core$List$take, size, xs);
+		var okayLength = _elm_lang$core$Native_Utils.eq(
+			size,
+			_elm_lang$core$List$length(group));
+		return (okayArgs && okayLength) ? A2(
+			_elm_lang$core$List_ops['::'],
+			group,
+			A3(_elm_community$list_extra$List_Extra$groupsOfWithStep, size, step, xs$)) : _elm_lang$core$Native_List.fromArray(
+			[]);
+	});
+var _elm_community$list_extra$List_Extra$groupsOf = F2(
+	function (size, xs) {
+		return A3(_elm_community$list_extra$List_Extra$groupsOfWithStep, size, size, xs);
+	});
+var _elm_community$list_extra$List_Extra$zip5 = _elm_lang$core$List$map5(
+	F5(
+		function (v0, v1, v2, v3, v4) {
+			return {ctor: '_Tuple5', _0: v0, _1: v1, _2: v2, _3: v3, _4: v4};
+		}));
+var _elm_community$list_extra$List_Extra$zip4 = _elm_lang$core$List$map4(
+	F4(
+		function (v0, v1, v2, v3) {
+			return {ctor: '_Tuple4', _0: v0, _1: v1, _2: v2, _3: v3};
+		}));
+var _elm_community$list_extra$List_Extra$zip3 = _elm_lang$core$List$map3(
+	F3(
+		function (v0, v1, v2) {
+			return {ctor: '_Tuple3', _0: v0, _1: v1, _2: v2};
+		}));
+var _elm_community$list_extra$List_Extra$zip = _elm_lang$core$List$map2(
+	F2(
+		function (v0, v1) {
+			return {ctor: '_Tuple2', _0: v0, _1: v1};
+		}));
+var _elm_community$list_extra$List_Extra$isPrefixOf = function (prefix) {
+	return function (_p0) {
+		return A2(
+			_elm_lang$core$List$all,
+			_elm_lang$core$Basics$identity,
+			A3(
+				_elm_lang$core$List$map2,
+				F2(
+					function (x, y) {
+						return _elm_lang$core$Native_Utils.eq(x, y);
+					}),
+				prefix,
+				_p0));
+	};
+};
+var _elm_community$list_extra$List_Extra$isSuffixOf = F2(
+	function (suffix, xs) {
+		return A2(
+			_elm_community$list_extra$List_Extra$isPrefixOf,
+			_elm_lang$core$List$reverse(suffix),
+			_elm_lang$core$List$reverse(xs));
+	});
+var _elm_community$list_extra$List_Extra$selectSplit = function (xs) {
+	var _p1 = xs;
+	if (_p1.ctor === '[]') {
+		return _elm_lang$core$Native_List.fromArray(
+			[]);
+	} else {
+		var _p5 = _p1._1;
+		var _p4 = _p1._0;
+		return A2(
+			_elm_lang$core$List_ops['::'],
+			{
+				ctor: '_Tuple3',
+				_0: _elm_lang$core$Native_List.fromArray(
+					[]),
+				_1: _p4,
+				_2: _p5
+			},
+			A2(
+				_elm_lang$core$List$map,
+				function (_p2) {
+					var _p3 = _p2;
+					return {
+						ctor: '_Tuple3',
+						_0: A2(_elm_lang$core$List_ops['::'], _p4, _p3._0),
+						_1: _p3._1,
+						_2: _p3._2
+					};
+				},
+				_elm_community$list_extra$List_Extra$selectSplit(_p5)));
+	}
+};
+var _elm_community$list_extra$List_Extra$select = function (xs) {
+	var _p6 = xs;
+	if (_p6.ctor === '[]') {
+		return _elm_lang$core$Native_List.fromArray(
+			[]);
+	} else {
+		var _p10 = _p6._1;
+		var _p9 = _p6._0;
+		return A2(
+			_elm_lang$core$List_ops['::'],
+			{ctor: '_Tuple2', _0: _p9, _1: _p10},
+			A2(
+				_elm_lang$core$List$map,
+				function (_p7) {
+					var _p8 = _p7;
+					return {
+						ctor: '_Tuple2',
+						_0: _p8._0,
+						_1: A2(_elm_lang$core$List_ops['::'], _p9, _p8._1)
+					};
+				},
+				_elm_community$list_extra$List_Extra$select(_p10)));
+	}
+};
+var _elm_community$list_extra$List_Extra$tailsHelp = F2(
+	function (e, list) {
+		var _p11 = list;
+		if (_p11.ctor === '::') {
+			var _p12 = _p11._0;
+			return A2(
+				_elm_lang$core$List_ops['::'],
+				A2(_elm_lang$core$List_ops['::'], e, _p12),
+				A2(_elm_lang$core$List_ops['::'], _p12, _p11._1));
+		} else {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		}
+	});
+var _elm_community$list_extra$List_Extra$tails = A2(
+	_elm_lang$core$List$foldr,
+	_elm_community$list_extra$List_Extra$tailsHelp,
+	_elm_lang$core$Native_List.fromArray(
+		[
+			_elm_lang$core$Native_List.fromArray(
+			[])
+		]));
+var _elm_community$list_extra$List_Extra$isInfixOf = F2(
+	function (infix, xs) {
+		return A2(
+			_elm_lang$core$List$any,
+			_elm_community$list_extra$List_Extra$isPrefixOf(infix),
+			_elm_community$list_extra$List_Extra$tails(xs));
+	});
+var _elm_community$list_extra$List_Extra$inits = A2(
+	_elm_lang$core$List$foldr,
+	F2(
+		function (e, acc) {
+			return A2(
+				_elm_lang$core$List_ops['::'],
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				A2(
+					_elm_lang$core$List$map,
+					F2(
+						function (x, y) {
+							return A2(_elm_lang$core$List_ops['::'], x, y);
+						})(e),
+					acc));
+		}),
+	_elm_lang$core$Native_List.fromArray(
+		[
+			_elm_lang$core$Native_List.fromArray(
+			[])
+		]));
+var _elm_community$list_extra$List_Extra$groupWhileTransitively = F2(
+	function (cmp, xs$) {
+		var _p13 = xs$;
+		if (_p13.ctor === '[]') {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		} else {
+			if (_p13._1.ctor === '[]') {
+				return _elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$core$Native_List.fromArray(
+						[_p13._0])
+					]);
+			} else {
+				var _p15 = _p13._0;
+				var _p14 = A2(_elm_community$list_extra$List_Extra$groupWhileTransitively, cmp, _p13._1);
+				if (_p14.ctor === '::') {
+					return A2(cmp, _p15, _p13._1._0) ? A2(
+						_elm_lang$core$List_ops['::'],
+						A2(_elm_lang$core$List_ops['::'], _p15, _p14._0),
+						_p14._1) : A2(
+						_elm_lang$core$List_ops['::'],
+						_elm_lang$core$Native_List.fromArray(
+							[_p15]),
+						_p14);
+				} else {
+					return _elm_lang$core$Native_List.fromArray(
+						[]);
+				}
+			}
+		}
+	});
+var _elm_community$list_extra$List_Extra$stripPrefix = F2(
+	function (prefix, xs) {
+		var step = F2(
+			function (e, m) {
+				var _p16 = m;
+				if (_p16.ctor === 'Nothing') {
+					return _elm_lang$core$Maybe$Nothing;
+				} else {
+					if (_p16._0.ctor === '[]') {
+						return _elm_lang$core$Maybe$Nothing;
+					} else {
+						return _elm_lang$core$Native_Utils.eq(e, _p16._0._0) ? _elm_lang$core$Maybe$Just(_p16._0._1) : _elm_lang$core$Maybe$Nothing;
+					}
+				}
+			});
+		return A3(
+			_elm_lang$core$List$foldl,
+			step,
+			_elm_lang$core$Maybe$Just(xs),
+			prefix);
+	});
+var _elm_community$list_extra$List_Extra$dropWhileRight = function (p) {
+	return A2(
+		_elm_lang$core$List$foldr,
+		F2(
+			function (x, xs) {
+				return (p(x) && _elm_lang$core$List$isEmpty(xs)) ? _elm_lang$core$Native_List.fromArray(
+					[]) : A2(_elm_lang$core$List_ops['::'], x, xs);
+			}),
+		_elm_lang$core$Native_List.fromArray(
+			[]));
+};
+var _elm_community$list_extra$List_Extra$takeWhileRight = function (p) {
+	var step = F2(
+		function (x, _p17) {
+			var _p18 = _p17;
+			var _p19 = _p18._0;
+			return (p(x) && _p18._1) ? {
+				ctor: '_Tuple2',
+				_0: A2(_elm_lang$core$List_ops['::'], x, _p19),
+				_1: true
+			} : {ctor: '_Tuple2', _0: _p19, _1: false};
+		});
+	return function (_p20) {
+		return _elm_lang$core$Basics$fst(
+			A3(
+				_elm_lang$core$List$foldr,
+				step,
+				{
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_List.fromArray(
+						[]),
+					_1: true
+				},
+				_p20));
+	};
+};
+var _elm_community$list_extra$List_Extra$splitAt = F2(
+	function (n, xs) {
+		return {
+			ctor: '_Tuple2',
+			_0: A2(_elm_lang$core$List$take, n, xs),
+			_1: A2(_elm_lang$core$List$drop, n, xs)
+		};
+	});
+var _elm_community$list_extra$List_Extra$unfoldr = F2(
+	function (f, seed) {
+		var _p21 = f(seed);
+		if (_p21.ctor === 'Nothing') {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		} else {
+			return A2(
+				_elm_lang$core$List_ops['::'],
+				_p21._0._0,
+				A2(_elm_community$list_extra$List_Extra$unfoldr, f, _p21._0._1));
+		}
+	});
+var _elm_community$list_extra$List_Extra$scanr1 = F2(
+	function (f, xs$) {
+		var _p22 = xs$;
+		if (_p22.ctor === '[]') {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		} else {
+			if (_p22._1.ctor === '[]') {
+				return _elm_lang$core$Native_List.fromArray(
+					[_p22._0]);
+			} else {
+				var _p23 = A2(_elm_community$list_extra$List_Extra$scanr1, f, _p22._1);
+				if (_p23.ctor === '::') {
+					return A2(
+						_elm_lang$core$List_ops['::'],
+						A2(f, _p22._0, _p23._0),
+						_p23);
+				} else {
+					return _elm_lang$core$Native_List.fromArray(
+						[]);
+				}
+			}
+		}
+	});
+var _elm_community$list_extra$List_Extra$scanr = F3(
+	function (f, acc, xs$) {
+		var _p24 = xs$;
+		if (_p24.ctor === '[]') {
+			return _elm_lang$core$Native_List.fromArray(
+				[acc]);
+		} else {
+			var _p25 = A3(_elm_community$list_extra$List_Extra$scanr, f, acc, _p24._1);
+			if (_p25.ctor === '::') {
+				return A2(
+					_elm_lang$core$List_ops['::'],
+					A2(f, _p24._0, _p25._0),
+					_p25);
+			} else {
+				return _elm_lang$core$Native_List.fromArray(
+					[]);
+			}
+		}
+	});
+var _elm_community$list_extra$List_Extra$scanl1 = F2(
+	function (f, xs$) {
+		var _p26 = xs$;
+		if (_p26.ctor === '[]') {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		} else {
+			return A3(_elm_lang$core$List$scanl, f, _p26._0, _p26._1);
+		}
+	});
+var _elm_community$list_extra$List_Extra$indexedFoldr = F3(
+	function (func, acc, list) {
+		var step = F2(
+			function (x, _p27) {
+				var _p28 = _p27;
+				var _p29 = _p28._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _p29 - 1,
+					_1: A3(func, _p29, x, _p28._1)
+				};
+			});
+		return _elm_lang$core$Basics$snd(
+			A3(
+				_elm_lang$core$List$foldr,
+				step,
+				{
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$List$length(list) - 1,
+					_1: acc
+				},
+				list));
+	});
+var _elm_community$list_extra$List_Extra$indexedFoldl = F3(
+	function (func, acc, list) {
+		var step = F2(
+			function (x, _p30) {
+				var _p31 = _p30;
+				var _p32 = _p31._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _p32 + 1,
+					_1: A3(func, _p32, x, _p31._1)
+				};
+			});
+		return _elm_lang$core$Basics$snd(
+			A3(
+				_elm_lang$core$List$foldl,
+				step,
+				{ctor: '_Tuple2', _0: 0, _1: acc},
+				list));
+	});
+var _elm_community$list_extra$List_Extra$foldr1 = F2(
+	function (f, xs) {
+		var mf = F2(
+			function (x, m) {
+				return _elm_lang$core$Maybe$Just(
+					function () {
+						var _p33 = m;
+						if (_p33.ctor === 'Nothing') {
+							return x;
+						} else {
+							return A2(f, x, _p33._0);
+						}
+					}());
+			});
+		return A3(_elm_lang$core$List$foldr, mf, _elm_lang$core$Maybe$Nothing, xs);
+	});
+var _elm_community$list_extra$List_Extra$foldl1 = F2(
+	function (f, xs) {
+		var mf = F2(
+			function (x, m) {
+				return _elm_lang$core$Maybe$Just(
+					function () {
+						var _p34 = m;
+						if (_p34.ctor === 'Nothing') {
+							return x;
+						} else {
+							return A2(f, _p34._0, x);
+						}
+					}());
+			});
+		return A3(_elm_lang$core$List$foldl, mf, _elm_lang$core$Maybe$Nothing, xs);
+	});
+var _elm_community$list_extra$List_Extra$interweaveHelp = F3(
+	function (l1, l2, acc) {
+		interweaveHelp:
+		while (true) {
+			var _p35 = {ctor: '_Tuple2', _0: l1, _1: l2};
+			_v19_1:
+			do {
+				if (_p35._0.ctor === '::') {
+					if (_p35._1.ctor === '::') {
+						var _v20 = _p35._0._1,
+							_v21 = _p35._1._1,
+							_v22 = A2(
+							_elm_lang$core$Basics_ops['++'],
+							acc,
+							_elm_lang$core$Native_List.fromArray(
+								[_p35._0._0, _p35._1._0]));
+						l1 = _v20;
+						l2 = _v21;
+						acc = _v22;
+						continue interweaveHelp;
+					} else {
+						break _v19_1;
+					}
+				} else {
+					if (_p35._1.ctor === '[]') {
+						break _v19_1;
+					} else {
+						return A2(_elm_lang$core$Basics_ops['++'], acc, _p35._1);
+					}
+				}
+			} while(false);
+			return A2(_elm_lang$core$Basics_ops['++'], acc, _p35._0);
+		}
+	});
+var _elm_community$list_extra$List_Extra$interweave = F2(
+	function (l1, l2) {
+		return A3(
+			_elm_community$list_extra$List_Extra$interweaveHelp,
+			l1,
+			l2,
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	});
+var _elm_community$list_extra$List_Extra$permutations = function (xs$) {
+	var _p36 = xs$;
+	if (_p36.ctor === '[]') {
+		return _elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$core$Native_List.fromArray(
+				[])
+			]);
+	} else {
+		var f = function (_p37) {
+			var _p38 = _p37;
+			return A2(
+				_elm_lang$core$List$map,
+				F2(
+					function (x, y) {
+						return A2(_elm_lang$core$List_ops['::'], x, y);
+					})(_p38._0),
+				_elm_community$list_extra$List_Extra$permutations(_p38._1));
+		};
+		return A2(
+			_elm_lang$core$List$concatMap,
+			f,
+			_elm_community$list_extra$List_Extra$select(_p36));
+	}
+};
+var _elm_community$list_extra$List_Extra$isPermutationOf = F2(
+	function (permut, xs) {
+		return A2(
+			_elm_lang$core$List$member,
+			permut,
+			_elm_community$list_extra$List_Extra$permutations(xs));
+	});
+var _elm_community$list_extra$List_Extra$subsequencesNonEmpty = function (xs) {
+	var _p39 = xs;
+	if (_p39.ctor === '[]') {
+		return _elm_lang$core$Native_List.fromArray(
+			[]);
+	} else {
+		var _p40 = _p39._0;
+		var f = F2(
+			function (ys, r) {
+				return A2(
+					_elm_lang$core$List_ops['::'],
+					ys,
+					A2(
+						_elm_lang$core$List_ops['::'],
+						A2(_elm_lang$core$List_ops['::'], _p40, ys),
+						r));
+			});
+		return A2(
+			_elm_lang$core$List_ops['::'],
+			_elm_lang$core$Native_List.fromArray(
+				[_p40]),
+			A3(
+				_elm_lang$core$List$foldr,
+				f,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				_elm_community$list_extra$List_Extra$subsequencesNonEmpty(_p39._1)));
+	}
+};
+var _elm_community$list_extra$List_Extra$subsequences = function (xs) {
+	return A2(
+		_elm_lang$core$List_ops['::'],
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_community$list_extra$List_Extra$subsequencesNonEmpty(xs));
+};
+var _elm_community$list_extra$List_Extra$isSubsequenceOf = F2(
+	function (subseq, xs) {
+		return A2(
+			_elm_lang$core$List$member,
+			subseq,
+			_elm_community$list_extra$List_Extra$subsequences(xs));
+	});
+var _elm_community$list_extra$List_Extra$transpose = function (ll) {
+	transpose:
+	while (true) {
+		var _p41 = ll;
+		if (_p41.ctor === '[]') {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		} else {
+			if (_p41._0.ctor === '[]') {
+				var _v27 = _p41._1;
+				ll = _v27;
+				continue transpose;
+			} else {
+				var _p42 = _p41._1;
+				var tails = A2(_elm_lang$core$List$filterMap, _elm_lang$core$List$tail, _p42);
+				var heads = A2(_elm_lang$core$List$filterMap, _elm_lang$core$List$head, _p42);
+				return A2(
+					_elm_lang$core$List_ops['::'],
+					A2(_elm_lang$core$List_ops['::'], _p41._0._0, heads),
+					_elm_community$list_extra$List_Extra$transpose(
+						A2(_elm_lang$core$List_ops['::'], _p41._0._1, tails)));
+			}
+		}
+	}
+};
+var _elm_community$list_extra$List_Extra$intercalate = function (xs) {
+	return function (_p43) {
+		return _elm_lang$core$List$concat(
+			A2(_elm_lang$core$List$intersperse, xs, _p43));
+	};
+};
+var _elm_community$list_extra$List_Extra$filterNot = F2(
+	function (pred, list) {
+		return A2(
+			_elm_lang$core$List$filter,
+			function (_p44) {
+				return _elm_lang$core$Basics$not(
+					pred(_p44));
+			},
+			list);
+	});
+var _elm_community$list_extra$List_Extra$removeAt = F2(
+	function (index, l) {
+		if (_elm_lang$core$Native_Utils.cmp(index, 0) < 0) {
+			return l;
+		} else {
+			var tail = _elm_lang$core$List$tail(
+				A2(_elm_lang$core$List$drop, index, l));
+			var head = A2(_elm_lang$core$List$take, index, l);
+			var _p45 = tail;
+			if (_p45.ctor === 'Nothing') {
+				return l;
+			} else {
+				return A2(_elm_lang$core$List$append, head, _p45._0);
+			}
+		}
+	});
+var _elm_community$list_extra$List_Extra$singleton = function (x) {
+	return _elm_lang$core$Native_List.fromArray(
+		[x]);
+};
+var _elm_community$list_extra$List_Extra$setAt = F3(
+	function (index, value, l) {
+		if (_elm_lang$core$Native_Utils.cmp(index, 0) < 0) {
+			return _elm_lang$core$Maybe$Nothing;
+		} else {
+			var tail = _elm_lang$core$List$tail(
+				A2(_elm_lang$core$List$drop, index, l));
+			var head = A2(_elm_lang$core$List$take, index, l);
+			var _p46 = tail;
+			if (_p46.ctor === 'Nothing') {
+				return _elm_lang$core$Maybe$Nothing;
+			} else {
+				return _elm_lang$core$Maybe$Just(
+					A2(
+						_elm_lang$core$List$append,
+						head,
+						A2(_elm_lang$core$List_ops['::'], value, _p46._0)));
+			}
+		}
+	});
+var _elm_community$list_extra$List_Extra$remove = F2(
+	function (x, xs) {
+		var _p47 = xs;
+		if (_p47.ctor === '[]') {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		} else {
+			var _p49 = _p47._1;
+			var _p48 = _p47._0;
+			return _elm_lang$core$Native_Utils.eq(x, _p48) ? _p49 : A2(
+				_elm_lang$core$List_ops['::'],
+				_p48,
+				A2(_elm_community$list_extra$List_Extra$remove, x, _p49));
+		}
+	});
+var _elm_community$list_extra$List_Extra$updateIfIndex = F3(
+	function (predicate, update, list) {
+		return A2(
+			_elm_lang$core$List$indexedMap,
+			F2(
+				function (i, x) {
+					return predicate(i) ? update(x) : x;
+				}),
+			list);
+	});
+var _elm_community$list_extra$List_Extra$updateAt = F3(
+	function (index, update, list) {
+		return ((_elm_lang$core$Native_Utils.cmp(index, 0) < 0) || (_elm_lang$core$Native_Utils.cmp(
+			index,
+			_elm_lang$core$List$length(list)) > -1)) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
+			A3(
+				_elm_community$list_extra$List_Extra$updateIfIndex,
+				F2(
+					function (x, y) {
+						return _elm_lang$core$Native_Utils.eq(x, y);
+					})(index),
+				update,
+				list));
+	});
+var _elm_community$list_extra$List_Extra$updateIf = F3(
+	function (predicate, update, list) {
+		return A2(
+			_elm_lang$core$List$map,
+			function (item) {
+				return predicate(item) ? update(item) : item;
+			},
+			list);
+	});
+var _elm_community$list_extra$List_Extra$replaceIf = F3(
+	function (predicate, replacement, list) {
+		return A3(
+			_elm_community$list_extra$List_Extra$updateIf,
+			predicate,
+			_elm_lang$core$Basics$always(replacement),
+			list);
+	});
+var _elm_community$list_extra$List_Extra$findIndices = function (p) {
+	return function (_p50) {
+		return A2(
+			_elm_lang$core$List$map,
+			_elm_lang$core$Basics$fst,
+			A2(
+				_elm_lang$core$List$filter,
+				function (_p51) {
+					var _p52 = _p51;
+					return p(_p52._1);
+				},
+				A2(
+					_elm_lang$core$List$indexedMap,
+					F2(
+						function (v0, v1) {
+							return {ctor: '_Tuple2', _0: v0, _1: v1};
+						}),
+					_p50)));
+	};
+};
+var _elm_community$list_extra$List_Extra$findIndex = function (p) {
+	return function (_p53) {
+		return _elm_lang$core$List$head(
+			A2(_elm_community$list_extra$List_Extra$findIndices, p, _p53));
+	};
+};
+var _elm_community$list_extra$List_Extra$elemIndices = function (x) {
+	return _elm_community$list_extra$List_Extra$findIndices(
+		F2(
+			function (x, y) {
+				return _elm_lang$core$Native_Utils.eq(x, y);
+			})(x));
+};
+var _elm_community$list_extra$List_Extra$elemIndex = function (x) {
+	return _elm_community$list_extra$List_Extra$findIndex(
+		F2(
+			function (x, y) {
+				return _elm_lang$core$Native_Utils.eq(x, y);
+			})(x));
+};
+var _elm_community$list_extra$List_Extra$find = F2(
+	function (predicate, list) {
+		find:
+		while (true) {
+			var _p54 = list;
+			if (_p54.ctor === '[]') {
+				return _elm_lang$core$Maybe$Nothing;
+			} else {
+				var _p55 = _p54._0;
+				if (predicate(_p55)) {
+					return _elm_lang$core$Maybe$Just(_p55);
+				} else {
+					var _v33 = predicate,
+						_v34 = _p54._1;
+					predicate = _v33;
+					list = _v34;
+					continue find;
+				}
+			}
+		}
+	});
+var _elm_community$list_extra$List_Extra$notMember = function (x) {
+	return function (_p56) {
+		return _elm_lang$core$Basics$not(
+			A2(_elm_lang$core$List$member, x, _p56));
+	};
+};
+var _elm_community$list_extra$List_Extra$andThen = _elm_lang$core$Basics$flip(_elm_lang$core$List$concatMap);
+var _elm_community$list_extra$List_Extra$lift2 = F3(
+	function (f, la, lb) {
+		return A2(
+			_elm_community$list_extra$List_Extra$andThen,
+			la,
+			function (a) {
+				return A2(
+					_elm_community$list_extra$List_Extra$andThen,
+					lb,
+					function (b) {
+						return _elm_lang$core$Native_List.fromArray(
+							[
+								A2(f, a, b)
+							]);
+					});
+			});
+	});
+var _elm_community$list_extra$List_Extra$lift3 = F4(
+	function (f, la, lb, lc) {
+		return A2(
+			_elm_community$list_extra$List_Extra$andThen,
+			la,
+			function (a) {
+				return A2(
+					_elm_community$list_extra$List_Extra$andThen,
+					lb,
+					function (b) {
+						return A2(
+							_elm_community$list_extra$List_Extra$andThen,
+							lc,
+							function (c) {
+								return _elm_lang$core$Native_List.fromArray(
+									[
+										A3(f, a, b, c)
+									]);
+							});
+					});
+			});
+	});
+var _elm_community$list_extra$List_Extra$lift4 = F5(
+	function (f, la, lb, lc, ld) {
+		return A2(
+			_elm_community$list_extra$List_Extra$andThen,
+			la,
+			function (a) {
+				return A2(
+					_elm_community$list_extra$List_Extra$andThen,
+					lb,
+					function (b) {
+						return A2(
+							_elm_community$list_extra$List_Extra$andThen,
+							lc,
+							function (c) {
+								return A2(
+									_elm_community$list_extra$List_Extra$andThen,
+									ld,
+									function (d) {
+										return _elm_lang$core$Native_List.fromArray(
+											[
+												A4(f, a, b, c, d)
+											]);
+									});
+							});
+					});
+			});
+	});
+var _elm_community$list_extra$List_Extra$andMap = F2(
+	function (fl, l) {
+		return A3(
+			_elm_lang$core$List$map2,
+			F2(
+				function (x, y) {
+					return x(y);
+				}),
+			fl,
+			l);
+	});
+var _elm_community$list_extra$List_Extra$uniqueHelp = F3(
+	function (f, existing, remaining) {
+		uniqueHelp:
+		while (true) {
+			var _p57 = remaining;
+			if (_p57.ctor === '[]') {
+				return _elm_lang$core$Native_List.fromArray(
+					[]);
+			} else {
+				var _p59 = _p57._1;
+				var _p58 = _p57._0;
+				var computedFirst = f(_p58);
+				if (A2(_elm_lang$core$Set$member, computedFirst, existing)) {
+					var _v36 = f,
+						_v37 = existing,
+						_v38 = _p59;
+					f = _v36;
+					existing = _v37;
+					remaining = _v38;
+					continue uniqueHelp;
+				} else {
+					return A2(
+						_elm_lang$core$List_ops['::'],
+						_p58,
+						A3(
+							_elm_community$list_extra$List_Extra$uniqueHelp,
+							f,
+							A2(_elm_lang$core$Set$insert, computedFirst, existing),
+							_p59));
+				}
+			}
+		}
+	});
+var _elm_community$list_extra$List_Extra$uniqueBy = F2(
+	function (f, list) {
+		return A3(_elm_community$list_extra$List_Extra$uniqueHelp, f, _elm_lang$core$Set$empty, list);
+	});
+var _elm_community$list_extra$List_Extra$unique = function (list) {
+	return A3(_elm_community$list_extra$List_Extra$uniqueHelp, _elm_lang$core$Basics$identity, _elm_lang$core$Set$empty, list);
+};
+var _elm_community$list_extra$List_Extra$dropWhile = F2(
+	function (predicate, list) {
+		dropWhile:
+		while (true) {
+			var _p60 = list;
+			if (_p60.ctor === '[]') {
+				return _elm_lang$core$Native_List.fromArray(
+					[]);
+			} else {
+				if (predicate(_p60._0)) {
+					var _v40 = predicate,
+						_v41 = _p60._1;
+					predicate = _v40;
+					list = _v41;
+					continue dropWhile;
+				} else {
+					return list;
+				}
+			}
+		}
+	});
+var _elm_community$list_extra$List_Extra$takeWhile = F2(
+	function (predicate, list) {
+		var _p61 = list;
+		if (_p61.ctor === '[]') {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		} else {
+			var _p62 = _p61._0;
+			return predicate(_p62) ? A2(
+				_elm_lang$core$List_ops['::'],
+				_p62,
+				A2(_elm_community$list_extra$List_Extra$takeWhile, predicate, _p61._1)) : _elm_lang$core$Native_List.fromArray(
+				[]);
+		}
+	});
+var _elm_community$list_extra$List_Extra$span = F2(
+	function (p, xs) {
+		return {
+			ctor: '_Tuple2',
+			_0: A2(_elm_community$list_extra$List_Extra$takeWhile, p, xs),
+			_1: A2(_elm_community$list_extra$List_Extra$dropWhile, p, xs)
+		};
+	});
+var _elm_community$list_extra$List_Extra$break = function (p) {
+	return _elm_community$list_extra$List_Extra$span(
+		function (_p63) {
+			return _elm_lang$core$Basics$not(
+				p(_p63));
+		});
+};
+var _elm_community$list_extra$List_Extra$groupWhile = F2(
+	function (eq, xs$) {
+		var _p64 = xs$;
+		if (_p64.ctor === '[]') {
+			return _elm_lang$core$Native_List.fromArray(
+				[]);
+		} else {
+			var _p66 = _p64._0;
+			var _p65 = A2(
+				_elm_community$list_extra$List_Extra$span,
+				eq(_p66),
+				_p64._1);
+			var ys = _p65._0;
+			var zs = _p65._1;
+			return A2(
+				_elm_lang$core$List_ops['::'],
+				A2(_elm_lang$core$List_ops['::'], _p66, ys),
+				A2(_elm_community$list_extra$List_Extra$groupWhile, eq, zs));
+		}
+	});
+var _elm_community$list_extra$List_Extra$group = _elm_community$list_extra$List_Extra$groupWhile(
+	F2(
+		function (x, y) {
+			return _elm_lang$core$Native_Utils.eq(x, y);
+		}));
+var _elm_community$list_extra$List_Extra$minimumBy = F2(
+	function (f, ls) {
+		var minBy = F2(
+			function (x, _p67) {
+				var _p68 = _p67;
+				var _p69 = _p68._1;
+				var fx = f(x);
+				return (_elm_lang$core$Native_Utils.cmp(fx, _p69) < 0) ? {ctor: '_Tuple2', _0: x, _1: fx} : {ctor: '_Tuple2', _0: _p68._0, _1: _p69};
+			});
+		var _p70 = ls;
+		if (_p70.ctor === '::') {
+			if (_p70._1.ctor === '[]') {
+				return _elm_lang$core$Maybe$Just(_p70._0);
+			} else {
+				var _p71 = _p70._0;
+				return _elm_lang$core$Maybe$Just(
+					_elm_lang$core$Basics$fst(
+						A3(
+							_elm_lang$core$List$foldl,
+							minBy,
+							{
+								ctor: '_Tuple2',
+								_0: _p71,
+								_1: f(_p71)
+							},
+							_p70._1)));
+			}
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _elm_community$list_extra$List_Extra$maximumBy = F2(
+	function (f, ls) {
+		var maxBy = F2(
+			function (x, _p72) {
+				var _p73 = _p72;
+				var _p74 = _p73._1;
+				var fx = f(x);
+				return (_elm_lang$core$Native_Utils.cmp(fx, _p74) > 0) ? {ctor: '_Tuple2', _0: x, _1: fx} : {ctor: '_Tuple2', _0: _p73._0, _1: _p74};
+			});
+		var _p75 = ls;
+		if (_p75.ctor === '::') {
+			if (_p75._1.ctor === '[]') {
+				return _elm_lang$core$Maybe$Just(_p75._0);
+			} else {
+				var _p76 = _p75._0;
+				return _elm_lang$core$Maybe$Just(
+					_elm_lang$core$Basics$fst(
+						A3(
+							_elm_lang$core$List$foldl,
+							maxBy,
+							{
+								ctor: '_Tuple2',
+								_0: _p76,
+								_1: f(_p76)
+							},
+							_p75._1)));
+			}
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _elm_community$list_extra$List_Extra$uncons = function (xs) {
+	var _p77 = xs;
+	if (_p77.ctor === '[]') {
+		return _elm_lang$core$Maybe$Nothing;
+	} else {
+		return _elm_lang$core$Maybe$Just(
+			{ctor: '_Tuple2', _0: _p77._0, _1: _p77._1});
+	}
+};
+var _elm_community$list_extra$List_Extra$iterate = F2(
+	function (f, x) {
+		var _p78 = f(x);
+		if (_p78.ctor === 'Just') {
+			return A2(
+				_elm_lang$core$List_ops['::'],
+				x,
+				A2(_elm_community$list_extra$List_Extra$iterate, f, _p78._0));
+		} else {
+			return _elm_lang$core$Native_List.fromArray(
+				[x]);
+		}
+	});
+var _elm_community$list_extra$List_Extra$getAt = F2(
+	function (idx, xs) {
+		return (_elm_lang$core$Native_Utils.cmp(idx, 0) < 0) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$List$head(
+			A2(_elm_lang$core$List$drop, idx, xs));
+	});
+var _elm_community$list_extra$List_Extra_ops = _elm_community$list_extra$List_Extra_ops || {};
+_elm_community$list_extra$List_Extra_ops['!!'] = _elm_lang$core$Basics$flip(_elm_community$list_extra$List_Extra$getAt);
+var _elm_community$list_extra$List_Extra$init = function () {
+	var maybe = F2(
+		function (d, f) {
+			return function (_p79) {
+				return A2(
+					_elm_lang$core$Maybe$withDefault,
+					d,
+					A2(_elm_lang$core$Maybe$map, f, _p79));
+			};
+		});
+	return A2(
+		_elm_lang$core$List$foldr,
+		function (_p80) {
+			return A2(
+				F2(
+					function (x, y) {
+						return function (_p81) {
+							return x(
+								y(_p81));
+						};
+					}),
+				_elm_lang$core$Maybe$Just,
+				A2(
+					maybe,
+					_elm_lang$core$Native_List.fromArray(
+						[]),
+					F2(
+						function (x, y) {
+							return A2(_elm_lang$core$List_ops['::'], x, y);
+						})(_p80)));
+		},
+		_elm_lang$core$Maybe$Nothing);
+}();
+var _elm_community$list_extra$List_Extra$last = _elm_community$list_extra$List_Extra$foldl1(
+	_elm_lang$core$Basics$flip(_elm_lang$core$Basics$always));
+
+var _ditrytus$elmtris$Brick$intToBool = function (i) {
+	return _elm_lang$core$Native_Utils.eq(i, 0) ? false : true;
+};
+var _ditrytus$elmtris$Brick$shape = function (_p0) {
+	var _p1 = _p0;
+	var _p9 = _p1.rot;
+	var _p2 = _p1.bType;
+	switch (_p2.ctor) {
+		case 'O':
+			return A2(
+				_tortus$elm_array_2d$Array2D$map,
+				_ditrytus$elmtris$Brick$intToBool,
+				_tortus$elm_array_2d$Array2D$fromList(
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$core$Native_List.fromArray(
+							[0, 1, 1, 0]),
+							_elm_lang$core$Native_List.fromArray(
+							[0, 1, 1, 0])
+						])));
+		case 'I':
+			var _p3 = _p9;
+			switch (_p3.ctor) {
+				case 'Deg0':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0, 0])
+								])));
+				case 'Deg90':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0, 0])
+								])));
+				case 'Deg180':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0, 0])
+								])));
+				default:
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 1, 0])
+								])));
+			}
+		case 'Z':
+			var _p4 = _p9;
+			switch (_p4.ctor) {
+				case 'Deg0':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0])
+								])));
+				case 'Deg90':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 0, 0])
+								])));
+				case 'Deg180':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 1])
+								])));
+				default:
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0])
+								])));
+			}
+		case 'S':
+			var _p5 = _p9;
+			switch (_p5.ctor) {
+				case 'Deg0':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0])
+								])));
+				case 'Deg90':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[1, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0])
+								])));
+				case 'Deg180':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 0])
+								])));
+				default:
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 1])
+								])));
+			}
+		case 'J':
+			var _p6 = _p9;
+			switch (_p6.ctor) {
+				case 'Deg0':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[1, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0])
+								])));
+				case 'Deg90':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 0])
+								])));
+				case 'Deg180':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 1])
+								])));
+				default:
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0])
+								])));
+			}
+		case 'L':
+			var _p7 = _p9;
+			switch (_p7.ctor) {
+				case 'Deg0':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0])
+								])));
+				case 'Deg90':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0])
+								])));
+				case 'Deg180':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 0, 0])
+								])));
+				default:
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 1])
+								])));
+			}
+		default:
+			var _p8 = _p9;
+			switch (_p8.ctor) {
+				case 'Deg0':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0])
+								])));
+				case 'Deg90':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0])
+								])));
+				case 'Deg180':
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 0, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[1, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0])
+								])));
+				default:
+					return A2(
+						_tortus$elm_array_2d$Array2D$map,
+						_ditrytus$elmtris$Brick$intToBool,
+						_tortus$elm_array_2d$Array2D$fromList(
+							_elm_lang$core$Native_List.fromArray(
+								[
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 1]),
+									_elm_lang$core$Native_List.fromArray(
+									[0, 1, 0])
+								])));
+			}
+	}
+};
+var _ditrytus$elmtris$Brick$height = function (_p10) {
+	return _tortus$elm_array_2d$Array2D$rows(
+		_ditrytus$elmtris$Brick$shape(_p10));
+};
+var _ditrytus$elmtris$Brick$width = function (_p11) {
+	return _tortus$elm_array_2d$Array2D$columns(
+		_ditrytus$elmtris$Brick$shape(_p11));
+};
+var _ditrytus$elmtris$Brick$isAt = F3(
+	function (row, col, brick) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			false,
+			A3(
+				_tortus$elm_array_2d$Array2D$get,
+				row,
+				col,
+				_ditrytus$elmtris$Brick$shape(brick)));
+	});
+var _ditrytus$elmtris$Brick$Pos = F2(
+	function (a, b) {
+		return {x: a, y: b};
+	});
+var _ditrytus$elmtris$Brick$wallKicksJLSTZ = F2(
+	function (rotation, direction) {
+		var _p12 = rotation;
+		switch (_p12.ctor) {
+			case 'Deg0':
+				var _p13 = direction;
+				if (_p13.ctor === 'Clockwise') {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, 1),
+							A2(_ditrytus$elmtris$Brick$Pos, 0, -2),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, -2)
+						]);
+				} else {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, 1),
+							A2(_ditrytus$elmtris$Brick$Pos, 0, -2),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, -2)
+						]);
+				}
+			case 'Deg90':
+				return _elm_lang$core$Native_List.fromArray(
+					[
+						A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+						A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
+						A2(_ditrytus$elmtris$Brick$Pos, -1, -1),
+						A2(_ditrytus$elmtris$Brick$Pos, 0, 2),
+						A2(_ditrytus$elmtris$Brick$Pos, -1, 2)
+					]);
+			case 'Deg180':
+				var _p14 = direction;
+				if (_p14.ctor === 'Clockwise') {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, 1),
+							A2(_ditrytus$elmtris$Brick$Pos, 0, -2),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, -2)
+						]);
+				} else {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, 1),
+							A2(_ditrytus$elmtris$Brick$Pos, 0, -2),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, -2)
+						]);
+				}
+			default:
+				return _elm_lang$core$Native_List.fromArray(
+					[
+						A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+						A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
+						A2(_ditrytus$elmtris$Brick$Pos, 1, -1),
+						A2(_ditrytus$elmtris$Brick$Pos, 0, 2),
+						A2(_ditrytus$elmtris$Brick$Pos, 1, 2)
+					]);
+		}
+	});
+var _ditrytus$elmtris$Brick$wallKicksI = F2(
+	function (rotation, direction) {
+		var _p15 = rotation;
+		switch (_p15.ctor) {
+			case 'Deg0':
+				var _p16 = direction;
+				if (_p16.ctor === 'Clockwise') {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -2, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -2, -1),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, 2)
+						]);
+				} else {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 2, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, 2),
+							A2(_ditrytus$elmtris$Brick$Pos, 2, -1)
+						]);
+				}
+			case 'Deg90':
+				var _p17 = direction;
+				if (_p17.ctor === 'Clockwise') {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -2, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, -2),
+							A2(_ditrytus$elmtris$Brick$Pos, -2, 1)
+						]);
+				} else {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -2, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -2, -1),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, 2)
+						]);
+				}
+			case 'Deg180':
+				var _p18 = direction;
+				if (_p18.ctor === 'Clockwise') {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 2, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 2, 1),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, -2)
+						]);
+				} else {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -2, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 1, -2),
+							A2(_ditrytus$elmtris$Brick$Pos, -2, 1)
+						]);
+				}
+			default:
+				var _p19 = direction;
+				if (_p19.ctor === 'Clockwise') {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 2, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, 2),
+							A2(_ditrytus$elmtris$Brick$Pos, 2, -1)
+						]);
+				} else {
+					return _elm_lang$core$Native_List.fromArray(
+						[
+							A2(_ditrytus$elmtris$Brick$Pos, 0, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 2, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, 0),
+							A2(_ditrytus$elmtris$Brick$Pos, 2, 1),
+							A2(_ditrytus$elmtris$Brick$Pos, -1, -2)
+						]);
+				}
+		}
+	});
+var _ditrytus$elmtris$Brick$wallKicks = F3(
+	function (rotation, direction, brickType) {
+		var _p20 = brickType;
+		switch (_p20.ctor) {
+			case 'J':
+				return A2(_ditrytus$elmtris$Brick$wallKicksJLSTZ, rotation, direction);
+			case 'L':
+				return A2(_ditrytus$elmtris$Brick$wallKicksJLSTZ, rotation, direction);
+			case 'S':
+				return A2(_ditrytus$elmtris$Brick$wallKicksJLSTZ, rotation, direction);
+			case 'T':
+				return A2(_ditrytus$elmtris$Brick$wallKicksJLSTZ, rotation, direction);
+			case 'Z':
+				return A2(_ditrytus$elmtris$Brick$wallKicksJLSTZ, rotation, direction);
+			case 'I':
+				return A2(_ditrytus$elmtris$Brick$wallKicksI, rotation, direction);
+			default:
+				return _elm_lang$core$Native_List.fromArray(
+					[
+						A2(_ditrytus$elmtris$Brick$Pos, 0, 0)
+					]);
+		}
+	});
+var _ditrytus$elmtris$Brick$Brick = F3(
+	function (a, b, c) {
+		return {bType: a, rot: b, brickPos: c};
+	});
+var _ditrytus$elmtris$Brick$T = {ctor: 'T'};
+var _ditrytus$elmtris$Brick$L = {ctor: 'L'};
+var _ditrytus$elmtris$Brick$J = {ctor: 'J'};
+var _ditrytus$elmtris$Brick$S = {ctor: 'S'};
+var _ditrytus$elmtris$Brick$Z = {ctor: 'Z'};
+var _ditrytus$elmtris$Brick$I = {ctor: 'I'};
+var _ditrytus$elmtris$Brick$O = {ctor: 'O'};
+var _ditrytus$elmtris$Brick$allBrickTypes = _elm_lang$core$Native_List.fromArray(
+	[_ditrytus$elmtris$Brick$O, _ditrytus$elmtris$Brick$I, _ditrytus$elmtris$Brick$Z, _ditrytus$elmtris$Brick$S, _ditrytus$elmtris$Brick$J, _ditrytus$elmtris$Brick$L, _ditrytus$elmtris$Brick$T]);
+var _ditrytus$elmtris$Brick$intToBrickBag = function (i) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		_ditrytus$elmtris$Brick$allBrickTypes,
+		A2(
+			_elm_community$list_extra$List_Extra$getAt,
+			i,
+			_elm_community$list_extra$List_Extra$permutations(_ditrytus$elmtris$Brick$allBrickTypes)));
+};
+var _ditrytus$elmtris$Brick$Deg270 = {ctor: 'Deg270'};
+var _ditrytus$elmtris$Brick$Deg180 = {ctor: 'Deg180'};
+var _ditrytus$elmtris$Brick$Deg90 = {ctor: 'Deg90'};
+var _ditrytus$elmtris$Brick$Deg0 = {ctor: 'Deg0'};
+var _ditrytus$elmtris$Brick$rotate = F2(
+	function (direction, rot) {
+		var _p21 = direction;
+		if (_p21.ctor === 'Clockwise') {
+			var _p22 = rot;
+			switch (_p22.ctor) {
+				case 'Deg0':
+					return _ditrytus$elmtris$Brick$Deg270;
+				case 'Deg90':
+					return _ditrytus$elmtris$Brick$Deg0;
+				case 'Deg180':
+					return _ditrytus$elmtris$Brick$Deg90;
+				default:
+					return _ditrytus$elmtris$Brick$Deg180;
+			}
+		} else {
+			var _p23 = rot;
+			switch (_p23.ctor) {
+				case 'Deg0':
+					return _ditrytus$elmtris$Brick$Deg90;
+				case 'Deg90':
+					return _ditrytus$elmtris$Brick$Deg180;
+				case 'Deg180':
+					return _ditrytus$elmtris$Brick$Deg270;
+				default:
+					return _ditrytus$elmtris$Brick$Deg0;
+			}
+		}
+	});
+var _ditrytus$elmtris$Brick$new = F2(
+	function (boardWidth, brickType) {
+		var angle = _ditrytus$elmtris$Brick$Deg0;
+		var shape = {
+			bType: brickType,
+			rot: angle,
+			brickPos: A2(_ditrytus$elmtris$Brick$Pos, 0, 0)
+		};
+		return {
+			bType: brickType,
+			rot: angle,
+			brickPos: A2(
+				_ditrytus$elmtris$Brick$Pos,
+				((boardWidth - _ditrytus$elmtris$Brick$width(shape)) / 2) | 0,
+				0)
+		};
+	});
+var _ditrytus$elmtris$Brick$CounterClockwise = {ctor: 'CounterClockwise'};
+var _ditrytus$elmtris$Brick$Clockwise = {ctor: 'Clockwise'};
 
 //import Maybe, Native.Array, Native.List, Native.Utils, Result //
 
@@ -8359,9 +9545,9 @@ var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
 };
 var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
 
-var _ditrytus$elmtris$Model$GameState = F3(
-	function (a, b, c) {
-		return {brick: a, score: b, board: c};
+var _ditrytus$elmtris$Model$GameState = F4(
+	function (a, b, c, d) {
+		return {brick: a, score: b, board: c, next: d};
 	});
 var _ditrytus$elmtris$Model$GameOver = function (a) {
 	return {ctor: 'GameOver', _0: a};
@@ -8383,11 +9569,8 @@ var _ditrytus$elmtris$Model$Move = function (a) {
 	return {ctor: 'Move', _0: a};
 };
 var _ditrytus$elmtris$Model$Tick = {ctor: 'Tick'};
-var _ditrytus$elmtris$Model$NextBrick = function (a) {
-	return {ctor: 'NextBrick', _0: a};
-};
-var _ditrytus$elmtris$Model$FirstBrick = function (a) {
-	return {ctor: 'FirstBrick', _0: a};
+var _ditrytus$elmtris$Model$NextBag = function (a) {
+	return {ctor: 'NextBag', _0: a};
 };
 var _ditrytus$elmtris$Model$Begin = {ctor: 'Begin'};
 
@@ -9220,7 +10403,7 @@ var _elm_lang$core$Random$cmdMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Random'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Random$init, onEffects: _elm_lang$core$Random$onEffects, onSelfMsg: _elm_lang$core$Random$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Random$cmdMap};
 
-var _ditrytus$elmtris$Update$mergeElements = F2(
+var _ditrytus$elmtris$Update$mergeWith = F2(
 	function (brick, board) {
 		return A2(
 			_tortus$elm_array_2d$Array2D$indexedMap,
@@ -9279,10 +10462,10 @@ var _ditrytus$elmtris$Update$doesCollide = F2(
 							}),
 						_ditrytus$elmtris$Brick$shape(brick)))));
 	});
-var _ditrytus$elmtris$Update$moveBrick = F2(
-	function (moveFunc, state) {
+var _ditrytus$elmtris$Update$updateBrickWithCollision = F2(
+	function (brickUpdateFunc, state) {
 		var brick = state.brick;
-		var newBrick = moveFunc(brick);
+		var newBrick = brickUpdateFunc(brick);
 		return A2(_ditrytus$elmtris$Update$doesCollide, newBrick, state.board) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
 			_elm_lang$core$Native_Utils.update(
 				state,
@@ -9307,7 +10490,7 @@ var _ditrytus$elmtris$Update$updateRotation = F3(
 						_elm_lang$core$List$filterMap,
 						function (kick) {
 							return A2(
-								_ditrytus$elmtris$Update$moveBrick,
+								_ditrytus$elmtris$Update$updateBrickWithCollision,
 								_ditrytus$elmtris$Update$updatePosition(
 									_ditrytus$elmtris$Update$by(kick)),
 								_elm_lang$core$Native_Utils.update(
@@ -9316,15 +10499,16 @@ var _ditrytus$elmtris$Update$updateRotation = F3(
 						},
 						kicks))));
 	});
-var _ditrytus$elmtris$Update$commandWithRandomBrickType = function (cmd) {
-	var brickTypesCount = 7;
+var _ditrytus$elmtris$Update$commandWithRandomBrickBag = function (cmd) {
+	var bagsCount = _elm_lang$core$List$length(
+		_elm_community$list_extra$List_Extra$permutations(_ditrytus$elmtris$Brick$allBrickTypes));
 	return A2(
 		_elm_lang$core$Random$generate,
 		cmd,
 		A2(
 			_elm_lang$core$Random$map,
-			_ditrytus$elmtris$Brick$intToBrickType,
-			A2(_elm_lang$core$Random$int, 1, brickTypesCount)));
+			_ditrytus$elmtris$Brick$intToBrickBag,
+			A2(_elm_lang$core$Random$int, 1, bagsCount)));
 };
 var _ditrytus$elmtris$Update$updateGameState = F2(
 	function (updateStateFunc, model) {
@@ -9344,102 +10528,123 @@ var _ditrytus$elmtris$Update$toGameplayWith = F2(
 		};
 	});
 var _ditrytus$elmtris$Update$toGameplay = _ditrytus$elmtris$Update$toGameplayWith(_elm_lang$core$Platform_Cmd$none);
-var _ditrytus$elmtris$Update$update = F2(
-	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
-			case 'Begin':
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: _ditrytus$elmtris$Update$commandWithRandomBrickType(_ditrytus$elmtris$Model$FirstBrick)
-				};
-			case 'FirstBrick':
-				return _ditrytus$elmtris$Update$toGameplay(
+var _ditrytus$elmtris$Update$byUpdatingBrick = F2(
+	function (brickUpdateFunc, state) {
+		return _ditrytus$elmtris$Update$toGameplay(
+			A2(
+				_elm_lang$core$Maybe$withDefault,
+				state,
+				A2(_ditrytus$elmtris$Update$updateBrickWithCollision, brickUpdateFunc, state)));
+	});
+var _ditrytus$elmtris$Update$byRotatingBrickIn = F2(
+	function (direction, state) {
+		return A2(
+			_ditrytus$elmtris$Update$byUpdatingBrick,
+			A2(_ditrytus$elmtris$Update$updateRotation, direction, state),
+			state);
+	});
+var _ditrytus$elmtris$Update$byMovingBrick = F2(
+	function (translateFunc, state) {
+		return A2(
+			_ditrytus$elmtris$Update$byUpdatingBrick,
+			_ditrytus$elmtris$Update$updatePosition(translateFunc),
+			state);
+	});
+var _ditrytus$elmtris$Update$visibleNextBricks = 1;
+var _ditrytus$elmtris$Update$byTakingNextBrick = function (state) {
+	var nextRandomBag = _ditrytus$elmtris$Update$commandWithRandomBrickBag(_ditrytus$elmtris$Model$NextBag);
+	if (_elm_lang$core$Native_Utils.cmp(
+		_elm_lang$core$List$length(state.next) + 1,
+		_ditrytus$elmtris$Update$visibleNextBricks) > -1) {
+		var _p1 = state.next;
+		if (_p1.ctor === '::') {
+			return _ditrytus$elmtris$Update$toGameplay(
+				_elm_lang$core$Native_Utils.update(
+					state,
 					{
 						brick: A2(_ditrytus$elmtris$Brick$new, _ditrytus$elmtris$Board$columns, _p1._0),
-						score: 0,
-						board: _ditrytus$elmtris$Board$empty
-					});
-			case 'NextBrick':
+						next: _p1._1
+					}));
+		} else {
+			return A2(_ditrytus$elmtris$Update$toGameplayWith, nextRandomBag, state);
+		}
+	} else {
+		return A2(_ditrytus$elmtris$Update$toGameplayWith, nextRandomBag, state);
+	}
+};
+var _ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick = F2(
+	function (newBag, state) {
+		return _ditrytus$elmtris$Update$byTakingNextBrick(
+			_elm_lang$core$Native_Utils.update(
+				state,
+				{
+					next: _elm_lang$core$List$concat(
+						_elm_lang$core$Native_List.fromArray(
+							[state.next, newBag]))
+				}));
+	});
+var _ditrytus$elmtris$Update$update = F2(
+	function (msg, model) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
+			case 'Begin':
 				return A2(
 					_ditrytus$elmtris$Update$updateGameState,
-					function (state) {
-						return _ditrytus$elmtris$Update$toGameplay(
-							_elm_lang$core$Native_Utils.update(
-								state,
-								{
-									brick: A2(_ditrytus$elmtris$Brick$new, _ditrytus$elmtris$Board$columns, _p1._0)
-								}));
-					},
+					_ditrytus$elmtris$Update$byTakingNextBrick,
+					_ditrytus$elmtris$Model$Gameplay(
+						{
+							brick: A2(_ditrytus$elmtris$Brick$new, _ditrytus$elmtris$Board$columns, _ditrytus$elmtris$Brick$I),
+							score: 0,
+							board: _ditrytus$elmtris$Board$empty,
+							next: _elm_lang$core$Native_List.fromArray(
+								[])
+						}));
+			case 'NextBag':
+				return A2(
+					_ditrytus$elmtris$Update$updateGameState,
+					_ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick(_p2._0),
 					model);
 			case 'Move':
-				var _p2 = _p1._0;
-				switch (_p2.ctor) {
+				var _p3 = _p2._0;
+				switch (_p3.ctor) {
 					case 'Left':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
-							function (state) {
-								return _ditrytus$elmtris$Update$toGameplay(
-									A2(
-										_elm_lang$core$Maybe$withDefault,
-										state,
-										A2(
-											_ditrytus$elmtris$Update$moveBrick,
-											_ditrytus$elmtris$Update$updatePosition(_ditrytus$elmtris$Update$toLeft),
-											state)));
-							},
+							_ditrytus$elmtris$Update$byMovingBrick(_ditrytus$elmtris$Update$toLeft),
 							model);
 					case 'Right':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
-							function (state) {
-								return _ditrytus$elmtris$Update$toGameplay(
-									A2(
-										_elm_lang$core$Maybe$withDefault,
-										state,
-										A2(
-											_ditrytus$elmtris$Update$moveBrick,
-											_ditrytus$elmtris$Update$updatePosition(_ditrytus$elmtris$Update$toRight),
-											state)));
-							},
+							_ditrytus$elmtris$Update$byMovingBrick(_ditrytus$elmtris$Update$toRight),
 							model);
 					case 'Down':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
 							function (state) {
-								var _p3 = A2(
-									_ditrytus$elmtris$Update$moveBrick,
+								var _p4 = A2(
+									_ditrytus$elmtris$Update$updateBrickWithCollision,
 									_ditrytus$elmtris$Update$updatePosition(_ditrytus$elmtris$Update$down),
 									state);
-								if (_p3.ctor === 'Just') {
-									return _ditrytus$elmtris$Update$toGameplay(_p3._0);
+								if (_p4.ctor === 'Just') {
+									return _ditrytus$elmtris$Update$toGameplay(_p4._0);
 								} else {
 									return A2(
-										_ditrytus$elmtris$Update$toGameplayWith,
-										_ditrytus$elmtris$Update$commandWithRandomBrickType(_ditrytus$elmtris$Model$NextBrick),
-										_elm_lang$core$Native_Utils.update(
-											state,
-											{
-												board: _ditrytus$elmtris$Board$removeLines(
-													A2(_ditrytus$elmtris$Update$mergeElements, state.brick, state.board))
-											}));
+										_ditrytus$elmtris$Update$updateGameState,
+										_ditrytus$elmtris$Update$byTakingNextBrick,
+										_ditrytus$elmtris$Model$Gameplay(
+											_elm_lang$core$Native_Utils.update(
+												state,
+												{
+													board: _ditrytus$elmtris$Board$removeLines(
+														A2(_ditrytus$elmtris$Update$mergeWith, state.brick, state.board))
+												})));
 								}
 							},
 							model);
 					case 'Rotate':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
-							function (state) {
-								return _ditrytus$elmtris$Update$toGameplay(
-									A2(
-										_elm_lang$core$Maybe$withDefault,
-										state,
-										A2(
-											_ditrytus$elmtris$Update$moveBrick,
-											A2(_ditrytus$elmtris$Update$updateRotation, _p2._0, state),
-											state)));
-							},
+							_ditrytus$elmtris$Update$byRotatingBrickIn(_p3._0),
 							model);
 					default:
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
@@ -10275,7 +11480,7 @@ var _ditrytus$elmtris$View$viewContent = function (model) {
 						_elm_lang$core$Native_List.fromArray(
 						[_ditrytus$elmtris$View$viewBorder]),
 						_ditrytus$elmtris$View$viewBoard(
-						A2(_ditrytus$elmtris$Update$mergeElements, _p2.brick, _p2.board))
+						A2(_ditrytus$elmtris$Update$mergeWith, _p2.brick, _p2.board))
 					]));
 		default:
 			return _elm_lang$core$Native_List.fromArray(
