@@ -9,6 +9,9 @@ import Array2D
 import Array2DExtras exposing (flattenArray2D)
 import List.Extra
 
+type alias BrickUpdateFunc = (Brick -> Brick)
+type alias MoveFunc = (Brick -> Pos)
+
 visibleNextBricks : Int
 visibleNextBricks = 1 
 
@@ -17,32 +20,50 @@ update msg model =
   case msg of
     Begin ->
       Gameplay { brick = Brick.new Board.columns Brick.I, score = 0, board = Board.empty, next = [] }
-      |> updateGameState nextBrick
+      |> updateGameState byTakingNextBrick
     NextBag newBag->
-      model
-      |> updateGameState (\state -> Gameplay {state | next = List.concat [state.next, newBag] }
-      |> updateGameState nextBrick)
+      model |> updateGameState (bySetingNewBagAndTakingNextBrick newBag)
     Move moveType ->
       case moveType of
         Left ->
-          model |> updateGameState (\state -> state |> moveBrick (updatePosition toLeft) |> Maybe.withDefault state |> toGameplay)
+          model |> updateGameState (byMovingBrick toLeft)
         Right ->
-          model |> updateGameState (\state -> state |> moveBrick (updatePosition toRight) |> Maybe.withDefault state |> toGameplay)
+          model |> updateGameState (byMovingBrick toRight)
         Down ->
           model |> updateGameState (\state ->
-            case state |> moveBrick (updatePosition down) of
+            case state |> updateBrickWithCollision (updatePosition down) of
               Just newState ->
                 newState |> toGameplay  
               Nothing ->
-                Gameplay {state | board = state.board |> mergeElements state.brick |> Board.removeLines}
-                |> updateGameState nextBrick)
+                Gameplay {state | board = state.board |> mergeWith state.brick |> Board.removeLines}
+                |> updateGameState byTakingNextBrick)
         Rotate direction ->
-          model |> updateGameState (\state -> state |> moveBrick (updateRotation direction state) |> Maybe.withDefault state |> toGameplay)
+          model |> updateGameState (byRotatingBrickIn direction)
         _ -> (model, Cmd.none)
     _ -> (model, Cmd.none)
-    
-nextBrick : GameState -> ( Model, Cmd Msg )
-nextBrick state =
+
+bySetingNewBagAndTakingNextBrick : Model.Bag -> GameState ->  ( Model, Cmd Msg )
+bySetingNewBagAndTakingNextBrick newBag state =
+  {state | next = List.concat [state.next, newBag] }
+  |> byTakingNextBrick
+
+byMovingBrick : MoveFunc -> GameState ->  ( Model, Cmd a )
+byMovingBrick translateFunc state  =
+  byUpdatingBrick (updatePosition translateFunc) state
+
+byRotatingBrickIn : RotationDirection -> GameState -> ( Model, Cmd a )
+byRotatingBrickIn direction state =
+  byUpdatingBrick (updateRotation direction state) state
+
+byUpdatingBrick : BrickUpdateFunc -> GameState -> ( Model, Cmd a )
+byUpdatingBrick brickUpdateFunc state  =
+  state
+  |> updateBrickWithCollision brickUpdateFunc
+  |> Maybe.withDefault state
+  |> toGameplay
+
+byTakingNextBrick : GameState -> ( Model, Cmd Msg )
+byTakingNextBrick state =
   let
     nextRandomBag = commandWithRandomBrickBag NextBag
   in
@@ -76,11 +97,11 @@ commandWithRandomBrickBag cmd =
   in
     generate cmd (map intToBrickBag (int 1 bagsCount))
 
-moveBrick: (Brick -> Brick) -> GameState -> Maybe GameState
-moveBrick moveFunc state =
+updateBrickWithCollision: BrickUpdateFunc -> GameState -> Maybe GameState
+updateBrickWithCollision brickUpdateFunc state =
   let
     brick = state.brick
-    newBrick = moveFunc brick 
+    newBrick = brickUpdateFunc brick 
   in
     if doesCollide newBrick state.board then
       Nothing
@@ -100,27 +121,27 @@ doesCollide brick board =
   |> Array.toList
   |> List.any identity
 
-down : Brick -> Pos
+down : MoveFunc
 down = by {x=0, y=1}
 
-toLeft : Brick -> Pos
+toLeft : MoveFunc
 toLeft = by {x=-1, y=0}
 
-toRight : Brick -> Pos
+toRight : MoveFunc
 toRight = by {x=1, y=0}
 
-by : Pos -> Brick -> Pos
+by : Pos -> MoveFunc
 by t brick =
   let
     pos = brick.brickPos
   in
     {x = pos.x + t.x, y = pos.y + t.y}
 
-updatePosition: (Brick -> Pos) -> Brick -> Brick
+updatePosition: MoveFunc -> BrickUpdateFunc
 updatePosition changePosFunc brick =
     {brick | brickPos = changePosFunc brick}
 
-updateRotation: RotationDirection -> GameState -> Brick -> Brick
+updateRotation: RotationDirection -> GameState -> BrickUpdateFunc
 updateRotation direction state brick =
   let
     rotatedBrick = {brick | rot = Brick.rotate direction brick.rot}
@@ -128,14 +149,14 @@ updateRotation direction state brick =
   in
     kicks
     |> List.filterMap (\kick -> 
-      moveBrick (updatePosition (by kick)) {state | brick = rotatedBrick})
+      updateBrickWithCollision (updatePosition (by kick)) {state | brick = rotatedBrick})
     |> List.head
     |> Maybe.withDefault state
     |> (.brick)
 
 
-mergeElements: Brick -> Board -> Board
-mergeElements brick board  =
+mergeWith: Brick -> Board -> Board
+mergeWith brick board  =
     board |>
       Array2D.indexedMap (\row col cell ->
         brick

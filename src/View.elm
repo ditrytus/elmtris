@@ -5,7 +5,7 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Model exposing (..)
 import Board exposing (Board)
-import Update exposing (mergeElements)
+import Update exposing (mergeWith)
 import Array
 import Array2D
 import Array2DExtras exposing (flattenArray2D)
@@ -42,7 +42,7 @@ viewContent model =
     Start ->
       [text' [x "50", y "50", textAnchor "middle", fontSize "5px"] [text "Press ANY key to start"]]
     Gameplay gameState ->
-      List.concat [[ viewBorder ], mergeElements gameState.brick gameState.board |> viewBoard ]
+      List.concat [[ viewBorder ], gameState.board |> mergeWith gameState.brick |> viewBoard ]
     _ ->
       []
 
