@@ -1,22 +1,27 @@
 module Update exposing (..)
 
 import Model exposing (..)
-import Brick exposing (Brick, BrickType, intToBrickType, Pos, isAt, RotationDirection)
+import Brick exposing (Brick, BrickType, intToBrickBag, Pos, isAt, RotationDirection)
 import Board exposing (..)
 import Random exposing (..)
 import Array
 import Array2D
 import Array2DExtras exposing (flattenArray2D)
+import List.Extra
+
+visibleNextBricks : Int
+visibleNextBricks = 1 
 
 update : Msg -> Model.Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
     Begin ->
-      (model, commandWithRandomBrickType FirstBrick)
-    FirstBrick newBrickType ->
-      { brick = Brick.new Board.columns newBrickType, score = 0, board = Board.empty} |> toGameplay
-    NextBrick newBrickType ->
-      model |> updateGameState (\state -> {state | brick = Brick.new Board.columns newBrickType} |> toGameplay)
+      Gameplay { brick = Brick.new Board.columns Brick.I, score = 0, board = Board.empty, next = [] }
+      |> updateGameState nextBrick
+    NextBag newBag->
+      model
+      |> updateGameState (\state -> Gameplay {state | next = List.concat [state.next, newBag] }
+      |> updateGameState nextBrick)
     Move moveType ->
       case moveType of
         Left ->
@@ -29,13 +34,29 @@ update msg model =
               Just newState ->
                 newState |> toGameplay  
               Nothing ->
-                {state | board = state.board |> mergeElements state.brick |> Board.removeLines} |> toGameplayWith (commandWithRandomBrickType NextBrick))
+                Gameplay {state | board = state.board |> mergeElements state.brick |> Board.removeLines}
+                |> updateGameState nextBrick)
         Rotate direction ->
           model |> updateGameState (\state -> state |> moveBrick (updateRotation direction state) |> Maybe.withDefault state |> toGameplay)
         _ -> (model, Cmd.none)
     _ -> (model, Cmd.none)
+    
+nextBrick : GameState -> ( Model, Cmd Msg )
+nextBrick state =
+  let
+    nextRandomBag = commandWithRandomBrickBag NextBag
+  in
+    if (List.length state.next) + 1 >= visibleNextBricks then
+      case state.next of
+        t::rest ->
+          {state | brick = Brick.new Board.columns t, next = rest}  
+          |> toGameplay
+        [] ->
+          state |> toGameplayWith nextRandomBag
+    else
+      state |> toGameplayWith nextRandomBag
 
-toGameplayWith : a -> GameState -> ( Model, a )
+toGameplayWith : Cmd a -> GameState -> ( Model, Cmd a )
 toGameplayWith cmd state = (Gameplay state, cmd)
 
 toGameplay : GameState -> ( Model, Cmd a )
@@ -48,12 +69,12 @@ updateGameState updateStateFunc model =
         updateStateFunc state
       _ -> (model, Cmd.none)
 
-commandWithRandomBrickType : (BrickType -> a) -> Cmd a
-commandWithRandomBrickType cmd =
+commandWithRandomBrickBag : (List BrickType -> a) -> Cmd a
+commandWithRandomBrickBag cmd =
   let
-    brickTypesCount = 7
+    bagsCount = List.Extra.permutations Brick.allBrickTypes |> List.length
   in
-    generate cmd (map intToBrickType (int 1 brickTypesCount))
+    generate cmd (map intToBrickBag (int 1 bagsCount))
 
 moveBrick: (Brick -> Brick) -> GameState -> Maybe GameState
 moveBrick moveFunc state =

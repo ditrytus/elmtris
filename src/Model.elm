@@ -9,6 +9,7 @@ type alias GameState =
   { brick: Brick.Brick
   , score: Score
   , board: Board.Board
+  , next: Bag
   }
 
 type Model
@@ -23,10 +24,11 @@ type MoveType
   | Rotate Brick.RotationDirection
   | None
 
+type alias Bag = List Brick.BrickType 
+
 type Msg
   = Begin
-  | FirstBrick Brick.BrickType
-  | NextBrick Brick.BrickType
+  | NextBag Bag
   | Tick
   | Move MoveType
   | Reset

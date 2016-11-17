@@ -1,20 +1,19 @@
 module Brick exposing (..)
 
 import Array2D
+import List.Extra
 
 type BrickType
   = O | I | Z | S | J | L | T
 
-intToBrickType : number -> BrickType
-intToBrickType i =
-  case i of
-    1 -> O
-    2 -> I
-    3 -> Z
-    4 -> S
-    5 -> J
-    6 -> L
-    _ -> T
+allBrickTypes : List BrickType
+allBrickTypes = [O, I, Z, S, J, L, T]
+
+intToBrickBag : Int -> List BrickType
+intToBrickBag i =
+  List.Extra.permutations allBrickTypes
+  |> List.Extra.getAt i
+  |> Maybe.withDefault allBrickTypes
 
 type Rotation
   = Deg0
