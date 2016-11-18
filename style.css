@@ -1,2 +1,25 @@
-html, body { margin:0px; padding:0px; overflow:hidden }
-svg { position:fixed; top:0px; bottom:0px; left:0px; right:0px }
+html, body
+{
+    margin:0px;
+    padding:0px;
+    overflow:hidden
+}
+
+@font-face
+{
+    font-family: 'coolvilleregular';
+    src: url('coolville-webfont.woff2') format('woff2'),
+         url('coolville-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+svg
+{
+    font-family: coolvilleregular, fallBackFonts, sans-serif;
+    position:fixed;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px
+}
