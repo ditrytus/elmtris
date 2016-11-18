@@ -67,7 +67,7 @@ byTakingNextBrick state =
   let
     nextRandomBag = commandWithRandomBrickBag NextBag
   in
-    if (List.length state.next) + 1 >= visibleNextBricks then
+    if (List.length state.next) > visibleNextBricks then
       case state.next of
         t::rest ->
           {state | brick = Brick.new Board.columns t, next = rest}  
