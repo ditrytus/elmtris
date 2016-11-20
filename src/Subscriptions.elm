@@ -9,13 +9,17 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
   case model of
     Start ->
-      Keyboard.presses (\_ -> Begin)
+      startNewGameOnKey 115
     Gameplay _ ->
       Sub.batch
         [ Time.every Time.second (\_ -> Move Down)
         , Keyboard.downs keyCodeToMove]
-    _ -> 
-      Sub.none
+    GameOver _ -> 
+      startNewGameOnKey 114
+
+startNewGameOnKey : KeyCode -> Sub Msg
+startNewGameOnKey keyToStart =
+  Keyboard.presses (\keyCode -> if keyCode == keyToStart then Begin else DoNothing)
 
 keyCodeToMove: KeyCode -> Msg
 keyCodeToMove keyCode =

@@ -32,11 +32,13 @@ cellSize = Size 10 10
 moveBy : Pos -> Pos -> Pos
 moveBy a b = {x=a.x+b.x, y=a.y+b.y}
 
+viewScale : ( Float, Float )
 viewScale = (cellSize.width, cellSize.height)
 
 nextBrickBoxPos : Pos
 nextBrickBoxPos = Pos 11 10 |> scalePosToView
 
+nextBrickBoxLogicSize : Size
 nextBrickBoxLogicSize = Size 6 4
 
 nextBrickBoxSize : Size
@@ -48,11 +50,13 @@ nextBrickLabelPos = nextBrickBoxPos |> moveBy ((Pos 0.5 -0.1) |> scalePosToView)
 scalePos : (Float,Float) -> Pos -> Pos
 scalePos (h,v) pos = {x = pos.x * h, y = pos.y * v}
 
+scalePosToView : Pos -> Pos
 scalePosToView = scalePos viewScale
 
 scaleSize : (Float,Float) -> Size -> Size
 scaleSize (h,v) size = {width = size.width * h, height = size.height * v}
 
+scaleSizeToView : Size -> Size
 scaleSizeToView = scaleSize viewScale 
 
 -- VIEW
@@ -73,7 +77,7 @@ content : Model -> List (Svg a)
 content model =
   case model of
     Start ->
-      boardWithText "Press S to start"
+      boardWithText ["Press S to start"]
     Gameplay gameState ->
       List.concat
       [ [ boardBorder ]
@@ -84,21 +88,28 @@ content model =
       , nextBrickBox gameState
       ]
     GameOver score ->
-      boardWithText "Game Over"
+      boardWithText ["Game Over", "Press R to restart"]
 
-boardWithText txt =
+boardWithText : List String -> List (Svg a)
+boardWithText lines =
   List.concat
     [ [ boardBorder ]
     , nextBrickLabeledBorder
-    , [ text'
-        [ x <| toString <| boardSize.width / 2
-        , y <| toString <| boardSize.height / 2
-        , textAnchor "middle"
-        , fontSize "10px"
-        ]
-        [ text txt ]
-      ] 
-    ]
+    , 
+      let
+        fSize = 10
+        lineHeight = fSize + 2 
+      in
+        lines
+        |> List.indexedMap (\i line -> 
+        text'
+          [ x <| toString <| (boardSize.width / 2)
+          , y <| toString <| ((boardSize.height / 2) - (toFloat (List.length lines * lineHeight) / 2) + toFloat i * toFloat lineHeight)
+          , textAnchor "middle"
+          , Svg.Attributes.fontSize <| (toString fSize) ++ "px"
+          ]
+          [ text line ]) 
+    ] 
 
 boardBorder : Svg a
 boardBorder =
@@ -119,8 +130,7 @@ nextBrickBox state =
       , case state.next of
           brickType::_ ->
             Board.new (floor nextBrickBoxLogicSize.height) (floor nextBrickBoxLogicSize.width)
-            |> mergeWith (Brick.Brick (Debug.log "next" brickType) Brick.Deg0 (Brick.Pos 1 1))
-            |> Debug.log "board"
+            |> mergeWith (Brick.Brick brickType Brick.Deg0 (Brick.Pos 1 1))
             |> board nextBrickBoxPos
           [] -> []
     ]

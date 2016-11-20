@@ -31,7 +31,7 @@ type Msg
   | NextBag Bag
   | Tick
   | Move MoveType
-  | Reset
+  | DoNothing
 
 init : ( Model, Cmd a )    
 init = (Start, Cmd.none)
