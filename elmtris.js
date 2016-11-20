@@ -9584,7 +9584,7 @@ var _ditrytus$elmtris$Model$Rotate = function (a) {
 var _ditrytus$elmtris$Model$Down = {ctor: 'Down'};
 var _ditrytus$elmtris$Model$Right = {ctor: 'Right'};
 var _ditrytus$elmtris$Model$Left = {ctor: 'Left'};
-var _ditrytus$elmtris$Model$Reset = {ctor: 'Reset'};
+var _ditrytus$elmtris$Model$DoNothing = {ctor: 'DoNothing'};
 var _ditrytus$elmtris$Model$Move = function (a) {
 	return {ctor: 'Move', _0: a};
 };
@@ -10648,7 +10648,7 @@ var _ditrytus$elmtris$Update$update = F2(
 								if (_p4.ctor === 'Just') {
 									return _ditrytus$elmtris$Update$toGameplay(_p4._0);
 								} else {
-									return A2(
+									return (_elm_lang$core$Native_Utils.cmp(state.brick.brickPos.y, _ditrytus$elmtris$Board$obstructedRows) > -1) ? A2(
 										_ditrytus$elmtris$Update$updateGameState,
 										_ditrytus$elmtris$Update$byTakingNextBrick,
 										_ditrytus$elmtris$Model$Gameplay(
@@ -10657,7 +10657,11 @@ var _ditrytus$elmtris$Update$update = F2(
 												{
 													board: _ditrytus$elmtris$Board$removeLines(
 														A2(_ditrytus$elmtris$Update$mergeWith, state.brick, state.board))
-												})));
+												}))) : {
+										ctor: '_Tuple2',
+										_0: _ditrytus$elmtris$Model$GameOver(state.score),
+										_1: _elm_lang$core$Platform_Cmd$none
+									};
 								}
 							},
 							model);
@@ -11045,14 +11049,17 @@ var _ditrytus$elmtris$Subscriptions$keyCodeToMove = function (keyCode) {
 			return _ditrytus$elmtris$Model$Move(_ditrytus$elmtris$Model$None);
 	}
 };
+var _ditrytus$elmtris$Subscriptions$startNewGameOnKey = function (keyToStart) {
+	return _elm_lang$keyboard$Keyboard$presses(
+		function (keyCode) {
+			return _elm_lang$core$Native_Utils.eq(keyCode, keyToStart) ? _ditrytus$elmtris$Model$Begin : _ditrytus$elmtris$Model$DoNothing;
+		});
+};
 var _ditrytus$elmtris$Subscriptions$subscriptions = function (model) {
 	var _p1 = model;
 	switch (_p1.ctor) {
 		case 'Start':
-			return _elm_lang$keyboard$Keyboard$presses(
-				function (_p2) {
-					return _ditrytus$elmtris$Model$Begin;
-				});
+			return _ditrytus$elmtris$Subscriptions$startNewGameOnKey(115);
 		case 'Gameplay':
 			return _elm_lang$core$Platform_Sub$batch(
 				_elm_lang$core$Native_List.fromArray(
@@ -11060,13 +11067,13 @@ var _ditrytus$elmtris$Subscriptions$subscriptions = function (model) {
 						A2(
 						_elm_lang$core$Time$every,
 						_elm_lang$core$Time$second,
-						function (_p3) {
+						function (_p2) {
 							return _ditrytus$elmtris$Model$Move(_ditrytus$elmtris$Model$Down);
 						}),
 						_elm_lang$keyboard$Keyboard$downs(_ditrytus$elmtris$Subscriptions$keyCodeToMove)
 					]));
 		default:
-			return _elm_lang$core$Platform_Sub$none;
+			return _ditrytus$elmtris$Subscriptions$startNewGameOnKey(114);
 	}
 };
 
@@ -11432,12 +11439,47 @@ var _ditrytus$elmtris$View$moveBy = F2(
 	function (a, b) {
 		return {x: a.x + b.x, y: a.y + b.y};
 	});
-var _ditrytus$elmtris$View$cellHeight = 10;
-var _ditrytus$elmtris$View$cellWidth = 10;
-var _ditrytus$elmtris$View$viewScale = {ctor: '_Tuple2', _0: _ditrytus$elmtris$View$cellWidth, _1: _ditrytus$elmtris$View$cellHeight};
+var _ditrytus$elmtris$View$Pos = F2(
+	function (a, b) {
+		return {x: a, y: b};
+	});
+var _ditrytus$elmtris$View$Size = F2(
+	function (a, b) {
+		return {width: a, height: b};
+	});
+var _ditrytus$elmtris$View$cellSize = A2(_ditrytus$elmtris$View$Size, 10, 10);
+var _ditrytus$elmtris$View$boardSize = {
+	width: _ditrytus$elmtris$View$cellSize.width * _elm_lang$core$Basics$toFloat(_ditrytus$elmtris$Board$columns),
+	height: _ditrytus$elmtris$View$cellSize.height * _elm_lang$core$Basics$toFloat(_ditrytus$elmtris$Board$visibleRows)
+};
+var _ditrytus$elmtris$View$displaySize = {width: _ditrytus$elmtris$View$boardSize.width * 2, height: _ditrytus$elmtris$View$boardSize.height};
+var _ditrytus$elmtris$View$boardBorder = A2(
+	_elm_lang$svg$Svg$rect,
+	_elm_lang$core$Native_List.fromArray(
+		[
+			_elm_lang$svg$Svg_Attributes$x('0'),
+			_elm_lang$svg$Svg_Attributes$y('0'),
+			_elm_lang$svg$Svg_Attributes$width(
+			_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardSize.width)),
+			_elm_lang$svg$Svg_Attributes$height(
+			_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardSize.height)),
+			_elm_lang$svg$Svg_Attributes$fill('#FFFFFF'),
+			_elm_lang$svg$Svg_Attributes$stroke('#000000'),
+			_elm_lang$svg$Svg_Attributes$strokeWidth('1')
+		]),
+	_elm_lang$core$Native_List.fromArray(
+		[]));
+var _ditrytus$elmtris$View$viewScale = {ctor: '_Tuple2', _0: _ditrytus$elmtris$View$cellSize.width, _1: _ditrytus$elmtris$View$cellSize.height};
 var _ditrytus$elmtris$View$scalePosToView = _ditrytus$elmtris$View$scalePos(_ditrytus$elmtris$View$viewScale);
+var _ditrytus$elmtris$View$nextBrickBoxPos = _ditrytus$elmtris$View$scalePosToView(
+	A2(_ditrytus$elmtris$View$Pos, 11, 10));
+var _ditrytus$elmtris$View$nextBrickLabelPos = A2(
+	_ditrytus$elmtris$View$moveBy,
+	_ditrytus$elmtris$View$scalePosToView(
+		A2(_ditrytus$elmtris$View$Pos, 0.5, -0.1)),
+	_ditrytus$elmtris$View$nextBrickBoxPos);
 var _ditrytus$elmtris$View$scaleSizeToView = _ditrytus$elmtris$View$scaleSize(_ditrytus$elmtris$View$viewScale);
-var _ditrytus$elmtris$View$viewBoard = F2(
+var _ditrytus$elmtris$View$board = F2(
 	function (pos, board) {
 		var cellToRect = F3(
 			function (row, column, cell) {
@@ -11450,14 +11492,14 @@ var _ditrytus$elmtris$View$viewBoard = F2(
 								[
 									_elm_lang$svg$Svg_Attributes$x(
 									_elm_lang$core$Basics$toString(
-										_elm_lang$core$Basics$floor(pos.x) + (column * _ditrytus$elmtris$View$cellWidth))),
+										_elm_lang$core$Basics$floor(pos.x) + (column * _elm_lang$core$Basics$floor(_ditrytus$elmtris$View$cellSize.width)))),
 									_elm_lang$svg$Svg_Attributes$y(
 									_elm_lang$core$Basics$toString(
-										_elm_lang$core$Basics$floor(pos.y) + (row * _ditrytus$elmtris$View$cellHeight))),
+										_elm_lang$core$Basics$floor(pos.y) + (row * _elm_lang$core$Basics$floor(_ditrytus$elmtris$View$cellSize.height)))),
 									_elm_lang$svg$Svg_Attributes$width(
-									_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$cellWidth + 0.1)),
+									_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$cellSize.width + 0.1)),
 									_elm_lang$svg$Svg_Attributes$height(
-									_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$cellHeight + 0.1)),
+									_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$cellSize.height + 0.1)),
 									_elm_lang$svg$Svg_Attributes$strokeWidth('0'),
 									_elm_lang$svg$Svg_Attributes$fill('#000000')
 								]),
@@ -11474,103 +11516,106 @@ var _ditrytus$elmtris$View$viewBoard = F2(
 				_ditrytus$elmtris$Array2DExtras$flattenArray2D(
 					A2(_tortus$elm_array_2d$Array2D$indexedMap, cellToRect, board))));
 	});
-var _ditrytus$elmtris$View$boardHeight = _ditrytus$elmtris$View$cellHeight * _ditrytus$elmtris$Board$visibleRows;
-var _ditrytus$elmtris$View$displayHeight = _ditrytus$elmtris$View$boardHeight;
-var _ditrytus$elmtris$View$boardWidth = _ditrytus$elmtris$View$cellWidth * _ditrytus$elmtris$Board$columns;
-var _ditrytus$elmtris$View$displayWidth = _ditrytus$elmtris$View$boardWidth * 2;
-var _ditrytus$elmtris$View$viewBorder = A2(
-	_elm_lang$svg$Svg$rect,
-	_elm_lang$core$Native_List.fromArray(
-		[
-			_elm_lang$svg$Svg_Attributes$x('0'),
-			_elm_lang$svg$Svg_Attributes$y('0'),
-			_elm_lang$svg$Svg_Attributes$width(
-			_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardWidth)),
-			_elm_lang$svg$Svg_Attributes$height(
-			_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardHeight)),
-			_elm_lang$svg$Svg_Attributes$fill('#FFFFFF'),
-			_elm_lang$svg$Svg_Attributes$stroke('#000000'),
-			_elm_lang$svg$Svg_Attributes$strokeWidth('1')
-		]),
-	_elm_lang$core$Native_List.fromArray(
-		[]));
-var _ditrytus$elmtris$View$Pos = F2(
-	function (a, b) {
-		return {x: a, y: b};
-	});
-var _ditrytus$elmtris$View$nextBrickBoxPos = _ditrytus$elmtris$View$scalePosToView(
-	A2(_ditrytus$elmtris$View$Pos, 11, 10));
-var _ditrytus$elmtris$View$nextBrickLabelPos = A2(
-	_ditrytus$elmtris$View$moveBy,
-	_ditrytus$elmtris$View$scalePosToView(
-		A2(_ditrytus$elmtris$View$Pos, 0.5, -0.1)),
-	_ditrytus$elmtris$View$nextBrickBoxPos);
-var _ditrytus$elmtris$View$Size = F2(
-	function (a, b) {
-		return {width: a, height: b};
-	});
 var _ditrytus$elmtris$View$nextBrickBoxLogicSize = A2(_ditrytus$elmtris$View$Size, 6, 4);
 var _ditrytus$elmtris$View$nextBrickBoxSize = _ditrytus$elmtris$View$scaleSizeToView(_ditrytus$elmtris$View$nextBrickBoxLogicSize);
-var _ditrytus$elmtris$View$viewNextBrickBox = function (state) {
+var _ditrytus$elmtris$View$nextBrickLabeledBorder = _elm_lang$core$Native_List.fromArray(
+	[
+		A2(
+		_elm_lang$svg$Svg$rect,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$svg$Svg_Attributes$x(
+				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxPos.x)),
+				_elm_lang$svg$Svg_Attributes$y(
+				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxPos.y)),
+				_elm_lang$svg$Svg_Attributes$width(
+				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxSize.width)),
+				_elm_lang$svg$Svg_Attributes$height(
+				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxSize.height)),
+				_elm_lang$svg$Svg_Attributes$fill('#FFFFFF'),
+				_elm_lang$svg$Svg_Attributes$stroke('#000000'),
+				_elm_lang$svg$Svg_Attributes$strokeWidth('1')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[])),
+		A2(
+		_elm_lang$svg$Svg$text$,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$svg$Svg_Attributes$x(
+				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickLabelPos.x)),
+				_elm_lang$svg$Svg_Attributes$y(
+				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickLabelPos.y)),
+				_elm_lang$svg$Svg_Attributes$textAnchor('start'),
+				_elm_lang$svg$Svg_Attributes$fontSize('10px')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$svg$Svg$text('Next brick')
+			]))
+	]);
+var _ditrytus$elmtris$View$boardWithText = function (lines) {
 	return _elm_lang$core$List$concat(
 		_elm_lang$core$Native_List.fromArray(
 			[
 				_elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$svg$Svg$rect,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$svg$Svg_Attributes$x(
-							_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxPos.x)),
-							_elm_lang$svg$Svg_Attributes$y(
-							_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxPos.y)),
-							_elm_lang$svg$Svg_Attributes$width(
-							_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxSize.width)),
-							_elm_lang$svg$Svg_Attributes$height(
-							_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxSize.height)),
-							_elm_lang$svg$Svg_Attributes$fill('#FFFFFF'),
-							_elm_lang$svg$Svg_Attributes$stroke('#000000'),
-							_elm_lang$svg$Svg_Attributes$strokeWidth('1')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[])),
-					A2(
-					_elm_lang$svg$Svg$text$,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$svg$Svg_Attributes$x(
-							_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickLabelPos.x)),
-							_elm_lang$svg$Svg_Attributes$y(
-							_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickLabelPos.y)),
-							_elm_lang$svg$Svg_Attributes$textAnchor('start'),
-							_elm_lang$svg$Svg_Attributes$fontSize('10px')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$svg$Svg$text('Next brick')
-						]))
-				]),
+				[_ditrytus$elmtris$View$boardBorder]),
+				_ditrytus$elmtris$View$nextBrickLabeledBorder,
+				function () {
+				var fSize = 10;
+				var lineHeight = fSize + 2;
+				return A2(
+					_elm_lang$core$List$indexedMap,
+					F2(
+						function (i, line) {
+							return A2(
+								_elm_lang$svg$Svg$text$,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$svg$Svg_Attributes$x(
+										_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardSize.width / 2)),
+										_elm_lang$svg$Svg_Attributes$y(
+										_elm_lang$core$Basics$toString(
+											((_ditrytus$elmtris$View$boardSize.height / 2) - (_elm_lang$core$Basics$toFloat(
+												_elm_lang$core$List$length(lines) * lineHeight) / 2)) + (_elm_lang$core$Basics$toFloat(i) * _elm_lang$core$Basics$toFloat(lineHeight)))),
+										_elm_lang$svg$Svg_Attributes$textAnchor('middle'),
+										_elm_lang$svg$Svg_Attributes$fontSize(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											_elm_lang$core$Basics$toString(fSize),
+											'px'))
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$svg$Svg$text(line)
+									]));
+						}),
+					lines);
+			}()
+			]));
+};
+var _ditrytus$elmtris$View$nextBrickBox = function (state) {
+	return _elm_lang$core$List$concat(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_ditrytus$elmtris$View$nextBrickLabeledBorder,
 				function () {
 				var _p5 = state.next;
 				if (_p5.ctor === '::') {
 					return A2(
-						_ditrytus$elmtris$View$viewBoard,
+						_ditrytus$elmtris$View$board,
 						_ditrytus$elmtris$View$nextBrickBoxPos,
 						A2(
-							_elm_lang$core$Debug$log,
-							'board',
+							_ditrytus$elmtris$Update$mergeWith,
+							A3(
+								_ditrytus$elmtris$Brick$Brick,
+								_p5._0,
+								_ditrytus$elmtris$Brick$Deg0,
+								A2(_ditrytus$elmtris$Brick$Pos, 1, 1)),
 							A2(
-								_ditrytus$elmtris$Update$mergeWith,
-								A3(
-									_ditrytus$elmtris$Brick$Brick,
-									A2(_elm_lang$core$Debug$log, 'next', _p5._0),
-									_ditrytus$elmtris$Brick$Deg0,
-									A2(_ditrytus$elmtris$Brick$Pos, 1, 1)),
-								A2(
-									_ditrytus$elmtris$Board$new,
-									_elm_lang$core$Basics$floor(_ditrytus$elmtris$View$nextBrickBoxLogicSize.height),
-									_elm_lang$core$Basics$floor(_ditrytus$elmtris$View$nextBrickBoxLogicSize.width)))));
+								_ditrytus$elmtris$Board$new,
+								_elm_lang$core$Basics$floor(_ditrytus$elmtris$View$nextBrickBoxLogicSize.height),
+								_elm_lang$core$Basics$floor(_ditrytus$elmtris$View$nextBrickBoxLogicSize.width))));
 				} else {
 					return _elm_lang$core$Native_List.fromArray(
 						[]);
@@ -11578,45 +11623,33 @@ var _ditrytus$elmtris$View$viewNextBrickBox = function (state) {
 			}()
 			]));
 };
-var _ditrytus$elmtris$View$viewContent = function (model) {
+var _ditrytus$elmtris$View$content = function (model) {
 	var _p6 = model;
 	switch (_p6.ctor) {
 		case 'Start':
-			return _elm_lang$core$Native_List.fromArray(
-				[
-					A2(
-					_elm_lang$svg$Svg$text$,
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$svg$Svg_Attributes$x('50'),
-							_elm_lang$svg$Svg_Attributes$y('50'),
-							_elm_lang$svg$Svg_Attributes$textAnchor('middle'),
-							_elm_lang$svg$Svg_Attributes$fontSize('5px')
-						]),
-					_elm_lang$core$Native_List.fromArray(
-						[
-							_elm_lang$svg$Svg$text('Press ANY key to start')
-						]))
-				]);
+			return _ditrytus$elmtris$View$boardWithText(
+				_elm_lang$core$Native_List.fromArray(
+					['Press S to start']));
 		case 'Gameplay':
 			var _p7 = _p6._0;
 			return _elm_lang$core$List$concat(
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$core$Native_List.fromArray(
-						[_ditrytus$elmtris$View$viewBorder]),
+						[_ditrytus$elmtris$View$boardBorder]),
 						A2(
-						_ditrytus$elmtris$View$viewBoard,
+						_ditrytus$elmtris$View$board,
 						A2(_ditrytus$elmtris$View$Pos, 0, 0),
 						A2(
 							_ditrytus$elmtris$Board$skipRows,
 							_ditrytus$elmtris$Board$obstructedRows,
 							A2(_ditrytus$elmtris$Update$mergeWith, _p7.brick, _p7.board))),
-						_ditrytus$elmtris$View$viewNextBrickBox(_p7)
+						_ditrytus$elmtris$View$nextBrickBox(_p7)
 					]));
 		default:
-			return _elm_lang$core$Native_List.fromArray(
-				[]);
+			return _ditrytus$elmtris$View$boardWithText(
+				_elm_lang$core$Native_List.fromArray(
+					['Game Over', 'Press R to restart']));
 	}
 };
 var _ditrytus$elmtris$View$view = function (model) {
@@ -11630,15 +11663,15 @@ var _ditrytus$elmtris$View$view = function (model) {
 					'0 0 ',
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$displayWidth),
+						_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$displaySize.width),
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							' ',
-							_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$displayHeight))))),
+							_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$displaySize.height))))),
 				_elm_lang$svg$Svg_Attributes$width('100%'),
 				_elm_lang$svg$Svg_Attributes$height('100%')
 			]),
-		_ditrytus$elmtris$View$viewContent(model));
+		_ditrytus$elmtris$View$content(model));
 };
 
 var _ditrytus$elmtris$Main$main = {
