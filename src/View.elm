@@ -10,33 +10,29 @@ import Update exposing (mergeWith)
 import Array
 import Array2D
 import Array2DExtras exposing (flattenArray2D)
-import Debug
 
 type alias Pos = { x:Float, y:Float }
 type alias Size = { width:Float, height:Float }
 
-boardWidth : Int
-boardWidth = cellWidth * Board.columns
+boardSize : Size
+boardSize =
+  { width = cellSize.width * toFloat Board.columns 
+  , height = cellSize.height * toFloat Board.visibleRows
+  }
 
-boardHeight : Int
-boardHeight = cellHeight * Board.visibleRows
+displaySize : Size
+displaySize =
+  { width = boardSize.width * 2
+  , height = boardSize.height
+  }
 
-displayWidth : Int
-displayWidth = boardWidth * 2
-
-displayHeight : Int
-displayHeight = boardHeight
-
-cellWidth : number
-cellWidth = 10
-
-cellHeight : number
-cellHeight = 10
+cellSize : Size
+cellSize = Size 10 10
 
 moveBy : Pos -> Pos -> Pos
 moveBy a b = {x=a.x+b.x, y=a.y+b.y}
 
-viewScale = (cellWidth, cellHeight)
+viewScale = (cellSize.width, cellSize.height)
 
 nextBrickBoxPos : Pos
 nextBrickBoxPos = Pos 11 10 |> scalePosToView
@@ -65,74 +61,92 @@ view model =
   svg
   [ viewBox (
       "0 0 "
-      ++ toString displayWidth
+      ++ toString displaySize.width
       ++ " "
-      ++ toString displayHeight)
+      ++ toString displaySize.height)
   , width "100%"
   , height "100%"
   ]
-  (viewContent model)
+  (content model)
 
-viewContent : Model -> List (Svg a)
-viewContent model =
+content : Model -> List (Svg a)
+content model =
   case model of
     Start ->
-      [text' [x "50", y "50", textAnchor "middle", fontSize "5px"] [text "Press ANY key to start"]]
+      boardWithText "Press S to start"
     Gameplay gameState ->
       List.concat
-      [ [ viewBorder ]
+      [ [ boardBorder ]
       , gameState.board
         |> mergeWith gameState.brick
         |> Board.skipRows Board.obstructedRows
-        |> viewBoard (Pos 0 0)
-      , viewNextBrickBox gameState
+        |> board (Pos 0 0)
+      , nextBrickBox gameState
       ]
-    _ ->
-      []
+    GameOver score ->
+      boardWithText "Game Over"
 
-viewBorder : Svg a
-viewBorder =
+boardWithText txt =
+  List.concat
+    [ [ boardBorder ]
+    , nextBrickLabeledBorder
+    , [ text'
+        [ x <| toString <| boardSize.width / 2
+        , y <| toString <| boardSize.height / 2
+        , textAnchor "middle"
+        , fontSize "10px"
+        ]
+        [ text txt ]
+      ] 
+    ]
+
+boardBorder : Svg a
+boardBorder =
   rect
     [ x "0"
     , y "0"
-    , width (toString boardWidth)
-    , height (toString boardHeight)
+    , width (toString boardSize.width)
+    , height (toString boardSize.height)
     , fill "#FFFFFF"
     , stroke "#000000"
     , strokeWidth "1"
     ] []
 
-viewNextBrickBox : GameState -> List (Svg a)
-viewNextBrickBox state =
+nextBrickBox : GameState -> List (Svg a)
+nextBrickBox state =
   List.concat
-    [ [ rect
-          [ x (toString nextBrickBoxPos.x)
-          , y (toString nextBrickBoxPos.y)
-          , width (toString nextBrickBoxSize.width)
-          , height (toString nextBrickBoxSize.height)
-          , fill "#FFFFFF"
-          , stroke "#000000"
-          , strokeWidth "1"
-          ] []
-      , text'
-          [ x (toString nextBrickLabelPos.x)
-          , y (toString nextBrickLabelPos.y)
-          , textAnchor "start"
-          , fontSize "10px"
-          ]
-          [text "Next brick"]
-      ]
+    [ nextBrickLabeledBorder
       , case state.next of
           brickType::_ ->
             Board.new (floor nextBrickBoxLogicSize.height) (floor nextBrickBoxLogicSize.width)
             |> mergeWith (Brick.Brick (Debug.log "next" brickType) Brick.Deg0 (Brick.Pos 1 1))
             |> Debug.log "board"
-            |> viewBoard nextBrickBoxPos
+            |> board nextBrickBoxPos
           [] -> []
     ]
+
+nextBrickLabeledBorder : List (Svg a)
+nextBrickLabeledBorder =
+  [ rect
+      [ x (toString nextBrickBoxPos.x)
+      , y (toString nextBrickBoxPos.y)
+      , width (toString nextBrickBoxSize.width)
+      , height (toString nextBrickBoxSize.height)
+      , fill "#FFFFFF"
+      , stroke "#000000"
+      , strokeWidth "1"
+      ] []
+  , text'
+      [ x (toString nextBrickLabelPos.x)
+      , y (toString nextBrickLabelPos.y)
+      , textAnchor "start"
+      , fontSize "10px"
+      ]
+      [text "Next brick"]
+  ]
     
-viewBoard: Pos -> Board -> List (Svg.Svg a) 
-viewBoard pos board =
+board: Pos -> Board -> List (Svg.Svg a) 
+board pos board =
   let
     cellToRect: Int -> Int -> Bool -> Maybe (Svg.Svg a)
     cellToRect row column cell =
@@ -140,10 +154,10 @@ viewBoard pos board =
         True ->
           Just (
             rect
-              [ x (toString ((floor pos.x) + column * cellWidth))
-              , y (toString ((floor pos.y) + row * cellHeight))
-              , width (toString (cellWidth + 0.1))
-              , height (toString (cellHeight + 0.1))
+              [ x (toString (floor pos.x + column * floor cellSize.width))
+              , y (toString (floor pos.y + row * floor cellSize.height))
+              , width (toString (cellSize.width + 0.1))
+              , height (toString (cellSize.height + 0.1))
               , strokeWidth "0"
               , fill "#000000" ]
               []

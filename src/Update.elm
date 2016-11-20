@@ -35,8 +35,11 @@ update msg model =
               Just newState ->
                 newState |> toGameplay  
               Nothing ->
-                Gameplay {state | board = state.board |> mergeWith state.brick |> Board.removeLines}
-                |> updateGameState byTakingNextBrick)
+                if state.brick.brickPos.y >= Board.obstructedRows then
+                  Gameplay {state | board = state.board |> mergeWith state.brick |> Board.removeLines}
+                  |> updateGameState byTakingNextBrick
+                else
+                  (GameOver state.score, Cmd.none))                  
         Rotate direction ->
           model |> updateGameState (byRotatingBrickIn direction)
         _ -> (model, Cmd.none)
