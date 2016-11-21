@@ -55,6 +55,20 @@ scoreBox =
   , label = "Score"
   }
 
+levelBox : LabeledBox
+levelBox =
+  { pos = Pos 11 6
+  , size = Size 3 2
+  , label = "Level"
+  }
+
+linesBox : LabeledBox
+linesBox =
+  { pos = Pos 15 6
+  , size = Size 4 2
+  , label = "Lines"
+  }
+
 toView : LabeledBox -> LabeledBox
 toView box =
   { pos = box.pos |> scalePosToView
@@ -106,6 +120,8 @@ content model =
         |> board (Pos 0 0)
       , showNextBrickBox gameState
       , showPointsBox gameState
+      , showLevelBox gameState
+      , showLinesBox gameState
       ]
     GameOver score ->
       boardWithText ["Game Over", "Press R to restart"]
@@ -116,6 +132,8 @@ boardWithText lines =
     [ [ boardBorder ]
     , showLabeledBox nextBrickBox 
     , showLabeledBox scoreBox
+    , showLabeledBox levelBox
+    , showLabeledBox linesBox
     , let
         fSize = 10
         lineHeight = fSize + 2 
@@ -160,21 +178,33 @@ showNextBrickBox state =
 
 showPointsBox : GameState -> List (Svg a)
 showPointsBox state =
+  showNumberBox scoreBox state.score
+
+showLevelBox : GameState -> List (Svg a)
+showLevelBox state =
+  showNumberBox levelBox state.level
+
+showLinesBox : GameState -> List (Svg a)
+showLinesBox state =
+  showNumberBox linesBox state.linesCleared
+
+showNumberBox : LabeledBox -> Int -> List (Svg a)
+showNumberBox box num =
   let
     numberPos =
-      scoreBox.pos
-      |> moveBy (Pos 0.5 ((scoreBox.size.height / 2) + 0.5))
+      box.pos
+      |> moveBy (Pos 0.5 ((box.size.height / 2) + 0.5))
       |> scalePosToView 
   in
     List.concat
-    [ showLabeledBox scoreBox 
+    [ showLabeledBox box 
     , [ text'
         [ x (toString numberPos.x)
         , y (toString numberPos.y)
         , textAnchor "start"
         , fontSize "20px"
         ]
-        [ text (state.score |> toString) ]
+        [ text (num |> toString) ]
       ]
     ]
 

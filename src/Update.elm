@@ -22,7 +22,7 @@ update : Msg -> Model.Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
     Begin ->
-      Gameplay { brick = Brick.new Board.columns Brick.I, level = 1, linesCleared = 1, score = 0, board = Board.empty, next = [] }
+      Gameplay { brick = Brick.new Board.columns Brick.I, level = 1, linesCleared = 0, score = 0, board = Board.empty, next = [] }
       |> updateGameState byTakingNextBrick
     NextBag newBag->
       model |> updateGameState (bySetingNewBagAndTakingNextBrick newBag)
