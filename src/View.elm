@@ -14,6 +14,12 @@ import Array2DExtras exposing (flattenArray2D)
 type alias Pos = { x:Float, y:Float }
 type alias Size = { width:Float, height:Float }
 
+type alias LabeledBox =
+  { pos : Pos
+  , size : Size
+  , label : String
+  }
+
 boardSize : Size
 boardSize =
   { width = cellSize.width * toFloat Board.columns 
@@ -35,17 +41,30 @@ moveBy a b = {x=a.x+b.x, y=a.y+b.y}
 viewScale : ( Float, Float )
 viewScale = (cellSize.width, cellSize.height)
 
-nextBrickBoxPos : Pos
-nextBrickBoxPos = Pos 11 10 |> scalePosToView
+nextBrickBox : LabeledBox
+nextBrickBox =
+  { pos = Pos 11 10
+  , size = Size 6 4
+  , label = "Next brick"
+  }
 
-nextBrickBoxLogicSize : Size
-nextBrickBoxLogicSize = Size 6 4
+scoreBox : LabeledBox
+scoreBox =
+  { pos = Pos 11 2
+  , size = Size 8 2
+  , label = "Score"
+  }
 
-nextBrickBoxSize : Size
-nextBrickBoxSize = nextBrickBoxLogicSize |> scaleSizeToView
+toView : LabeledBox -> LabeledBox
+toView box =
+  { pos = box.pos |> scalePosToView
+  , size = box.size |> scaleSizeToView
+  , label = box.label
+  }
 
-nextBrickLabelPos : Pos
-nextBrickLabelPos = nextBrickBoxPos |> moveBy ((Pos 0.5 -0.1) |> scalePosToView)
+labelViewPos : LabeledBox -> Pos
+labelViewPos box =
+  box.pos |> moveBy (Pos 0.5 -0.1) |> scalePosToView
 
 scalePos : (Float,Float) -> Pos -> Pos
 scalePos (h,v) pos = {x = pos.x * h, y = pos.y * v}
@@ -85,7 +104,8 @@ content model =
         |> mergeWith gameState.brick
         |> Board.skipRows Board.obstructedRows
         |> board (Pos 0 0)
-      , nextBrickBox gameState
+      , showNextBrickBox gameState
+      , showPointsBox gameState
       ]
     GameOver score ->
       boardWithText ["Game Over", "Press R to restart"]
@@ -94,9 +114,9 @@ boardWithText : List String -> List (Svg a)
 boardWithText lines =
   List.concat
     [ [ boardBorder ]
-    , nextBrickLabeledBorder
-    , 
-      let
+    , showLabeledBox nextBrickBox 
+    , showLabeledBox scoreBox
+    , let
         fSize = 10
         lineHeight = fSize + 2 
       in
@@ -123,36 +143,63 @@ boardBorder =
     , strokeWidth "1"
     ] []
 
-nextBrickBox : GameState -> List (Svg a)
-nextBrickBox state =
+showNextBrickBox : GameState -> List (Svg a)
+showNextBrickBox state =
   List.concat
-    [ nextBrickLabeledBorder
-      , case state.next of
-          brickType::_ ->
-            Board.new (floor nextBrickBoxLogicSize.height) (floor nextBrickBoxLogicSize.width)
-            |> mergeWith (Brick.Brick brickType Brick.Deg0 (Brick.Pos 1 1))
-            |> board nextBrickBoxPos
-          [] -> []
+  [ showLabeledBox nextBrickBox
+  , let
+      viewBox = nextBrickBox |> toView
+    in
+      case state.next of
+        brickType::_ ->
+          Board.new (floor nextBrickBox.size.height) (floor nextBrickBox.size.width)
+          |> mergeWith (Brick.Brick brickType Brick.Deg0 (Brick.Pos 1 1))
+          |> board viewBox.pos
+        [] -> []
+  ]
+
+showPointsBox : GameState -> List (Svg a)
+showPointsBox state =
+  let
+    numberPos =
+      scoreBox.pos
+      |> moveBy (Pos 0.5 ((scoreBox.size.height / 2) + 0.5))
+      |> scalePosToView 
+  in
+    List.concat
+    [ showLabeledBox scoreBox 
+    , [ text'
+        [ x (toString numberPos.x)
+        , y (toString numberPos.y)
+        , textAnchor "start"
+        , fontSize "20px"
+        ]
+        [ text (state.score |> toString) ]
+      ]
     ]
 
-nextBrickLabeledBorder : List (Svg a)
-nextBrickLabeledBorder =
+showLabeledBox : LabeledBox -> List (Svg a)
+showLabeledBox box =
+  let
+    viewBox = box |> toView
+    labelPos = labelViewPos box
+  in
   [ rect
-      [ x (toString nextBrickBoxPos.x)
-      , y (toString nextBrickBoxPos.y)
-      , width (toString nextBrickBoxSize.width)
-      , height (toString nextBrickBoxSize.height)
+      [ x (toString viewBox.pos.x)
+      , y (toString viewBox.pos.y)
+      , width (toString viewBox.size.width)
+      , height (toString viewBox.size.height)
       , fill "#FFFFFF"
       , stroke "#000000"
       , strokeWidth "1"
       ] []
   , text'
-      [ x (toString nextBrickLabelPos.x)
-      , y (toString nextBrickLabelPos.y)
+      [ x (toString labelPos.x)
+      , y (toString labelPos.y)
       , textAnchor "start"
       , fontSize "10px"
       ]
-      [text "Next brick"]
+      [text box.label]
   ]
     
 board: Pos -> Board -> List (Svg.Svg a) 
