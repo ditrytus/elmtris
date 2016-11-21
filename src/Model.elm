@@ -7,6 +7,8 @@ type alias Score = Int
 
 type alias GameState =
   { brick: Brick.Brick
+  , linesCleared: Int
+  , level: Int
   , score: Score
   , board: Board.Board
   , next: Bag

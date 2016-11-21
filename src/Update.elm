@@ -15,11 +15,14 @@ type alias MoveFunc = (Brick -> Pos)
 visibleNextBricks : Int
 visibleNextBricks = 1 
 
+levelUpEvery : Int
+levelUpEvery = 25
+
 update : Msg -> Model.Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
     Begin ->
-      Gameplay { brick = Brick.new Board.columns Brick.I, score = 0, board = Board.empty, next = [] }
+      Gameplay { brick = Brick.new Board.columns Brick.I, level = 1, linesCleared = 1, score = 0, board = Board.empty, next = [] }
       |> updateGameState byTakingNextBrick
     NextBag newBag->
       model |> updateGameState (bySetingNewBagAndTakingNextBrick newBag)
@@ -36,8 +39,20 @@ update msg model =
                 newState |> toGameplay  
               Nothing ->
                 if state.brick.brickPos.y >= Board.obstructedRows then
-                  Gameplay {state | board = state.board |> mergeWith state.brick |> Board.removeLines}
-                  |> updateGameState byTakingNextBrick
+                  let
+                    mergedBoard =
+                      state.board 
+                      |> mergeWith state.brick
+                    newLinesCleared =
+                      mergedBoard
+                      |> Board.countLines 
+                      |> (+) state.linesCleared
+                  in
+                    Gameplay { state 
+                    | board = mergedBoard |> Board.removeLines
+                    , linesCleared = newLinesCleared
+                    , level = (newLinesCleared // levelUpEvery) + 1 }
+                    |> updateGameState byTakingNextBrick
                 else
                   (GameOver state.score, Cmd.none))                  
         Rotate direction ->

@@ -44,3 +44,12 @@ removeLines board =
     |> List.append (List.repeat (rows - (List.length remainingRows)) (Array.repeat columns False))
     |> Array.fromList
     |> Array2D.fromArray
+
+countLines: Board -> Int
+countLines board = 
+  board.data
+    |> Array.filter (\row ->
+      row
+      |> Array.toList
+      |> List.all identity)
+    |> Array.length

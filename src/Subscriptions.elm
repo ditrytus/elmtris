@@ -10,9 +10,9 @@ subscriptions model =
   case model of
     Start ->
       startNewGameOnKey 115
-    Gameplay _ ->
+    Gameplay state ->
       Sub.batch
-        [ Time.every Time.second (\_ -> Move Down)
+        [ Time.every (levelToDelay state.level) (\_ -> Move Down)
         , Keyboard.downs keyCodeToMove]
     GameOver _ -> 
       startNewGameOnKey 114
@@ -20,6 +20,10 @@ subscriptions model =
 startNewGameOnKey : KeyCode -> Sub Msg
 startNewGameOnKey keyToStart =
   Keyboard.presses (\keyCode -> if keyCode == keyToStart then Begin else DoNothing)
+
+levelToDelay : Int -> Time.Time
+levelToDelay level =
+  Time.inMilliseconds <| 1000*0.9^(toFloat level-1)
 
 keyCodeToMove: KeyCode -> Msg
 keyCodeToMove keyCode =
