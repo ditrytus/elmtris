@@ -43,15 +43,18 @@ update msg model =
                     mergedBoard =
                       state.board 
                       |> mergeWith state.brick
-                    newLinesCleared =
+                    linesCleared =
                       mergedBoard
                       |> Board.countLines 
+                    totalLinesCleared =
+                      linesCleared
                       |> (+) state.linesCleared
                   in
                     Gameplay { state 
                     | board = mergedBoard |> Board.removeLines
-                    , linesCleared = newLinesCleared
-                    , level = (newLinesCleared // levelUpEvery) + 1 }
+                    , linesCleared = totalLinesCleared
+                    , level = (totalLinesCleared // levelUpEvery) + 1
+                    , score = state.score + (score linesCleared state.level)}
                     |> updateGameState byTakingNextBrick
                 else
                   (GameOver state.score, Cmd.none))                  
@@ -59,6 +62,19 @@ update msg model =
           model |> updateGameState (byRotatingBrickIn direction)
         _ -> (model, Cmd.none)
     _ -> (model, Cmd.none)
+
+score : number -> number' -> number'
+score lines level =
+  let
+    scoreBase lines =
+      case lines of
+      0 -> 0
+      1 -> 40
+      2 -> 100
+      3 -> 300
+      _ -> 1200
+  in
+    (scoreBase lines) * level
 
 bySetingNewBagAndTakingNextBrick : Model.Bag -> GameState ->  ( Model, Cmd Msg )
 bySetingNewBagAndTakingNextBrick newBag state =
