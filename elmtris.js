@@ -3962,6 +3962,18 @@ var _ditrytus$elmtris$Array2DExtras$flattenArray2D = function (array2D) {
 					array2D.data))));
 };
 
+var _ditrytus$elmtris$Board$countLines = function (board) {
+	return _elm_lang$core$Array$length(
+		A2(
+			_elm_lang$core$Array$filter,
+			function (row) {
+				return A2(
+					_elm_lang$core$List$all,
+					_elm_lang$core$Basics$identity,
+					_elm_lang$core$Array$toList(row));
+			},
+			board.data));
+};
 var _ditrytus$elmtris$Board$skipRows = F2(
 	function (n, board) {
 		skipRows:
@@ -9565,9 +9577,9 @@ var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
 };
 var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
 
-var _ditrytus$elmtris$Model$GameState = F4(
-	function (a, b, c, d) {
-		return {brick: a, score: b, board: c, next: d};
+var _ditrytus$elmtris$Model$GameState = F6(
+	function (a, b, c, d, e, f) {
+		return {brick: a, linesCleared: b, level: c, score: d, board: e, next: f};
 	});
 var _ditrytus$elmtris$Model$GameOver = function (a) {
 	return {ctor: 'GameOver', _0: a};
@@ -10570,20 +10582,40 @@ var _ditrytus$elmtris$Update$byMovingBrick = F2(
 			_ditrytus$elmtris$Update$updatePosition(translateFunc),
 			state);
 	});
+var _ditrytus$elmtris$Update$score = F2(
+	function (lines, level) {
+		var scoreBase = function (lines) {
+			var _p1 = lines;
+			switch (_p1) {
+				case 0:
+					return 0;
+				case 1:
+					return 40;
+				case 2:
+					return 100;
+				case 3:
+					return 300;
+				default:
+					return 1200;
+			}
+		};
+		return scoreBase(lines) * level;
+	});
+var _ditrytus$elmtris$Update$levelUpEvery = 25;
 var _ditrytus$elmtris$Update$visibleNextBricks = 1;
 var _ditrytus$elmtris$Update$byTakingNextBrick = function (state) {
 	var nextRandomBag = _ditrytus$elmtris$Update$commandWithRandomBrickBag(_ditrytus$elmtris$Model$NextBag);
 	if (_elm_lang$core$Native_Utils.cmp(
 		_elm_lang$core$List$length(state.next),
 		_ditrytus$elmtris$Update$visibleNextBricks) > 0) {
-		var _p1 = state.next;
-		if (_p1.ctor === '::') {
+		var _p2 = state.next;
+		if (_p2.ctor === '::') {
 			return _ditrytus$elmtris$Update$toGameplay(
 				_elm_lang$core$Native_Utils.update(
 					state,
 					{
-						brick: A2(_ditrytus$elmtris$Brick$new, _ditrytus$elmtris$Board$columns, _p1._0),
-						next: _p1._1
+						brick: A2(_ditrytus$elmtris$Brick$new, _ditrytus$elmtris$Board$columns, _p2._0),
+						next: _p2._1
 					}));
 		} else {
 			return A2(_ditrytus$elmtris$Update$toGameplayWith, nextRandomBag, state);
@@ -10605,8 +10637,8 @@ var _ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick = F2(
 	});
 var _ditrytus$elmtris$Update$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
 			case 'Begin':
 				return A2(
 					_ditrytus$elmtris$Update$updateGameState,
@@ -10614,6 +10646,8 @@ var _ditrytus$elmtris$Update$update = F2(
 					_ditrytus$elmtris$Model$Gameplay(
 						{
 							brick: A2(_ditrytus$elmtris$Brick$new, _ditrytus$elmtris$Board$columns, _ditrytus$elmtris$Brick$I),
+							level: 1,
+							linesCleared: 0,
 							score: 0,
 							board: _ditrytus$elmtris$Board$empty,
 							next: _elm_lang$core$Native_List.fromArray(
@@ -10622,11 +10656,11 @@ var _ditrytus$elmtris$Update$update = F2(
 			case 'NextBag':
 				return A2(
 					_ditrytus$elmtris$Update$updateGameState,
-					_ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick(_p2._0),
+					_ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick(_p3._0),
 					model);
 			case 'Move':
-				var _p3 = _p2._0;
-				switch (_p3.ctor) {
+				var _p4 = _p3._0;
+				switch (_p4.ctor) {
 					case 'Left':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
@@ -10641,34 +10675,49 @@ var _ditrytus$elmtris$Update$update = F2(
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
 							function (state) {
-								var _p4 = A2(
+								var _p5 = A2(
 									_ditrytus$elmtris$Update$updateBrickWithCollision,
 									_ditrytus$elmtris$Update$updatePosition(_ditrytus$elmtris$Update$down),
 									state);
-								if (_p4.ctor === 'Just') {
-									return _ditrytus$elmtris$Update$toGameplay(_p4._0);
+								if (_p5.ctor === 'Just') {
+									return _ditrytus$elmtris$Update$toGameplay(_p5._0);
 								} else {
-									return (_elm_lang$core$Native_Utils.cmp(state.brick.brickPos.y, _ditrytus$elmtris$Board$obstructedRows) > -1) ? A2(
-										_ditrytus$elmtris$Update$updateGameState,
-										_ditrytus$elmtris$Update$byTakingNextBrick,
-										_ditrytus$elmtris$Model$Gameplay(
-											_elm_lang$core$Native_Utils.update(
-												state,
-												{
-													board: _ditrytus$elmtris$Board$removeLines(
-														A2(_ditrytus$elmtris$Update$mergeWith, state.brick, state.board))
-												}))) : {
-										ctor: '_Tuple2',
-										_0: _ditrytus$elmtris$Model$GameOver(state.score),
-										_1: _elm_lang$core$Platform_Cmd$none
-									};
+									if (_elm_lang$core$Native_Utils.cmp(state.brick.brickPos.y, _ditrytus$elmtris$Board$obstructedRows) > -1) {
+										var mergedBoard = A2(_ditrytus$elmtris$Update$mergeWith, state.brick, state.board);
+										var linesCleared = _ditrytus$elmtris$Board$countLines(mergedBoard);
+										var totalLinesCleared = A2(
+											F2(
+												function (x, y) {
+													return x + y;
+												}),
+											state.linesCleared,
+											linesCleared);
+										return A2(
+											_ditrytus$elmtris$Update$updateGameState,
+											_ditrytus$elmtris$Update$byTakingNextBrick,
+											_ditrytus$elmtris$Model$Gameplay(
+												_elm_lang$core$Native_Utils.update(
+													state,
+													{
+														board: _ditrytus$elmtris$Board$removeLines(mergedBoard),
+														linesCleared: totalLinesCleared,
+														level: ((totalLinesCleared / _ditrytus$elmtris$Update$levelUpEvery) | 0) + 1,
+														score: state.score + A2(_ditrytus$elmtris$Update$score, linesCleared, state.level)
+													})));
+									} else {
+										return {
+											ctor: '_Tuple2',
+											_0: _ditrytus$elmtris$Model$GameOver(state.score),
+											_1: _elm_lang$core$Platform_Cmd$none
+										};
+									}
 								}
 							},
 							model);
 					case 'Rotate':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
-							_ditrytus$elmtris$Update$byRotatingBrickIn(_p3._0),
+							_ditrytus$elmtris$Update$byRotatingBrickIn(_p4._0),
 							model);
 					default:
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
@@ -11049,6 +11098,12 @@ var _ditrytus$elmtris$Subscriptions$keyCodeToMove = function (keyCode) {
 			return _ditrytus$elmtris$Model$Move(_ditrytus$elmtris$Model$None);
 	}
 };
+var _ditrytus$elmtris$Subscriptions$levelToDelay = function (level) {
+	return _elm_lang$core$Time$inMilliseconds(
+		1000 * Math.pow(
+			0.9,
+			_elm_lang$core$Basics$toFloat(level) - 1));
+};
 var _ditrytus$elmtris$Subscriptions$startNewGameOnKey = function (keyToStart) {
 	return _elm_lang$keyboard$Keyboard$presses(
 		function (keyCode) {
@@ -11066,7 +11121,7 @@ var _ditrytus$elmtris$Subscriptions$subscriptions = function (model) {
 					[
 						A2(
 						_elm_lang$core$Time$every,
-						_elm_lang$core$Time$second,
+						_ditrytus$elmtris$Subscriptions$levelToDelay(_p1._0.level),
 						function (_p2) {
 							return _ditrytus$elmtris$Model$Move(_ditrytus$elmtris$Model$Down);
 						}),
@@ -11471,14 +11526,93 @@ var _ditrytus$elmtris$View$boardBorder = A2(
 		[]));
 var _ditrytus$elmtris$View$viewScale = {ctor: '_Tuple2', _0: _ditrytus$elmtris$View$cellSize.width, _1: _ditrytus$elmtris$View$cellSize.height};
 var _ditrytus$elmtris$View$scalePosToView = _ditrytus$elmtris$View$scalePos(_ditrytus$elmtris$View$viewScale);
-var _ditrytus$elmtris$View$nextBrickBoxPos = _ditrytus$elmtris$View$scalePosToView(
-	A2(_ditrytus$elmtris$View$Pos, 11, 10));
-var _ditrytus$elmtris$View$nextBrickLabelPos = A2(
-	_ditrytus$elmtris$View$moveBy,
-	_ditrytus$elmtris$View$scalePosToView(
-		A2(_ditrytus$elmtris$View$Pos, 0.5, -0.1)),
-	_ditrytus$elmtris$View$nextBrickBoxPos);
+var _ditrytus$elmtris$View$labelViewPos = function (box) {
+	return _ditrytus$elmtris$View$scalePosToView(
+		A2(
+			_ditrytus$elmtris$View$moveBy,
+			A2(_ditrytus$elmtris$View$Pos, 0.5, -0.1),
+			box.pos));
+};
 var _ditrytus$elmtris$View$scaleSizeToView = _ditrytus$elmtris$View$scaleSize(_ditrytus$elmtris$View$viewScale);
+var _ditrytus$elmtris$View$toView = function (box) {
+	return {
+		pos: _ditrytus$elmtris$View$scalePosToView(box.pos),
+		size: _ditrytus$elmtris$View$scaleSizeToView(box.size),
+		label: box.label
+	};
+};
+var _ditrytus$elmtris$View$showLabeledBox = function (box) {
+	var labelPos = _ditrytus$elmtris$View$labelViewPos(box);
+	var viewBox = _ditrytus$elmtris$View$toView(box);
+	return _elm_lang$core$Native_List.fromArray(
+		[
+			A2(
+			_elm_lang$svg$Svg$rect,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$svg$Svg_Attributes$x(
+					_elm_lang$core$Basics$toString(viewBox.pos.x)),
+					_elm_lang$svg$Svg_Attributes$y(
+					_elm_lang$core$Basics$toString(viewBox.pos.y)),
+					_elm_lang$svg$Svg_Attributes$width(
+					_elm_lang$core$Basics$toString(viewBox.size.width)),
+					_elm_lang$svg$Svg_Attributes$height(
+					_elm_lang$core$Basics$toString(viewBox.size.height)),
+					_elm_lang$svg$Svg_Attributes$fill('#FFFFFF'),
+					_elm_lang$svg$Svg_Attributes$stroke('#000000'),
+					_elm_lang$svg$Svg_Attributes$strokeWidth('1')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[])),
+			A2(
+			_elm_lang$svg$Svg$text$,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$svg$Svg_Attributes$x(
+					_elm_lang$core$Basics$toString(labelPos.x)),
+					_elm_lang$svg$Svg_Attributes$y(
+					_elm_lang$core$Basics$toString(labelPos.y)),
+					_elm_lang$svg$Svg_Attributes$textAnchor('start'),
+					_elm_lang$svg$Svg_Attributes$fontSize('10px')
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$svg$Svg$text(box.label)
+				]))
+		]);
+};
+var _ditrytus$elmtris$View$showNumberBox = F2(
+	function (box, num) {
+		var numberPos = _ditrytus$elmtris$View$scalePosToView(
+			A2(
+				_ditrytus$elmtris$View$moveBy,
+				A2(_ditrytus$elmtris$View$Pos, 0.5, (box.size.height / 2) + 0.5),
+				box.pos));
+		return _elm_lang$core$List$concat(
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_ditrytus$elmtris$View$showLabeledBox(box),
+					_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$svg$Svg$text$,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$svg$Svg_Attributes$x(
+								_elm_lang$core$Basics$toString(numberPos.x)),
+								_elm_lang$svg$Svg_Attributes$y(
+								_elm_lang$core$Basics$toString(numberPos.y)),
+								_elm_lang$svg$Svg_Attributes$textAnchor('start'),
+								_elm_lang$svg$Svg_Attributes$fontSize('20px')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$svg$Svg$text(
+								_elm_lang$core$Basics$toString(num))
+							]))
+					])
+				]));
+	});
 var _ditrytus$elmtris$View$board = F2(
 	function (pos, board) {
 		var cellToRect = F3(
@@ -11516,51 +11650,72 @@ var _ditrytus$elmtris$View$board = F2(
 				_ditrytus$elmtris$Array2DExtras$flattenArray2D(
 					A2(_tortus$elm_array_2d$Array2D$indexedMap, cellToRect, board))));
 	});
-var _ditrytus$elmtris$View$nextBrickBoxLogicSize = A2(_ditrytus$elmtris$View$Size, 6, 4);
-var _ditrytus$elmtris$View$nextBrickBoxSize = _ditrytus$elmtris$View$scaleSizeToView(_ditrytus$elmtris$View$nextBrickBoxLogicSize);
-var _ditrytus$elmtris$View$nextBrickLabeledBorder = _elm_lang$core$Native_List.fromArray(
-	[
-		A2(
-		_elm_lang$svg$Svg$rect,
+var _ditrytus$elmtris$View$nextBrickBox = {
+	pos: A2(_ditrytus$elmtris$View$Pos, 11, 10),
+	size: A2(_ditrytus$elmtris$View$Size, 6, 4),
+	label: 'Next brick'
+};
+var _ditrytus$elmtris$View$showNextBrickBox = function (state) {
+	return _elm_lang$core$List$concat(
 		_elm_lang$core$Native_List.fromArray(
 			[
-				_elm_lang$svg$Svg_Attributes$x(
-				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxPos.x)),
-				_elm_lang$svg$Svg_Attributes$y(
-				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxPos.y)),
-				_elm_lang$svg$Svg_Attributes$width(
-				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxSize.width)),
-				_elm_lang$svg$Svg_Attributes$height(
-				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickBoxSize.height)),
-				_elm_lang$svg$Svg_Attributes$fill('#FFFFFF'),
-				_elm_lang$svg$Svg_Attributes$stroke('#000000'),
-				_elm_lang$svg$Svg_Attributes$strokeWidth('1')
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[])),
-		A2(
-		_elm_lang$svg$Svg$text$,
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$svg$Svg_Attributes$x(
-				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickLabelPos.x)),
-				_elm_lang$svg$Svg_Attributes$y(
-				_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$nextBrickLabelPos.y)),
-				_elm_lang$svg$Svg_Attributes$textAnchor('start'),
-				_elm_lang$svg$Svg_Attributes$fontSize('10px')
-			]),
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_elm_lang$svg$Svg$text('Next brick')
-			]))
-	]);
+				_ditrytus$elmtris$View$showLabeledBox(_ditrytus$elmtris$View$nextBrickBox),
+				function () {
+				var viewBox = _ditrytus$elmtris$View$toView(_ditrytus$elmtris$View$nextBrickBox);
+				var _p5 = state.next;
+				if (_p5.ctor === '::') {
+					return A2(
+						_ditrytus$elmtris$View$board,
+						viewBox.pos,
+						A2(
+							_ditrytus$elmtris$Update$mergeWith,
+							A3(
+								_ditrytus$elmtris$Brick$Brick,
+								_p5._0,
+								_ditrytus$elmtris$Brick$Deg0,
+								A2(_ditrytus$elmtris$Brick$Pos, 1, 1)),
+							A2(
+								_ditrytus$elmtris$Board$new,
+								_elm_lang$core$Basics$floor(_ditrytus$elmtris$View$nextBrickBox.size.height),
+								_elm_lang$core$Basics$floor(_ditrytus$elmtris$View$nextBrickBox.size.width))));
+				} else {
+					return _elm_lang$core$Native_List.fromArray(
+						[]);
+				}
+			}()
+			]));
+};
+var _ditrytus$elmtris$View$scoreBox = {
+	pos: A2(_ditrytus$elmtris$View$Pos, 11, 2),
+	size: A2(_ditrytus$elmtris$View$Size, 8, 2),
+	label: 'Score'
+};
+var _ditrytus$elmtris$View$showPointsBox = function (state) {
+	return A2(_ditrytus$elmtris$View$showNumberBox, _ditrytus$elmtris$View$scoreBox, state.score);
+};
+var _ditrytus$elmtris$View$levelBox = {
+	pos: A2(_ditrytus$elmtris$View$Pos, 11, 6),
+	size: A2(_ditrytus$elmtris$View$Size, 3, 2),
+	label: 'Level'
+};
+var _ditrytus$elmtris$View$showLevelBox = function (state) {
+	return A2(_ditrytus$elmtris$View$showNumberBox, _ditrytus$elmtris$View$levelBox, state.level);
+};
+var _ditrytus$elmtris$View$linesBox = {
+	pos: A2(_ditrytus$elmtris$View$Pos, 15, 6),
+	size: A2(_ditrytus$elmtris$View$Size, 4, 2),
+	label: 'Lines'
+};
 var _ditrytus$elmtris$View$boardWithText = function (lines) {
 	return _elm_lang$core$List$concat(
 		_elm_lang$core$Native_List.fromArray(
 			[
 				_elm_lang$core$Native_List.fromArray(
 				[_ditrytus$elmtris$View$boardBorder]),
-				_ditrytus$elmtris$View$nextBrickLabeledBorder,
+				_ditrytus$elmtris$View$showLabeledBox(_ditrytus$elmtris$View$nextBrickBox),
+				_ditrytus$elmtris$View$showLabeledBox(_ditrytus$elmtris$View$scoreBox),
+				_ditrytus$elmtris$View$showLabeledBox(_ditrytus$elmtris$View$levelBox),
+				_ditrytus$elmtris$View$showLabeledBox(_ditrytus$elmtris$View$linesBox),
 				function () {
 				var fSize = 10;
 				var lineHeight = fSize + 2;
@@ -11594,34 +11749,8 @@ var _ditrytus$elmtris$View$boardWithText = function (lines) {
 			}()
 			]));
 };
-var _ditrytus$elmtris$View$nextBrickBox = function (state) {
-	return _elm_lang$core$List$concat(
-		_elm_lang$core$Native_List.fromArray(
-			[
-				_ditrytus$elmtris$View$nextBrickLabeledBorder,
-				function () {
-				var _p5 = state.next;
-				if (_p5.ctor === '::') {
-					return A2(
-						_ditrytus$elmtris$View$board,
-						_ditrytus$elmtris$View$nextBrickBoxPos,
-						A2(
-							_ditrytus$elmtris$Update$mergeWith,
-							A3(
-								_ditrytus$elmtris$Brick$Brick,
-								_p5._0,
-								_ditrytus$elmtris$Brick$Deg0,
-								A2(_ditrytus$elmtris$Brick$Pos, 1, 1)),
-							A2(
-								_ditrytus$elmtris$Board$new,
-								_elm_lang$core$Basics$floor(_ditrytus$elmtris$View$nextBrickBoxLogicSize.height),
-								_elm_lang$core$Basics$floor(_ditrytus$elmtris$View$nextBrickBoxLogicSize.width))));
-				} else {
-					return _elm_lang$core$Native_List.fromArray(
-						[]);
-				}
-			}()
-			]));
+var _ditrytus$elmtris$View$showLinesBox = function (state) {
+	return A2(_ditrytus$elmtris$View$showNumberBox, _ditrytus$elmtris$View$linesBox, state.linesCleared);
 };
 var _ditrytus$elmtris$View$content = function (model) {
 	var _p6 = model;
@@ -11644,7 +11773,10 @@ var _ditrytus$elmtris$View$content = function (model) {
 							_ditrytus$elmtris$Board$skipRows,
 							_ditrytus$elmtris$Board$obstructedRows,
 							A2(_ditrytus$elmtris$Update$mergeWith, _p7.brick, _p7.board))),
-						_ditrytus$elmtris$View$nextBrickBox(_p7)
+						_ditrytus$elmtris$View$showNextBrickBox(_p7),
+						_ditrytus$elmtris$View$showPointsBox(_p7),
+						_ditrytus$elmtris$View$showLevelBox(_p7),
+						_ditrytus$elmtris$View$showLinesBox(_p7)
 					]));
 		default:
 			return _ditrytus$elmtris$View$boardWithText(
@@ -11673,6 +11805,10 @@ var _ditrytus$elmtris$View$view = function (model) {
 			]),
 		_ditrytus$elmtris$View$content(model));
 };
+var _ditrytus$elmtris$View$LabeledBox = F3(
+	function (a, b, c) {
+		return {pos: a, size: b, label: c};
+	});
 
 var _ditrytus$elmtris$Main$main = {
 	main: _elm_lang$html$Html_App$program(
