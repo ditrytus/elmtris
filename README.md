@@ -39,3 +39,4 @@ Current version is playable under: (http://ditrytus.github.io/elmtris)
 
 - [x] Automatically build and publish to github pages with travis CI
 - [ ] Give it a nice domain
+- [x] Add some front end build pipeline (Just for practice)
