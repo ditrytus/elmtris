@@ -1,6 +1,8 @@
 var gulp = require('gulp'),
     elm = require('gulp-elm'),
-    del = require('del');
+    connect = require('gulp-connect'),
+    del = require('del'),
+    livereload = require('gulp-livereload');
 
 var sourceFolder = 'src/';
 var outputFolder = 'dist/'
@@ -17,11 +19,13 @@ gulp.task('elm', ['elm-init'], function() {
   return gulp.src(elmMainFile)
     .pipe(elm.bundle('elmtris.js'))
     .pipe(gulp.dest(outputFolder))
+    .pipe(livereload());
 });
 
 gulp.task('assets', function() {
-    return gulp.src(assetsFiles)
-      .pipe(gulp.dest(outputFolder));
+  return gulp.src(assetsFiles)
+    .pipe(gulp.dest(outputFolder))
+    .pipe(livereload());
 });
 
 gulp.task('clean', function() {
@@ -29,10 +33,18 @@ gulp.task('clean', function() {
 });
 
 gulp.task('watch', function() {
+  livereload.listen();
   gulp.watch(elmFiles, ['elm']);
   gulp.watch(assetsFiles, ['assets']);
 });
 
 gulp.task('build', ['clean'], function() {
   gulp.start(['elm', 'assets']);
+});
+
+gulp.task('connect', function() {
+  connect.server({
+    root: 'dist',
+    livereload: true
+  });
 });
