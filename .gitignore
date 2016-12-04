@@ -2,4 +2,5 @@ elm-stuff/
 *.js
 .DS_Store
 out/
+dist/
 node_modules/

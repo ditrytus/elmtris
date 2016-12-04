@@ -8,6 +8,8 @@
   "author": "Jakub Gruszecki",
   "license": "BSD3",
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-elm": "^0.6.1"
   }
 }
