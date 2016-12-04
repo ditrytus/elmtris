@@ -4,3 +4,4 @@ elm-stuff/
 out/
 dist/
 node_modules/
+.vscode/
