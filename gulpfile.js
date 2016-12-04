@@ -5,6 +5,7 @@ var gulp = require('gulp'),
 var sourceFolder = 'src/';
 var outputFolder = 'dist/'
 var elmMainFile = sourceFolder + 'app/Main.elm';
+var elmFiles = sourceFolder + '**/*.elm';
 var cssFiles = sourceFolder + '**/*.css';
 var htmlFiles = sourceFolder + '**/*.html';
 var fontFiles = sourceFolder + '**/*.woff*';
@@ -19,12 +20,17 @@ gulp.task('elm', ['elm-init'], function() {
 });
 
 gulp.task('assets', function() {
-    return gulp.src([cssFiles, htmlFiles, fontFiles])
+    return gulp.src(assetsFiles)
       .pipe(gulp.dest(outputFolder));
 });
 
 gulp.task('clean', function() {
   return del([outputFolder]);
+});
+
+gulp.task('watch', function() {
+  gulp.watch(elmFiles, ['elm']);
+  gulp.watch(assetsFiles, ['assets']);
 });
 
 gulp.task('build', ['clean'], function() {
