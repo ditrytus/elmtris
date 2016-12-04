@@ -1,0 +1,13 @@
+{
+  "name": "elmtris",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ditrytus/elmtris.git"
+  },
+  "author": "Jakub Gruszecki",
+  "license": "BSD3",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
