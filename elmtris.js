@@ -9581,8 +9581,15 @@ var _ditrytus$elmtris$Model$GameState = F6(
 	function (a, b, c, d, e, f) {
 		return {brick: a, linesCleared: b, level: c, score: d, board: e, next: f};
 	});
+var _ditrytus$elmtris$Model$GameOverState = F3(
+	function (a, b, c) {
+		return {linesCleared: a, level: b, score: c};
+	});
 var _ditrytus$elmtris$Model$GameOver = function (a) {
 	return {ctor: 'GameOver', _0: a};
+};
+var _ditrytus$elmtris$Model$Paused = function (a) {
+	return {ctor: 'Paused', _0: a};
 };
 var _ditrytus$elmtris$Model$Gameplay = function (a) {
 	return {ctor: 'Gameplay', _0: a};
@@ -9597,6 +9604,7 @@ var _ditrytus$elmtris$Model$Down = {ctor: 'Down'};
 var _ditrytus$elmtris$Model$Right = {ctor: 'Right'};
 var _ditrytus$elmtris$Model$Left = {ctor: 'Left'};
 var _ditrytus$elmtris$Model$DoNothing = {ctor: 'DoNothing'};
+var _ditrytus$elmtris$Model$Pause = {ctor: 'Pause'};
 var _ditrytus$elmtris$Model$Move = function (a) {
 	return {ctor: 'Move', _0: a};
 };
@@ -10658,9 +10666,27 @@ var _ditrytus$elmtris$Update$update = F2(
 					_ditrytus$elmtris$Update$updateGameState,
 					_ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick(_p3._0),
 					model);
-			case 'Move':
-				var _p4 = _p3._0;
+			case 'Pause':
+				var _p4 = model;
 				switch (_p4.ctor) {
+					case 'Gameplay':
+						return {
+							ctor: '_Tuple2',
+							_0: _ditrytus$elmtris$Model$Paused(_p4._0),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					case 'Paused':
+						return {
+							ctor: '_Tuple2',
+							_0: _ditrytus$elmtris$Model$Gameplay(_p4._0),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					default:
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'Move':
+				var _p5 = _p3._0;
+				switch (_p5.ctor) {
 					case 'Left':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
@@ -10675,12 +10701,12 @@ var _ditrytus$elmtris$Update$update = F2(
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
 							function (state) {
-								var _p5 = A2(
+								var _p6 = A2(
 									_ditrytus$elmtris$Update$updateBrickWithCollision,
 									_ditrytus$elmtris$Update$updatePosition(_ditrytus$elmtris$Update$down),
 									state);
-								if (_p5.ctor === 'Just') {
-									return _ditrytus$elmtris$Update$toGameplay(_p5._0);
+								if (_p6.ctor === 'Just') {
+									return _ditrytus$elmtris$Update$toGameplay(_p6._0);
 								} else {
 									if (_elm_lang$core$Native_Utils.cmp(state.brick.brickPos.y, _ditrytus$elmtris$Board$obstructedRows) > -1) {
 										var mergedBoard = A2(_ditrytus$elmtris$Update$mergeWith, state.brick, state.board);
@@ -10707,7 +10733,8 @@ var _ditrytus$elmtris$Update$update = F2(
 									} else {
 										return {
 											ctor: '_Tuple2',
-											_0: _ditrytus$elmtris$Model$GameOver(state.score),
+											_0: _ditrytus$elmtris$Model$GameOver(
+												{score: state.score, level: state.level, linesCleared: state.linesCleared}),
 											_1: _elm_lang$core$Platform_Cmd$none
 										};
 									}
@@ -10717,7 +10744,7 @@ var _ditrytus$elmtris$Update$update = F2(
 					case 'Rotate':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
-							_ditrytus$elmtris$Update$byRotatingBrickIn(_p4._0),
+							_ditrytus$elmtris$Update$byRotatingBrickIn(_p5._0),
 							model);
 					default:
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
@@ -11079,7 +11106,7 @@ var _elm_lang$keyboard$Keyboard$subMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Keyboard'] = {pkg: 'elm-lang/keyboard', init: _elm_lang$keyboard$Keyboard$init, onEffects: _elm_lang$keyboard$Keyboard$onEffects, onSelfMsg: _elm_lang$keyboard$Keyboard$onSelfMsg, tag: 'sub', subMap: _elm_lang$keyboard$Keyboard$subMap};
 
-var _ditrytus$elmtris$Subscriptions$keyCodeToMove = function (keyCode) {
+var _ditrytus$elmtris$Subscriptions$keyCodeToMsg = function (keyCode) {
 	var _p0 = keyCode;
 	switch (_p0) {
 		case 37:
@@ -11091,6 +11118,8 @@ var _ditrytus$elmtris$Subscriptions$keyCodeToMove = function (keyCode) {
 		case 90:
 			return _ditrytus$elmtris$Model$Move(
 				_ditrytus$elmtris$Model$Rotate(_ditrytus$elmtris$Brick$CounterClockwise));
+		case 80:
+			return _ditrytus$elmtris$Model$Pause;
 		case 88:
 			return _ditrytus$elmtris$Model$Move(
 				_ditrytus$elmtris$Model$Rotate(_ditrytus$elmtris$Brick$Clockwise));
@@ -11125,8 +11154,10 @@ var _ditrytus$elmtris$Subscriptions$subscriptions = function (model) {
 						function (_p2) {
 							return _ditrytus$elmtris$Model$Move(_ditrytus$elmtris$Model$Down);
 						}),
-						_elm_lang$keyboard$Keyboard$downs(_ditrytus$elmtris$Subscriptions$keyCodeToMove)
+						_elm_lang$keyboard$Keyboard$downs(_ditrytus$elmtris$Subscriptions$keyCodeToMsg)
 					]));
+		case 'Paused':
+			return _elm_lang$keyboard$Keyboard$downs(_ditrytus$elmtris$Subscriptions$keyCodeToMsg);
 		default:
 			return _ditrytus$elmtris$Subscriptions$startNewGameOnKey(114);
 	}
@@ -11508,6 +11539,37 @@ var _ditrytus$elmtris$View$boardSize = {
 	height: _ditrytus$elmtris$View$cellSize.height * _elm_lang$core$Basics$toFloat(_ditrytus$elmtris$Board$visibleRows)
 };
 var _ditrytus$elmtris$View$displaySize = {width: _ditrytus$elmtris$View$boardSize.width * 2, height: _ditrytus$elmtris$View$boardSize.height};
+var _ditrytus$elmtris$View$textInTheBoard = function (lines) {
+	var fSize = 10;
+	var lineHeight = fSize + 2;
+	return A2(
+		_elm_lang$core$List$indexedMap,
+		F2(
+			function (i, line) {
+				return A2(
+					_elm_lang$svg$Svg$text$,
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$svg$Svg_Attributes$x(
+							_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardSize.width / 2)),
+							_elm_lang$svg$Svg_Attributes$y(
+							_elm_lang$core$Basics$toString(
+								((_ditrytus$elmtris$View$boardSize.height / 2) - (_elm_lang$core$Basics$toFloat(
+									_elm_lang$core$List$length(lines) * lineHeight) / 2)) + (_elm_lang$core$Basics$toFloat(i) * _elm_lang$core$Basics$toFloat(lineHeight)))),
+							_elm_lang$svg$Svg_Attributes$textAnchor('middle'),
+							_elm_lang$svg$Svg_Attributes$fontSize(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(fSize),
+								'px'))
+						]),
+					_elm_lang$core$Native_List.fromArray(
+						[
+							_elm_lang$svg$Svg$text(line)
+						]));
+			}),
+		lines);
+};
 var _ditrytus$elmtris$View$boardBorder = A2(
 	_elm_lang$svg$Svg$rect,
 	_elm_lang$core$Native_List.fromArray(
@@ -11716,37 +11778,7 @@ var _ditrytus$elmtris$View$boardWithText = function (lines) {
 				_ditrytus$elmtris$View$showLabeledBox(_ditrytus$elmtris$View$scoreBox),
 				_ditrytus$elmtris$View$showLabeledBox(_ditrytus$elmtris$View$levelBox),
 				_ditrytus$elmtris$View$showLabeledBox(_ditrytus$elmtris$View$linesBox),
-				function () {
-				var fSize = 10;
-				var lineHeight = fSize + 2;
-				return A2(
-					_elm_lang$core$List$indexedMap,
-					F2(
-						function (i, line) {
-							return A2(
-								_elm_lang$svg$Svg$text$,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$svg$Svg_Attributes$x(
-										_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardSize.width / 2)),
-										_elm_lang$svg$Svg_Attributes$y(
-										_elm_lang$core$Basics$toString(
-											((_ditrytus$elmtris$View$boardSize.height / 2) - (_elm_lang$core$Basics$toFloat(
-												_elm_lang$core$List$length(lines) * lineHeight) / 2)) + (_elm_lang$core$Basics$toFloat(i) * _elm_lang$core$Basics$toFloat(lineHeight)))),
-										_elm_lang$svg$Svg_Attributes$textAnchor('middle'),
-										_elm_lang$svg$Svg_Attributes$fontSize(
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											_elm_lang$core$Basics$toString(fSize),
-											'px'))
-									]),
-								_elm_lang$core$Native_List.fromArray(
-									[
-										_elm_lang$svg$Svg$text(line)
-									]));
-						}),
-					lines);
-			}()
+				_ditrytus$elmtris$View$textInTheBoard(lines)
 			]));
 };
 var _ditrytus$elmtris$View$showLinesBox = function (state) {
@@ -11778,10 +11810,36 @@ var _ditrytus$elmtris$View$content = function (model) {
 						_ditrytus$elmtris$View$showLevelBox(_p7),
 						_ditrytus$elmtris$View$showLinesBox(_p7)
 					]));
-		default:
-			return _ditrytus$elmtris$View$boardWithText(
+		case 'Paused':
+			var _p8 = _p6._0;
+			return _elm_lang$core$List$concat(
 				_elm_lang$core$Native_List.fromArray(
-					['Game Over', 'Press R to restart']));
+					[
+						_elm_lang$core$Native_List.fromArray(
+						[_ditrytus$elmtris$View$boardBorder]),
+						_ditrytus$elmtris$View$showLabeledBox(_ditrytus$elmtris$View$nextBrickBox),
+						_ditrytus$elmtris$View$showPointsBox(_p8),
+						_ditrytus$elmtris$View$showLevelBox(_p8),
+						_ditrytus$elmtris$View$showLinesBox(_p8),
+						_ditrytus$elmtris$View$textInTheBoard(
+						_elm_lang$core$Native_List.fromArray(
+							['Paused']))
+					]));
+		default:
+			var _p9 = _p6._0;
+			return _elm_lang$core$List$concat(
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$core$Native_List.fromArray(
+						[_ditrytus$elmtris$View$boardBorder]),
+						_ditrytus$elmtris$View$showLabeledBox(_ditrytus$elmtris$View$nextBrickBox),
+						_ditrytus$elmtris$View$showPointsBox(_p9),
+						_ditrytus$elmtris$View$showLevelBox(_p9),
+						_ditrytus$elmtris$View$showLinesBox(_p9),
+						_ditrytus$elmtris$View$textInTheBoard(
+						_elm_lang$core$Native_List.fromArray(
+							['Game Over', 'Press R to restart']))
+					]));
 	}
 };
 var _ditrytus$elmtris$View$view = function (model) {
