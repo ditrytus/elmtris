@@ -27,7 +27,7 @@ Current version is playable under: (http://ditrytus.github.io/elmtris)
 ## Other things to do
 
 - [ ] Add sound and music
-- [ ] Pause
+- [x] Pause
 - [x] Display of next-coming tetrominoes.
 - [ ] Game should include the songs:
   - [ ] Katjusha
