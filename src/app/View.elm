@@ -124,7 +124,14 @@ content model =
       , showLinesBox gameState
       ]
     Paused gameState ->
-      boardWithText ["Paused"]
+      List.concat
+      [ [ boardBorder ]
+      , showLabeledBox nextBrickBox
+      , showPointsBox gameState
+      , showLevelBox gameState
+      , showLinesBox gameState
+      , textInTheBoard ["Paused"]
+      ]
     GameOver score ->
       boardWithText ["Game Over", "Press R to restart"]
 
@@ -136,20 +143,24 @@ boardWithText lines =
     , showLabeledBox scoreBox
     , showLabeledBox levelBox
     , showLabeledBox linesBox
-    , let
-        fSize = 10
-        lineHeight = fSize + 2 
-      in
-        lines
-        |> List.indexedMap (\i line -> 
-        text'
-          [ x <| toString <| (boardSize.width / 2)
-          , y <| toString <| ((boardSize.height / 2) - (toFloat (List.length lines * lineHeight) / 2) + toFloat i * toFloat lineHeight)
-          , textAnchor "middle"
-          , Svg.Attributes.fontSize <| (toString fSize) ++ "px"
-          ]
-          [ text line ]) 
+    , textInTheBoard lines
     ] 
+
+textInTheBoard : List String -> List (Svg a)
+textInTheBoard lines =
+  let
+    fSize = 10
+    lineHeight = fSize + 2 
+  in
+    lines
+    |> List.indexedMap (\i line -> 
+    text'
+      [ x <| toString <| (boardSize.width / 2)
+      , y <| toString <| ((boardSize.height / 2) - (toFloat (List.length lines * lineHeight) / 2) + toFloat i * toFloat lineHeight)
+      , textAnchor "middle"
+      , Svg.Attributes.fontSize <| (toString fSize) ++ "px"
+      ]
+      [ text line ])
 
 boardBorder : Svg a
 boardBorder =
