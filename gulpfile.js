@@ -17,7 +17,7 @@ gulp.task('elm-init', elm.init);
 
 gulp.task('elm', ['elm-init'], function() {
   return gulp.src(elmMainFile)
-    .pipe(elm.bundle('elmtris.js'))
+    .pipe(elm.bundle('elmtris.js').on('error', function () {}))
     .pipe(gulp.dest(outputFolder))
     .pipe(livereload());
 });
