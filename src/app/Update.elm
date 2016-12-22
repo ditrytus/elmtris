@@ -26,6 +26,11 @@ update msg model =
       |> updateGameState byTakingNextBrick
     NextBag newBag->
       model |> updateGameState (bySetingNewBagAndTakingNextBrick newBag)
+    Pause ->
+      case model of
+        Gameplay state -> (Paused state, Cmd.none)
+        Paused state -> (Gameplay state, Cmd.none)
+        _ -> (model, Cmd.none)
     Move moveType ->
       case moveType of
         Left ->

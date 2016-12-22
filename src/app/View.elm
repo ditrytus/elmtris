@@ -123,6 +123,8 @@ content model =
       , showLevelBox gameState
       , showLinesBox gameState
       ]
+    Paused gameState ->
+      boardWithText ["Paused"]
     GameOver score ->
       boardWithText ["Game Over", "Press R to restart"]
 

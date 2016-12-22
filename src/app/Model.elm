@@ -17,6 +17,7 @@ type alias GameState =
 type Model
   = Start
   | Gameplay GameState
+  | Paused GameState
   | GameOver Score
 
 type MoveType
@@ -33,6 +34,7 @@ type Msg
   | NextBag Bag
   | Tick
   | Move MoveType
+  | Pause
   | DoNothing
 
 init : ( Model, Cmd a )    
