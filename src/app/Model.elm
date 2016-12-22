@@ -14,11 +14,17 @@ type alias GameState =
   , next: Bag
   }
 
+type alias GameOverState =
+  { linesCleared: Int
+  , level: Int
+  , score: Score
+  }
+
 type Model
   = Start
   | Gameplay GameState
   | Paused GameState
-  | GameOver Score
+  | GameOver GameOverState
 
 type MoveType
   = Left

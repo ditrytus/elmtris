@@ -62,7 +62,7 @@ update msg model =
                     , score = state.score + (score linesCleared state.level)}
                     |> updateGameState byTakingNextBrick
                 else
-                  (GameOver state.score, Cmd.none))                  
+                  (GameOver {score = state.score, level = state.level, linesCleared = state.linesCleared}, Cmd.none))                  
         Rotate direction ->
           model |> updateGameState (byRotatingBrickIn direction)
         _ -> (model, Cmd.none)

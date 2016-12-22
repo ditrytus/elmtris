@@ -132,8 +132,15 @@ content model =
       , showLinesBox gameState
       , textInTheBoard ["Paused"]
       ]
-    GameOver score ->
-      boardWithText ["Game Over", "Press R to restart"]
+    GameOver overState ->
+      List.concat
+      [ [ boardBorder ]
+      , showLabeledBox nextBrickBox
+      , showPointsBox overState
+      , showLevelBox overState
+      , showLinesBox overState
+      , textInTheBoard ["Game Over", "Press R to restart"]
+      ]
 
 boardWithText : List String -> List (Svg a)
 boardWithText lines =
@@ -189,15 +196,15 @@ showNextBrickBox state =
         [] -> []
   ]
 
-showPointsBox : GameState -> List (Svg a)
+showPointsBox : {b | score:Int} -> List (Svg a)
 showPointsBox state =
   showNumberBox scoreBox state.score
 
-showLevelBox : GameState -> List (Svg a)
+showLevelBox : {b | level:Int} -> List (Svg a)
 showLevelBox state =
   showNumberBox levelBox state.level
 
-showLinesBox : GameState -> List (Svg a)
+showLinesBox : {b | linesCleared:Int} -> List (Svg a)
 showLinesBox state =
   showNumberBox linesBox state.linesCleared
 
