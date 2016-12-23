@@ -9577,9 +9577,9 @@ var _elm_lang$html$Html_App$beginnerProgram = function (_p1) {
 };
 var _elm_lang$html$Html_App$map = _elm_lang$virtual_dom$VirtualDom$map;
 
-var _ditrytus$elmtris$Model$GameState = F6(
-	function (a, b, c, d, e, f) {
-		return {brick: a, linesCleared: b, level: c, score: d, board: e, next: f};
+var _ditrytus$elmtris$Model$GameState = F7(
+	function (a, b, c, d, e, f, g) {
+		return {brick: a, linesCleared: b, level: c, score: d, board: e, next: f, ghostBrickEnabled: g};
 	});
 var _ditrytus$elmtris$Model$GameOverState = F3(
 	function (a, b, c) {
@@ -9605,6 +9605,7 @@ var _ditrytus$elmtris$Model$Down = {ctor: 'Down'};
 var _ditrytus$elmtris$Model$Right = {ctor: 'Right'};
 var _ditrytus$elmtris$Model$Left = {ctor: 'Left'};
 var _ditrytus$elmtris$Model$DoNothing = {ctor: 'DoNothing'};
+var _ditrytus$elmtris$Model$ToggleGhostBrick = {ctor: 'ToggleGhostBrick'};
 var _ditrytus$elmtris$Model$Pause = {ctor: 'Pause'};
 var _ditrytus$elmtris$Model$Move = function (a) {
 	return {ctor: 'Move', _0: a};
@@ -10610,6 +10611,37 @@ var _ditrytus$elmtris$Update$score = F2(
 		};
 		return scoreBase(lines) * level;
 	});
+var _ditrytus$elmtris$Update$tryMoveBrickDown = F3(
+	function (handleMoveDown, handleCollision, state) {
+		var _p2 = A2(
+			_ditrytus$elmtris$Update$updateBrickWithCollision,
+			_ditrytus$elmtris$Update$updatePosition(_ditrytus$elmtris$Update$down),
+			state);
+		if (_p2.ctor === 'Just') {
+			return handleMoveDown(_p2._0);
+		} else {
+			return handleCollision(state);
+		}
+	});
+var _ditrytus$elmtris$Update$recursivelyMoveBrickDown = function (handleCollision) {
+	return A2(
+		_ditrytus$elmtris$Update$tryMoveBrickDown,
+		function (newState) {
+			return A2(_ditrytus$elmtris$Update$recursivelyMoveBrickDown, handleCollision, newState);
+		},
+		handleCollision);
+};
+var _ditrytus$elmtris$Update$ghostBrick = function (state) {
+	if (state.ghostBrickEnabled) {
+		var getGhostBrick = _ditrytus$elmtris$Update$recursivelyMoveBrickDown(
+			function (state) {
+				return A2(_ditrytus$elmtris$Update$mergeWith, state.brick, _ditrytus$elmtris$Board$empty);
+			});
+		return getGhostBrick(state);
+	} else {
+		return _ditrytus$elmtris$Board$empty;
+	}
+};
 var _ditrytus$elmtris$Update$levelUpEvery = 25;
 var _ditrytus$elmtris$Update$visibleNextBricks = 1;
 var _ditrytus$elmtris$Update$byTakingNextBrick = function (state) {
@@ -10617,14 +10649,14 @@ var _ditrytus$elmtris$Update$byTakingNextBrick = function (state) {
 	if (_elm_lang$core$Native_Utils.cmp(
 		_elm_lang$core$List$length(state.next),
 		_ditrytus$elmtris$Update$visibleNextBricks) > 0) {
-		var _p2 = state.next;
-		if (_p2.ctor === '::') {
+		var _p3 = state.next;
+		if (_p3.ctor === '::') {
 			return _ditrytus$elmtris$Update$toGameplay(
 				_elm_lang$core$Native_Utils.update(
 					state,
 					{
-						brick: A2(_ditrytus$elmtris$Brick$new, _ditrytus$elmtris$Board$columns, _p2._0),
-						next: _p2._1
+						brick: A2(_ditrytus$elmtris$Brick$new, _ditrytus$elmtris$Board$columns, _p3._0),
+						next: _p3._1
 					}));
 		} else {
 			return A2(_ditrytus$elmtris$Update$toGameplayWith, nextRandomBag, state);
@@ -10665,22 +10697,8 @@ var _ditrytus$elmtris$Update$handleBrickDropped = function (state) {
 		};
 	}
 };
-var _ditrytus$elmtris$Update$byDropingBrick = function (state) {
-	byDropingBrick:
-	while (true) {
-		var _p3 = A2(
-			_ditrytus$elmtris$Update$updateBrickWithCollision,
-			_ditrytus$elmtris$Update$updatePosition(_ditrytus$elmtris$Update$down),
-			state);
-		if (_p3.ctor === 'Just') {
-			var _v4 = _p3._0;
-			state = _v4;
-			continue byDropingBrick;
-		} else {
-			return _ditrytus$elmtris$Update$handleBrickDropped(state);
-		}
-	}
-};
+var _ditrytus$elmtris$Update$byMovingBrickDown = A2(_ditrytus$elmtris$Update$tryMoveBrickDown, _ditrytus$elmtris$Update$toGameplay, _ditrytus$elmtris$Update$handleBrickDropped);
+var _ditrytus$elmtris$Update$byDropingBrick = _ditrytus$elmtris$Update$recursivelyMoveBrickDown(_ditrytus$elmtris$Update$handleBrickDropped);
 var _ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick = F2(
 	function (newBag, state) {
 		return _ditrytus$elmtris$Update$byTakingNextBrick(
@@ -10708,7 +10726,8 @@ var _ditrytus$elmtris$Update$update = F2(
 							score: 0,
 							board: _ditrytus$elmtris$Board$empty,
 							next: _elm_lang$core$Native_List.fromArray(
-								[])
+								[]),
+							ghostBrickEnabled: false
 						}));
 			case 'NextBag':
 				return A2(
@@ -10747,20 +10766,7 @@ var _ditrytus$elmtris$Update$update = F2(
 							_ditrytus$elmtris$Update$byMovingBrick(_ditrytus$elmtris$Update$toRight),
 							model);
 					case 'Down':
-						return A2(
-							_ditrytus$elmtris$Update$updateGameState,
-							function (state) {
-								var _p7 = A2(
-									_ditrytus$elmtris$Update$updateBrickWithCollision,
-									_ditrytus$elmtris$Update$updatePosition(_ditrytus$elmtris$Update$down),
-									state);
-								if (_p7.ctor === 'Just') {
-									return _ditrytus$elmtris$Update$toGameplay(_p7._0);
-								} else {
-									return _ditrytus$elmtris$Update$handleBrickDropped(state);
-								}
-							},
-							model);
+						return A2(_ditrytus$elmtris$Update$updateGameState, _ditrytus$elmtris$Update$byMovingBrickDown, model);
 					case 'Rotate':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
@@ -10770,6 +10776,19 @@ var _ditrytus$elmtris$Update$update = F2(
 						return A2(_ditrytus$elmtris$Update$updateGameState, _ditrytus$elmtris$Update$byDropingBrick, model);
 					default:
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'ToggleGhostBrick':
+				var _p7 = model;
+				if (_p7.ctor === 'Gameplay') {
+					var _p8 = _p7._0;
+					return _ditrytus$elmtris$Update$toGameplay(
+						_elm_lang$core$Native_Utils.update(
+							_p8,
+							{
+								ghostBrickEnabled: _elm_lang$core$Basics$not(_p8.ghostBrickEnabled)
+							}));
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			default:
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
@@ -11139,14 +11158,16 @@ var _ditrytus$elmtris$Subscriptions$keyCodeToMsg = function (keyCode) {
 			return _ditrytus$elmtris$Model$Move(_ditrytus$elmtris$Model$Right);
 		case 40:
 			return _ditrytus$elmtris$Model$Move(_ditrytus$elmtris$Model$Down);
-		case 90:
-			return _ditrytus$elmtris$Model$Move(
-				_ditrytus$elmtris$Model$Rotate(_ditrytus$elmtris$Brick$CounterClockwise));
+		case 71:
+			return _ditrytus$elmtris$Model$ToggleGhostBrick;
 		case 80:
 			return _ditrytus$elmtris$Model$Pause;
 		case 88:
 			return _ditrytus$elmtris$Model$Move(
 				_ditrytus$elmtris$Model$Rotate(_ditrytus$elmtris$Brick$Clockwise));
+		case 90:
+			return _ditrytus$elmtris$Model$Move(
+				_ditrytus$elmtris$Model$Rotate(_ditrytus$elmtris$Brick$CounterClockwise));
 		default:
 			return _ditrytus$elmtris$Model$Move(_ditrytus$elmtris$Model$None);
 	}
@@ -11535,6 +11556,8 @@ var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$a
 var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
 var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
 
+var _ditrytus$elmtris$View$gray = '#DDDDDD';
+var _ditrytus$elmtris$View$black = '#000000';
 var _ditrytus$elmtris$View$scaleSize = F2(
 	function (_p0, size) {
 		var _p1 = _p0;
@@ -11553,6 +11576,7 @@ var _ditrytus$elmtris$View$Pos = F2(
 	function (a, b) {
 		return {x: a, y: b};
 	});
+var _ditrytus$elmtris$View$boardPos = A2(_ditrytus$elmtris$View$Pos, 0, 0);
 var _ditrytus$elmtris$View$Size = F2(
 	function (a, b) {
 		return {width: a, height: b};
@@ -11604,7 +11628,7 @@ var _ditrytus$elmtris$View$boardBorder = A2(
 			_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardSize.width)),
 			_elm_lang$svg$Svg_Attributes$height(
 			_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardSize.height)),
-			_elm_lang$svg$Svg_Attributes$fill('#FFFFFF'),
+			_elm_lang$svg$Svg_Attributes$fill('#FFFFFF00'),
 			_elm_lang$svg$Svg_Attributes$stroke('#000000'),
 			_elm_lang$svg$Svg_Attributes$strokeWidth('1')
 		]),
@@ -11699,8 +11723,8 @@ var _ditrytus$elmtris$View$showNumberBox = F2(
 					])
 				]));
 	});
-var _ditrytus$elmtris$View$board = F2(
-	function (pos, board) {
+var _ditrytus$elmtris$View$board = F3(
+	function (fillColor, pos, board) {
 		var cellToRect = F3(
 			function (row, column, cell) {
 				var _p4 = cell;
@@ -11721,7 +11745,7 @@ var _ditrytus$elmtris$View$board = F2(
 									_elm_lang$svg$Svg_Attributes$height(
 									_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$cellSize.height + 0.1)),
 									_elm_lang$svg$Svg_Attributes$strokeWidth('0'),
-									_elm_lang$svg$Svg_Attributes$fill('#000000')
+									_elm_lang$svg$Svg_Attributes$fill(fillColor)
 								]),
 							_elm_lang$core$Native_List.fromArray(
 								[])));
@@ -11750,8 +11774,9 @@ var _ditrytus$elmtris$View$showNextBrickBox = function (state) {
 				var viewBox = _ditrytus$elmtris$View$toView(_ditrytus$elmtris$View$nextBrickBox);
 				var _p5 = state.next;
 				if (_p5.ctor === '::') {
-					return A2(
+					return A3(
 						_ditrytus$elmtris$View$board,
+						_ditrytus$elmtris$View$black,
 						viewBox.pos,
 						A2(
 							_ditrytus$elmtris$Update$mergeWith,
@@ -11820,15 +11845,24 @@ var _ditrytus$elmtris$View$content = function (model) {
 			return _elm_lang$core$List$concat(
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$core$Native_List.fromArray(
-						[_ditrytus$elmtris$View$boardBorder]),
-						A2(
+						A3(
 						_ditrytus$elmtris$View$board,
-						A2(_ditrytus$elmtris$View$Pos, 0, 0),
+						_ditrytus$elmtris$View$gray,
+						_ditrytus$elmtris$View$boardPos,
+						A2(
+							_ditrytus$elmtris$Board$skipRows,
+							_ditrytus$elmtris$Board$obstructedRows,
+							_ditrytus$elmtris$Update$ghostBrick(_p7))),
+						A3(
+						_ditrytus$elmtris$View$board,
+						_ditrytus$elmtris$View$black,
+						_ditrytus$elmtris$View$boardPos,
 						A2(
 							_ditrytus$elmtris$Board$skipRows,
 							_ditrytus$elmtris$Board$obstructedRows,
 							A2(_ditrytus$elmtris$Update$mergeWith, _p7.brick, _p7.board))),
+						_elm_lang$core$Native_List.fromArray(
+						[_ditrytus$elmtris$View$boardBorder]),
 						_ditrytus$elmtris$View$showNextBrickBox(_p7),
 						_ditrytus$elmtris$View$showPointsBox(_p7),
 						_ditrytus$elmtris$View$showLevelBox(_p7),
