@@ -9596,6 +9596,7 @@ var _ditrytus$elmtris$Model$Gameplay = function (a) {
 };
 var _ditrytus$elmtris$Model$Start = {ctor: 'Start'};
 var _ditrytus$elmtris$Model$init = {ctor: '_Tuple2', _0: _ditrytus$elmtris$Model$Start, _1: _elm_lang$core$Platform_Cmd$none};
+var _ditrytus$elmtris$Model$Drop = {ctor: 'Drop'};
 var _ditrytus$elmtris$Model$None = {ctor: 'None'};
 var _ditrytus$elmtris$Model$Rotate = function (a) {
 	return {ctor: 'Rotate', _0: a};
@@ -10632,6 +10633,54 @@ var _ditrytus$elmtris$Update$byTakingNextBrick = function (state) {
 		return A2(_ditrytus$elmtris$Update$toGameplayWith, nextRandomBag, state);
 	}
 };
+var _ditrytus$elmtris$Update$handleBrickDropped = function (state) {
+	if (_elm_lang$core$Native_Utils.cmp(state.brick.brickPos.y, _ditrytus$elmtris$Board$obstructedRows) > -1) {
+		var mergedBoard = A2(_ditrytus$elmtris$Update$mergeWith, state.brick, state.board);
+		var linesCleared = _ditrytus$elmtris$Board$countLines(mergedBoard);
+		var totalLinesCleared = A2(
+			F2(
+				function (x, y) {
+					return x + y;
+				}),
+			state.linesCleared,
+			linesCleared);
+		return A2(
+			_ditrytus$elmtris$Update$updateGameState,
+			_ditrytus$elmtris$Update$byTakingNextBrick,
+			_ditrytus$elmtris$Model$Gameplay(
+				_elm_lang$core$Native_Utils.update(
+					state,
+					{
+						board: _ditrytus$elmtris$Board$removeLines(mergedBoard),
+						linesCleared: totalLinesCleared,
+						level: ((totalLinesCleared / _ditrytus$elmtris$Update$levelUpEvery) | 0) + 1,
+						score: state.score + A2(_ditrytus$elmtris$Update$score, linesCleared, state.level)
+					})));
+	} else {
+		return {
+			ctor: '_Tuple2',
+			_0: _ditrytus$elmtris$Model$GameOver(
+				{score: state.score, level: state.level, linesCleared: state.linesCleared}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	}
+};
+var _ditrytus$elmtris$Update$byDropingBrick = function (state) {
+	byDropingBrick:
+	while (true) {
+		var _p3 = A2(
+			_ditrytus$elmtris$Update$updateBrickWithCollision,
+			_ditrytus$elmtris$Update$updatePosition(_ditrytus$elmtris$Update$down),
+			state);
+		if (_p3.ctor === 'Just') {
+			var _v4 = _p3._0;
+			state = _v4;
+			continue byDropingBrick;
+		} else {
+			return _ditrytus$elmtris$Update$handleBrickDropped(state);
+		}
+	}
+};
 var _ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick = F2(
 	function (newBag, state) {
 		return _ditrytus$elmtris$Update$byTakingNextBrick(
@@ -10645,8 +10694,8 @@ var _ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick = F2(
 	});
 var _ditrytus$elmtris$Update$update = F2(
 	function (msg, model) {
-		var _p3 = msg;
-		switch (_p3.ctor) {
+		var _p4 = msg;
+		switch (_p4.ctor) {
 			case 'Begin':
 				return A2(
 					_ditrytus$elmtris$Update$updateGameState,
@@ -10664,29 +10713,29 @@ var _ditrytus$elmtris$Update$update = F2(
 			case 'NextBag':
 				return A2(
 					_ditrytus$elmtris$Update$updateGameState,
-					_ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick(_p3._0),
+					_ditrytus$elmtris$Update$bySetingNewBagAndTakingNextBrick(_p4._0),
 					model);
 			case 'Pause':
-				var _p4 = model;
-				switch (_p4.ctor) {
+				var _p5 = model;
+				switch (_p5.ctor) {
 					case 'Gameplay':
 						return {
 							ctor: '_Tuple2',
-							_0: _ditrytus$elmtris$Model$Paused(_p4._0),
+							_0: _ditrytus$elmtris$Model$Paused(_p5._0),
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					case 'Paused':
 						return {
 							ctor: '_Tuple2',
-							_0: _ditrytus$elmtris$Model$Gameplay(_p4._0),
+							_0: _ditrytus$elmtris$Model$Gameplay(_p5._0),
 							_1: _elm_lang$core$Platform_Cmd$none
 						};
 					default:
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			case 'Move':
-				var _p5 = _p3._0;
-				switch (_p5.ctor) {
+				var _p6 = _p4._0;
+				switch (_p6.ctor) {
 					case 'Left':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
@@ -10701,51 +10750,24 @@ var _ditrytus$elmtris$Update$update = F2(
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
 							function (state) {
-								var _p6 = A2(
+								var _p7 = A2(
 									_ditrytus$elmtris$Update$updateBrickWithCollision,
 									_ditrytus$elmtris$Update$updatePosition(_ditrytus$elmtris$Update$down),
 									state);
-								if (_p6.ctor === 'Just') {
-									return _ditrytus$elmtris$Update$toGameplay(_p6._0);
+								if (_p7.ctor === 'Just') {
+									return _ditrytus$elmtris$Update$toGameplay(_p7._0);
 								} else {
-									if (_elm_lang$core$Native_Utils.cmp(state.brick.brickPos.y, _ditrytus$elmtris$Board$obstructedRows) > -1) {
-										var mergedBoard = A2(_ditrytus$elmtris$Update$mergeWith, state.brick, state.board);
-										var linesCleared = _ditrytus$elmtris$Board$countLines(mergedBoard);
-										var totalLinesCleared = A2(
-											F2(
-												function (x, y) {
-													return x + y;
-												}),
-											state.linesCleared,
-											linesCleared);
-										return A2(
-											_ditrytus$elmtris$Update$updateGameState,
-											_ditrytus$elmtris$Update$byTakingNextBrick,
-											_ditrytus$elmtris$Model$Gameplay(
-												_elm_lang$core$Native_Utils.update(
-													state,
-													{
-														board: _ditrytus$elmtris$Board$removeLines(mergedBoard),
-														linesCleared: totalLinesCleared,
-														level: ((totalLinesCleared / _ditrytus$elmtris$Update$levelUpEvery) | 0) + 1,
-														score: state.score + A2(_ditrytus$elmtris$Update$score, linesCleared, state.level)
-													})));
-									} else {
-										return {
-											ctor: '_Tuple2',
-											_0: _ditrytus$elmtris$Model$GameOver(
-												{score: state.score, level: state.level, linesCleared: state.linesCleared}),
-											_1: _elm_lang$core$Platform_Cmd$none
-										};
-									}
+									return _ditrytus$elmtris$Update$handleBrickDropped(state);
 								}
 							},
 							model);
 					case 'Rotate':
 						return A2(
 							_ditrytus$elmtris$Update$updateGameState,
-							_ditrytus$elmtris$Update$byRotatingBrickIn(_p5._0),
+							_ditrytus$elmtris$Update$byRotatingBrickIn(_p6._0),
 							model);
+					case 'Drop':
+						return A2(_ditrytus$elmtris$Update$updateGameState, _ditrytus$elmtris$Update$byDropingBrick, model);
 					default:
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
@@ -11109,6 +11131,8 @@ _elm_lang$core$Native_Platform.effectManagers['Keyboard'] = {pkg: 'elm-lang/keyb
 var _ditrytus$elmtris$Subscriptions$keyCodeToMsg = function (keyCode) {
 	var _p0 = keyCode;
 	switch (_p0) {
+		case 32:
+			return _ditrytus$elmtris$Model$Move(_ditrytus$elmtris$Model$Drop);
 		case 37:
 			return _ditrytus$elmtris$Model$Move(_ditrytus$elmtris$Model$Left);
 		case 39:
