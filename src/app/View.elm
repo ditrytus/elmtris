@@ -188,7 +188,7 @@ boardBorder =
     , y "0"
     , width (toString boardSize.width)
     , height (toString boardSize.height)
-    , fill "#FFFFFF00"
+    , fill "transparent"
     , stroke "#000000"
     , strokeWidth "1"
     ] []
