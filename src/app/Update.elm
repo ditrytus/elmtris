@@ -48,7 +48,8 @@ update msg model =
           model |> updateGameState (byRotatingBrickIn direction)
         Drop ->
           model |> updateGameState byDropingBrick
-        _ -> (model, Cmd.none)
+        _ ->
+          (model, Cmd.none)
     _ -> (model, Cmd.none)
 
 byDropingBrick : GameState -> ( Model, Cmd Msg )
