@@ -11,7 +11,7 @@ Current version is playable under: (http://ditrytus.github.io/elmtris)
 - [x] Tetromino start locations
 - [x] [Super Rotation System (SRS)] (https://tetris.wiki/SRS) specifies tetromino rotation
 - [ ] Standard mappings for computer keyboards
-  - [ ] hard drop
+  - [x] hard drop
   - [ ] non-locking soft drop (left shift, and right shift respectively).
   - [x] rotating both clockwise, and counterclockwise
 - [x] So-called Random Generator (also called "random bag" or "7 system")
@@ -22,7 +22,7 @@ Current version is playable under: (http://ditrytus.github.io/elmtris)
   - [x] clearing lines
   - [ ] performing T-Spin
 - [ ] Game must include a song called Korobeiniki.
-- [ ] The player tops out when a piece is spawned overlapping at least one block, or a piece locks completely above the visible portion of the playfield.
+- [x] The player tops out when a piece is spawned overlapping at least one block, or a piece locks completely above the visible portion of the playfield.
  
 ## Other things to do
 

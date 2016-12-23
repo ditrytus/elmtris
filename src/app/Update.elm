@@ -40,33 +40,47 @@ update msg model =
         Down ->
           model |> updateGameState (\state ->
             case state |> updateBrickWithCollision (updatePosition down) of
-              Just newState ->
-                newState |> toGameplay  
-              Nothing ->
-                if state.brick.brickPos.y >= Board.obstructedRows then
-                  let
-                    mergedBoard =
-                      state.board 
-                      |> mergeWith state.brick
-                    linesCleared =
-                      mergedBoard
-                      |> Board.countLines 
-                    totalLinesCleared =
-                      linesCleared
-                      |> (+) state.linesCleared
-                  in
-                    Gameplay { state 
-                    | board = mergedBoard |> Board.removeLines
-                    , linesCleared = totalLinesCleared
-                    , level = (totalLinesCleared // levelUpEvery) + 1
-                    , score = state.score + (score linesCleared state.level)}
-                    |> updateGameState byTakingNextBrick
-                else
-                  (GameOver {score = state.score, level = state.level, linesCleared = state.linesCleared}, Cmd.none))                  
+            Just newState ->
+              newState |> toGameplay  
+            Nothing ->
+              handleBrickDropped state)
         Rotate direction ->
           model |> updateGameState (byRotatingBrickIn direction)
+        Drop ->
+          model |> updateGameState byDropingBrick
         _ -> (model, Cmd.none)
     _ -> (model, Cmd.none)
+
+byDropingBrick : GameState -> ( Model, Cmd Msg )
+byDropingBrick state =
+  case state |> updateBrickWithCollision (updatePosition down) of
+  Just newState ->
+    byDropingBrick newState
+  Nothing ->
+    handleBrickDropped state
+
+handleBrickDropped: GameState -> ( Model, Cmd Msg )
+handleBrickDropped state = 
+  if state.brick.brickPos.y >= Board.obstructedRows then
+    let
+      mergedBoard =
+        state.board 
+        |> mergeWith state.brick
+      linesCleared =
+        mergedBoard
+        |> Board.countLines 
+      totalLinesCleared =
+        linesCleared
+        |> (+) state.linesCleared
+    in
+      Gameplay { state 
+      | board = mergedBoard |> Board.removeLines
+      , linesCleared = totalLinesCleared
+      , level = (totalLinesCleared // levelUpEvery) + 1
+      , score = state.score + (score linesCleared state.level)}
+      |> updateGameState byTakingNextBrick
+  else
+    (GameOver {score = state.score, level = state.level, linesCleared = state.linesCleared}, Cmd.none)               
 
 score : number -> number' -> number'
 score lines level =

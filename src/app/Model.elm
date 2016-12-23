@@ -32,6 +32,7 @@ type MoveType
   | Down
   | Rotate Brick.RotationDirection
   | None
+  | Drop
 
 type alias Bag = List Brick.BrickType 
 

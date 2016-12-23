@@ -30,6 +30,7 @@ levelToDelay level =
 keyCodeToMsg: KeyCode -> Msg
 keyCodeToMsg keyCode =
   case keyCode of
+    32 -> Move Drop
     37 -> Move Left
     39 -> Move Right
     40 -> Move Down
