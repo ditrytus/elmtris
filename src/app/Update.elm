@@ -40,10 +40,10 @@ update msg model =
         Down ->
           model |> updateGameState (\state ->
             case state |> updateBrickWithCollision (updatePosition down) of
-            Just newState ->
-              newState |> toGameplay  
-            Nothing ->
-              handleBrickDropped state)
+              Just newState ->
+                newState |> toGameplay  
+              Nothing ->
+                handleBrickDropped state)
         Rotate direction ->
           model |> updateGameState (byRotatingBrickIn direction)
         Drop ->

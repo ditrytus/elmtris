@@ -6,36 +6,54 @@ var gulp = require('gulp'),
 
 var sourceFolder = 'src/';
 var outputFolder = 'dist/'
+
 var elmMainFile = sourceFolder + 'app/Main.elm';
-var elmFiles = sourceFolder + '**/*.elm';
-var cssFiles = sourceFolder + '**/*.css';
-var htmlFiles = sourceFolder + '**/*.html';
-var fontFiles = sourceFolder + '**/*.woff*';
-var assetsFiles = [cssFiles, htmlFiles, fontFiles];
+
+var elmFiles = '**/*.elm';
+var cssFiles = '**/*.css';
+var htmlFiles = '**/*.html';
+var fontFiles = '**/*.woff*';
+
+var elmBundleFile = 'elmtris.js'
+
+var srcElmFiles = sourceFolder + elmFiles;
+
+var srcCssFiles = sourceFolder + cssFiles;
+var srcHtmlFiles = sourceFolder + htmlFiles;
+var srcFontFiles = sourceFolder + fontFiles;
+
+var srcAssetsFiles = [srcCssFiles, srcHtmlFiles, srcFontFiles];
+
+var outCssFiles = outputFolder + cssFiles;
+var outHtmlFiles = outputFolder + htmlFiles;
+var outFontFiles = outputFolder + fontFiles;
+var outElmBundle = outputFolder + elmBundleFile;
+
+var outFiles = [outCssFiles, outHtmlFiles, outFontFiles, outElmBundle]
 
 gulp.task('elm-init', elm.init);
 
 gulp.task('elm', ['elm-init'], function() {
   return gulp.src(elmMainFile)
-    .pipe(elm.bundle('elmtris.js').on('error', function () {}))
+    .pipe(elm.bundle(elmBundleFile).on('error', function () {}))
     .pipe(gulp.dest(outputFolder))
     .pipe(livereload());
 });
 
 gulp.task('assets', function() {
-  return gulp.src(assetsFiles)
+  return gulp.src(srcAssetsFiles)
     .pipe(gulp.dest(outputFolder))
     .pipe(livereload());
 });
 
 gulp.task('clean', function() {
-  return del([outputFolder]);
+  return del(outFiles);
 });
 
 gulp.task('watch', function() {
   livereload.listen();
-  gulp.watch(elmFiles, ['elm']);
-  gulp.watch(assetsFiles, ['assets']);
+  gulp.watch(srcElmFiles, ['elm']);
+  gulp.watch(srcAssetsFiles, ['assets']);
 });
 
 gulp.task('build', ['clean'], function() {
