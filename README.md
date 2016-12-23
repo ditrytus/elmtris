@@ -16,7 +16,7 @@ Current version is playable under: (http://ditrytus.github.io/elmtris)
   - [x] rotating both clockwise, and counterclockwise
 - [x] So-called Random Generator (also called "random bag" or "7 system")
 - [ ] "Hold piece": The player can press a button to send the falling tetromino to the hold box, and any tetromino that had been in the hold box moves to the top of the screen and begins falling. Hold cannot be used again until after the piece locks down.
-- [ ] Game must have ghost piece function.
+- [X] Game must have ghost piece function.
 - [ ] Designated soft drop speed.
 - [ ] Player may only level up by:
   - [x] clearing lines
