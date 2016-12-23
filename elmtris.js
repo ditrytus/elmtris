@@ -11628,7 +11628,7 @@ var _ditrytus$elmtris$View$boardBorder = A2(
 			_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardSize.width)),
 			_elm_lang$svg$Svg_Attributes$height(
 			_elm_lang$core$Basics$toString(_ditrytus$elmtris$View$boardSize.height)),
-			_elm_lang$svg$Svg_Attributes$fill('#FFFFFF00'),
+			_elm_lang$svg$Svg_Attributes$fill('transparent'),
 			_elm_lang$svg$Svg_Attributes$stroke('#000000'),
 			_elm_lang$svg$Svg_Attributes$strokeWidth('1')
 		]),
