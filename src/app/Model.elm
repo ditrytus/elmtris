@@ -12,6 +12,7 @@ type alias GameState =
   , score: Score
   , board: Board.Board
   , next: Bag
+  , ghostBrickEnabled: Bool
   }
 
 type alias GameOverState =
@@ -42,6 +43,7 @@ type Msg
   | Tick
   | Move MoveType
   | Pause
+  | ToggleGhostBrick
   | DoNothing
 
 init : ( Model, Cmd a )    

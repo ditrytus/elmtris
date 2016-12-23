@@ -6,7 +6,7 @@ import Svg.Attributes exposing (..)
 import Model exposing (..)
 import Brick
 import Board exposing (Board)
-import Update exposing (mergeWith)
+import Update exposing (mergeWith, ghostBrick)
 import Array
 import Array2D
 import Array2DExtras exposing (flattenArray2D)
@@ -25,6 +25,9 @@ boardSize =
   { width = cellSize.width * toFloat Board.columns 
   , height = cellSize.height * toFloat Board.visibleRows
   }
+
+boardPos : Pos
+boardPos = Pos 0 0
 
 displaySize : Size
 displaySize =
@@ -92,6 +95,12 @@ scaleSize (h,v) size = {width = size.width * h, height = size.height * v}
 scaleSizeToView : Size -> Size
 scaleSizeToView = scaleSize viewScale 
 
+black : String
+black = "#000000"
+
+gray : String
+gray = "#DDDDDD"
+
 -- VIEW
 view : Model -> Html a
 view model =
@@ -113,11 +122,14 @@ content model =
       boardWithText ["Press S to start"]
     Gameplay gameState ->
       List.concat
-      [ [ boardBorder ]
+      [ ghostBrick gameState
+        |> Board.skipRows Board.obstructedRows
+        |> board gray boardPos
       , gameState.board
         |> mergeWith gameState.brick
         |> Board.skipRows Board.obstructedRows
-        |> board (Pos 0 0)
+        |> board black boardPos
+      , [ boardBorder ]
       , showNextBrickBox gameState
       , showPointsBox gameState
       , showLevelBox gameState
@@ -176,7 +188,7 @@ boardBorder =
     , y "0"
     , width (toString boardSize.width)
     , height (toString boardSize.height)
-    , fill "#FFFFFF"
+    , fill "#FFFFFF00"
     , stroke "#000000"
     , strokeWidth "1"
     ] []
@@ -192,7 +204,7 @@ showNextBrickBox state =
         brickType::_ ->
           Board.new (floor nextBrickBox.size.height) (floor nextBrickBox.size.width)
           |> mergeWith (Brick.Brick brickType Brick.Deg0 (Brick.Pos 1 1))
-          |> board viewBox.pos
+          |> board black viewBox.pos
         [] -> []
   ]
 
@@ -252,8 +264,8 @@ showLabeledBox box =
       [text box.label]
   ]
     
-board: Pos -> Board -> List (Svg.Svg a) 
-board pos board =
+board: String -> Pos -> Board -> List (Svg.Svg a) 
+board fillColor pos board =
   let
     cellToRect: Int -> Int -> Bool -> Maybe (Svg.Svg a)
     cellToRect row column cell =
@@ -266,7 +278,7 @@ board pos board =
               , width (toString (cellSize.width + 0.1))
               , height (toString (cellSize.height + 0.1))
               , strokeWidth "0"
-              , fill "#000000" ]
+              , fill fillColor ]
               []
             )
         False ->

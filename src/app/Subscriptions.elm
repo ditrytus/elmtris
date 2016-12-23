@@ -34,7 +34,8 @@ keyCodeToMsg keyCode =
     37 -> Move Left
     39 -> Move Right
     40 -> Move Down
-    90 -> Move (Rotate Brick.CounterClockwise)
+    71 -> ToggleGhostBrick
     80 -> Pause
     88 -> Move (Rotate Brick.Clockwise)
+    90 -> Move (Rotate Brick.CounterClockwise)
     _ -> Move None

@@ -22,7 +22,7 @@ update : Msg -> Model.Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
     Begin ->
-      Gameplay { brick = Brick.new Board.columns Brick.I, level = 1, linesCleared = 0, score = 0, board = Board.empty, next = [] }
+      Gameplay { brick = Brick.new Board.columns Brick.I, level = 1, linesCleared = 0, score = 0, board = Board.empty, next = [], ghostBrickEnabled = False }
       |> updateGameState byTakingNextBrick
     NextBag newBag->
       model |> updateGameState (bySetingNewBagAndTakingNextBrick newBag)
@@ -38,27 +38,51 @@ update msg model =
         Right ->
           model |> updateGameState (byMovingBrick toRight)
         Down ->
-          model |> updateGameState (\state ->
-            case state |> updateBrickWithCollision (updatePosition down) of
-              Just newState ->
-                newState |> toGameplay  
-              Nothing ->
-                handleBrickDropped state)
+          model |> updateGameState byMovingBrickDown
         Rotate direction ->
           model |> updateGameState (byRotatingBrickIn direction)
         Drop ->
           model |> updateGameState byDropingBrick
         _ ->
           (model, Cmd.none)
+    ToggleGhostBrick ->
+      case model of
+        Gameplay state ->
+          {state | ghostBrickEnabled = not state.ghostBrickEnabled} |> toGameplay
+        _ ->
+          (model, Cmd.none)
     _ -> (model, Cmd.none)
 
-byDropingBrick : GameState -> ( Model, Cmd Msg )
-byDropingBrick state =
+tryMoveBrickDown : (GameState -> a) -> (GameState -> a) -> GameState -> a
+tryMoveBrickDown handleMoveDown handleCollision state =
   case state |> updateBrickWithCollision (updatePosition down) of
-  Just newState ->
-    byDropingBrick newState
-  Nothing ->
-    handleBrickDropped state
+    Just newState ->
+      handleMoveDown newState
+    Nothing ->
+      handleCollision state
+
+byMovingBrickDown : GameState -> ( Model, Cmd Msg )
+byMovingBrickDown =
+  tryMoveBrickDown toGameplay handleBrickDropped
+
+recursivelyMoveBrickDown : (GameState -> a) -> GameState -> a
+recursivelyMoveBrickDown handleCollision =
+  tryMoveBrickDown (\newState -> recursivelyMoveBrickDown handleCollision newState) handleCollision
+
+byDropingBrick : GameState -> ( Model, Cmd Msg )
+byDropingBrick =
+  recursivelyMoveBrickDown handleBrickDropped
+
+ghostBrick : GameState -> Board
+ghostBrick state =
+  if state.ghostBrickEnabled then
+    let
+      getGhostBrick = 
+        recursivelyMoveBrickDown (\state -> Board.empty |> mergeWith state.brick)
+    in
+      getGhostBrick state
+  else
+    Board.empty
 
 handleBrickDropped: GameState -> ( Model, Cmd Msg )
 handleBrickDropped state = 
