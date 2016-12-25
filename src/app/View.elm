@@ -101,6 +101,20 @@ black = "#000000"
 gray : String
 gray = "#DDDDDD"
 
+instructions : List String
+instructions =
+  [ ""
+  ,"arrows - move"
+  ,"z, x - rotate"
+  ,"space - drop"
+  ,"p - pause"
+  ,"g - ghost piece"
+  ]
+
+appendInstructions : List String -> List String
+appendInstructions lines =
+  List.concat [lines,instructions]
+
 -- VIEW
 view : Model -> Html a
 view model =
@@ -119,7 +133,7 @@ content : Model -> List (Svg a)
 content model =
   case model of
     Start ->
-      boardWithText ["Press S to start"]
+      ["Press S to start"] |> appendInstructions |> boardWithText
     Gameplay gameState ->
       List.concat
       [ ghostBrick gameState
@@ -142,7 +156,7 @@ content model =
       , showPointsBox gameState
       , showLevelBox gameState
       , showLinesBox gameState
-      , textInTheBoard ["Paused"]
+      , ["Paused"] |> appendInstructions |> textInTheBoard
       ]
     GameOver overState ->
       List.concat
@@ -151,7 +165,7 @@ content model =
       , showPointsBox overState
       , showLevelBox overState
       , showLinesBox overState
-      , textInTheBoard ["Game Over", "Press R to restart"]
+      , ["Game Over", "Press R to restart"] |> appendInstructions |> textInTheBoard
       ]
 
 boardWithText : List String -> List (Svg a)
