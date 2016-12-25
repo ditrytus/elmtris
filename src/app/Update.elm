@@ -16,7 +16,7 @@ visibleNextBricks : Int
 visibleNextBricks = 1 
 
 levelUpEvery : Int
-levelUpEvery = 25
+levelUpEvery = 15
 
 update : Msg -> Model.Model -> ( Model, Cmd Msg )
 update msg model =
