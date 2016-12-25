@@ -6,7 +6,7 @@ cache:
   - elm-stuff
   - node_modules
 before_script:
-  - npm install -g elm@0.17 gulp
+  - npm install -g elm@0.18 gulp
 script: bash ./deploy.sh
 env:
   global:

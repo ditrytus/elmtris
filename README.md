@@ -33,7 +33,7 @@ Current version is playable under: (http://ditrytus.github.io/elmtris)
   - [ ] Katjusha
   - [ ] Kalinka.
 - [ ] Support for touch gestures, so that a game is playable on mobile devices
-- [ ] Display key/gesture mappings dependent on the platform
+- [x] Display key/gesture mappings dependent on the platform
 
 ## Non functional stuff
 

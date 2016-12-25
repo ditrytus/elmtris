@@ -28,9 +28,12 @@ update msg model =
       model |> updateGameState (bySetingNewBagAndTakingNextBrick newBag)
     Pause ->
       case model of
-        Gameplay state -> (Paused state, Cmd.none)
-        Paused state -> (Gameplay state, Cmd.none)
-        _ -> (model, Cmd.none)
+        Gameplay state ->
+          (Paused state, Cmd.none)
+        Paused state ->
+          (Gameplay state, Cmd.none)
+        _ ->
+          (model, Cmd.none)
     Move moveType ->
       case moveType of
         Left ->
@@ -107,7 +110,7 @@ handleBrickDropped state =
   else
     (GameOver {score = state.score, level = state.level, linesCleared = state.linesCleared}, Cmd.none)               
 
-score : number -> number' -> number'
+score : number -> number_ -> number_
 score lines level =
   let
     scoreBase lines =

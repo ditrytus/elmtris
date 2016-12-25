@@ -104,11 +104,11 @@ gray = "#DDDDDD"
 instructions : List String
 instructions =
   [ ""
-  ,"arrows - move"
-  ,"z, x - rotate"
-  ,"space - drop"
-  ,"p - pause"
-  ,"g - ghost piece"
+  , "arrows - move"
+  , "z, x - rotate"
+  , "space - drop"
+  , "p - pause"
+  , "g - ghost piece"
   ]
 
 appendInstructions : List String -> List String
@@ -187,7 +187,7 @@ textInTheBoard lines =
   in
     lines
     |> List.indexedMap (\i line -> 
-    text'
+    text_
       [ x <| toString <| (boardSize.width / 2)
       , y <| toString <| ((boardSize.height / 2) - (toFloat (List.length lines * lineHeight) / 2) + toFloat i * toFloat lineHeight)
       , textAnchor "middle"
@@ -244,7 +244,7 @@ showNumberBox box num =
   in
     List.concat
     [ showLabeledBox box 
-    , [ text'
+    , [ text_
         [ x (toString numberPos.x)
         , y (toString numberPos.y)
         , textAnchor "start"
@@ -269,7 +269,7 @@ showLabeledBox box =
       , stroke "#000000"
       , strokeWidth "1"
       ] []
-  , text'
+  , text_
       [ x (toString labelPos.x)
       , y (toString labelPos.y)
       , textAnchor "start"
