@@ -2,6 +2,7 @@ module Board exposing (..)
 
 import Array
 import Array2D
+import Brick exposing (Brick, BrickType)
 
 columns : Int
 columns = 10
@@ -15,10 +16,18 @@ obstructedRows = 2
 visibleRows : Int
 visibleRows = rows - obstructedRows
 
-type alias Board = Array2D.Array2D Bool
+type alias Cell = Maybe BrickType
+
+cellToBool : Cell -> Bool
+cellToBool cell =
+  case cell of
+  Just _ -> True
+  Nothing -> False
+
+type alias Board = Array2D.Array2D Cell
 
 new : Int -> Int -> Board
-new r c = Array2D.repeat r c False
+new r c = Array2D.repeat r c Nothing
 
 empty : Board
 empty = new rows columns
@@ -36,12 +45,13 @@ removeLines board =
       |> Array.filter (\row ->
         row
         |> Array.toList
+        |> List.map cellToBool
         |> List.all identity
         |> not)
       |> Array.toList 
   in
     remainingRows
-    |> List.append (List.repeat (rows - (List.length remainingRows)) (Array.repeat columns False))
+    |> List.append (List.repeat (rows - (List.length remainingRows)) (Array.repeat columns Nothing))
     |> Array.fromList
     |> Array2D.fromArray
 
@@ -51,5 +61,6 @@ countLines board =
     |> Array.filter (\row ->
       row
       |> Array.toList
+      |> List.map cellToBool
       |> List.all identity)
     |> Array.length

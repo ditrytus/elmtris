@@ -49,6 +49,13 @@ type alias Brick =
   , brickPos: Pos
   }
 
+isAt : Int -> Int -> Brick -> Bool
+isAt row col brick =
+  brick
+  |> shape
+  |> Array2D.get row col
+  |> Maybe.withDefault False
+
 type alias BrickShape = Array2D.Array2D Bool
 
 shape : Brick -> BrickShape
@@ -263,13 +270,6 @@ height = shape >> Array2D.rows
 
 width : Brick -> Int
 width = shape >> Array2D.columns
-
-isAt : Int -> Int -> Brick -> Bool
-isAt row col brick =
-  brick
-  |> shape 
-  |> Array2D.get row col
-  |> Maybe.withDefault False
 
 wallKicks: Rotation -> RotationDirection -> BrickType -> List Pos
 wallKicks rotation direction brickType =

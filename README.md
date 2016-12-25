@@ -7,7 +7,7 @@ Current version is playable under: (http://ditrytus.github.io/elmtris)
 ## Compliance with (known) [Tetris Guidlines] (https://tetris.wiki/Tetris_Guideline)
 
 - [x] Playfield is 10 cells wide and at least 22 cells tall, where rows above 20 are hidden or obstructed by the field frame
-- [ ] Tetromino colors
+- [X] Tetromino colors
 - [x] Tetromino start locations
 - [x] [Super Rotation System (SRS)] (https://tetris.wiki/SRS) specifies tetromino rotation
 - [ ] Standard mappings for computer keyboards

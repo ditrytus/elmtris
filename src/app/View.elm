@@ -4,8 +4,8 @@ import Html exposing (Html)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Model exposing (..)
-import Brick
-import Board exposing (Board)
+import Brick exposing (BrickType)
+import Board exposing (Board, Cell)
 import Update exposing (mergeWith, ghostBrick)
 import Array
 import Array2D
@@ -138,11 +138,11 @@ content model =
       List.concat
       [ ghostBrick gameState
         |> Board.skipRows Board.obstructedRows
-        |> board gray boardPos
+        |> board (Just gray) boardPos
       , gameState.board
         |> mergeWith gameState.brick
         |> Board.skipRows Board.obstructedRows
-        |> board black boardPos
+        |> board Nothing boardPos
       , [ boardBorder ]
       , showNextBrickBox gameState
       , showPointsBox gameState
@@ -218,7 +218,7 @@ showNextBrickBox state =
         brickType::_ ->
           Board.new (floor nextBrickBox.size.height) (floor nextBrickBox.size.width)
           |> mergeWith (Brick.Brick brickType Brick.Deg0 (Brick.Pos 1 1))
-          |> board black viewBox.pos
+          |> board Nothing viewBox.pos
         [] -> []
   ]
 
@@ -277,14 +277,26 @@ showLabeledBox box =
       ]
       [text box.label]
   ]
-    
-board: String -> Pos -> Board -> List (Svg.Svg a) 
+
+
+cellToColor : BrickType -> String
+cellToColor brickType =
+  case brickType of
+  Brick.O -> "#FFFF00"
+  Brick.I -> "#00FFFF"
+  Brick.Z -> "#FF0000"
+  Brick.S -> "#00FF00"
+  Brick.J -> "#0000FF"
+  Brick.L -> "#FFA500"
+  Brick.T -> "#800080"
+
+board: Maybe String -> Pos -> Board -> List (Svg.Svg a) 
 board fillColor pos board =
   let
-    cellToRect: Int -> Int -> Bool -> Maybe (Svg.Svg a)
+    cellToRect: Int -> Int -> Cell -> Maybe (Svg.Svg a)
     cellToRect row column cell =
       case cell of
-        True ->
+        Just brickType ->
           Just (
             rect
               [ x (toString (floor pos.x + column * floor cellSize.width))
@@ -292,11 +304,14 @@ board fillColor pos board =
               , width (toString (cellSize.width + 0.1))
               , height (toString (cellSize.height + 0.1))
               , strokeWidth "0"
-              , fill fillColor ]
+              , fill <| (
+                  case fillColor of
+                  Just color -> color
+                  Nothing -> cellToColor brickType
+                )]
               []
             )
-        False ->
-          Nothing
+        Nothing -> Nothing
   in 
     board
     |> Array2D.indexedMap cellToRect

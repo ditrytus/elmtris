@@ -24,7 +24,7 @@ update msg model =
     Begin ->
       Gameplay { brick = Brick.new Board.columns Brick.I, level = 1, linesCleared = 0, score = 0, board = Board.empty, next = [], ghostBrickEnabled = True }
       |> updateGameState byTakingNextBrick
-    NextBag newBag->
+    NextBag newBag ->
       model |> updateGameState (bySetingNewBagAndTakingNextBrick newBag)
     Pause ->
       case model of
@@ -196,7 +196,8 @@ doesCollide brick board =
   |> Array2D.indexedMap (\row column cell ->
       board
       |> Array2D.get (row + brick.brickPos.y) (column + brick.brickPos.x)
-      |> Maybe.withDefault True
+      |> Maybe.withDefault (Just Brick.O)
+      |> cellToBool
       |> (&&) cell)
   |> flattenArray2D
   |> Array.toList
@@ -240,7 +241,8 @@ mergeWith: Brick -> Board -> Board
 mergeWith brick board  =
     board |>
       Array2D.indexedMap (\row col cell ->
-        brick
-        |> Brick.isAt (row - brick.brickPos.y) (col - brick.brickPos.x)
-        |> (||) cell)
+        if brick |> Brick.isAt (row - brick.brickPos.y) (col - brick.brickPos.x) then
+          Just brick.bType
+        else
+          cell)
 
