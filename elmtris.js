@@ -13341,19 +13341,19 @@ var _ditrytus$elmtris$View$cellToColor = function (brickType) {
 	var _p0 = brickType;
 	switch (_p0.ctor) {
 		case 'O':
-			return '#FFFF00';
+			return '#DAA520';
 		case 'I':
-			return '#00FFFF';
+			return '#008B8B';
 		case 'Z':
-			return '#FF0000';
+			return '#8B0000';
 		case 'S':
-			return '#00FF00';
+			return '#006400';
 		case 'J':
-			return '#0000FF';
+			return '#00008B';
 		case 'L':
-			return '#FFA500';
+			return '#FF8C00';
 		default:
-			return '#800080';
+			return '#4B0082';
 	}
 };
 var _ditrytus$elmtris$View$instructions = {
