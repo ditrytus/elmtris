@@ -2,12 +2,12 @@
 
 Tetris made in Elm. 
 
-Current version is playable under: (http://ditrytus.github.io/elmtris)
+Current version is playable under: (http://elmtris.gruszecki.software)
 
 ## Compliance with (known) [Tetris Guidlines] (https://tetris.wiki/Tetris_Guideline)
 
 - [x] Playfield is 10 cells wide and at least 22 cells tall, where rows above 20 are hidden or obstructed by the field frame
-- [X] Tetromino colors
+- [x] Tetromino colors
 - [x] Tetromino start locations
 - [x] [Super Rotation System (SRS)] (https://tetris.wiki/SRS) specifies tetromino rotation
 - [ ] Standard mappings for computer keyboards
@@ -38,5 +38,5 @@ Current version is playable under: (http://ditrytus.github.io/elmtris)
 ## Non functional stuff
 
 - [x] Automatically build and publish to github pages with travis CI
-- [ ] Give it a nice domain
+- [x] Give it a nice domain
 - [x] Add some front end build pipeline (Just for practice)
