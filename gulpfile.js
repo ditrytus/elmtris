@@ -2,7 +2,8 @@ var gulp = require('gulp'),
     elm = require('gulp-elm'),
     connect = require('gulp-connect'),
     del = require('del'),
-    livereload = require('gulp-livereload');
+    livereload = require('gulp-livereload'),
+    minify = require('gulp-minify');
 
 var sourceFolder = 'src/';
 var outputFolder = 'dist/'
@@ -36,6 +37,12 @@ gulp.task('elm-init', elm.init);
 gulp.task('elm', ['elm-init'], function() {
   return gulp.src(elmMainFile)
     .pipe(elm.bundle(elmBundleFile).on('error', function () {}))
+    .pipe(minify({
+      ext:{
+        src:".js'",
+        min:".js"
+      }
+    }))
     .pipe(gulp.dest(outputFolder))
     .pipe(livereload());
 });
