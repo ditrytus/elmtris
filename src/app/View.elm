@@ -282,13 +282,13 @@ showLabeledBox box =
 cellToColor : BrickType -> String
 cellToColor brickType =
   case brickType of
-  Brick.O -> "#FFFF00"
-  Brick.I -> "#00FFFF"
-  Brick.Z -> "#FF0000"
-  Brick.S -> "#00FF00"
-  Brick.J -> "#0000FF"
-  Brick.L -> "#FFA500"
-  Brick.T -> "#800080"
+  Brick.O -> "#DAA520"
+  Brick.I -> "#008B8B"
+  Brick.Z -> "#8B0000"
+  Brick.S -> "#006400"
+  Brick.J -> "#00008B"
+  Brick.L -> "#FF8C00"
+  Brick.T -> "#4B0082"
 
 board: Maybe String -> Pos -> Board -> List (Svg.Svg a) 
 board fillColor pos board =
